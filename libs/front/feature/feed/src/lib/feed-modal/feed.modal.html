@@ -1,0 +1,37 @@
+<div id="feed-modal" [ngClass]="{'max-w-md': !expanded, 'max-w-full': expanded}" class="z-modal inset-0 h-full overflow-y-auto overflow-x-hidden w-screen bg-black hidden">
+    <div [ngClass]="{'max-h-42 max-w-md': !expanded, 'max-h-72': expanded}" *ngIf="this.selectedCategory != null" class="absolute top-0 w-full h-full pointer-events-none opacity-50" style="mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0) 100%); -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0) 100%);background: center center / cover url('{{ this.selectedCategory.backgroundUrl }}');"></div>
+    <div class="flex justify-end items-center left-auto p-3 gap-x-2">
+            <a (click)="closeFeed()" title="Fermer le feed" class="cursor-pointer text-white text-sm/6 p-1">
+                <svg class="size-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </a>
+    </div> 
+    <div [ngClass]="{'pt-24':selectedCategory&&!expanded,'pt-42':selectedCategory&&expanded}" class="pt-24 overflow-auto">
+        <div class="flex flex-wrap gap-2 justify-center mb-4 p-4">
+            <span *ngFor="let item of categories" title="{{ item.description }}" (click)="selectedCategory = item" [ngClass]="{
+                'border border-indigo-400 bg-indigo-400/10 text-indigo-400 ring-indigo-400/30': selectedCategory === item, 
+                'bg-gray-400/10 text-gray-400 ring-1 ring-gray-400/20': selectedCategory !== item
+                }" class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset cursor-pointer hover:bg-indigo-500">{{ item.name }}</span>
+        </div>
+        <div class="w-84 flex items-center justify-center mx-auto rounded-lg text-sm gap-x-2">
+            <span class="text-gray-400">Afficher la carte</span>
+            <button (click)="this.expand()" [ngClass]="{'bg-indigo-600':this.expanded, 'bg-gray-200':!this.expanded}" type="button" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 focus:outline-hidden" role="switch" aria-checked="false">
+                <span class="sr-only">Type d'affichage</span>
+                <span [ngClass]="{'translate-x-5':this.expanded, 'translate-x-0':!this.expanded}" class="pointer-events-none relative inline-block size-5 translate-x-0 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out">
+                    <span [ngClass]="{'opacity-0 duration-100 ease-out':this.expanded,'opacity-100 duration-200 ease-in':!this.expanded}" class="absolute inset-0 flex size-full items-center justify-center opacity-100 transition-opacity duration-200 ease-in" aria-hidden="true">
+                    <svg class="size-3 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8c0 3.613-3.869 7.429-5.393 8.795a1 1 0 0 1-1.214 0C9.87 15.429 6 11.613 6 8a6 6 0 0 1 12 0"/><circle cx="12" cy="8" r="2"/><path d="M8.714 14h-3.71a1 1 0 0 0-.948.683l-2.004 6A1 1 0 0 0 3 22h18a1 1 0 0 0 .948-1.316l-2-6a1 1 0 0 0-.949-.684h-3.712"/></svg>
+                    </span>
+                    <span [ngClass]="{'opacity-100 duration-200 ease-in':this.expanded,'opacity-0 duration-100 ease-out':!this.expanded}" class="absolute inset-0 flex size-full items-center justify-center opacity-0 transition-opacity duration-100 ease-out" aria-hidden="true">
+                    <svg class="size-3 text-indigo-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M13 8H7"/><path d="M17 12H7"/></svg>
+                    </span>
+                </span>
+            </button>
+            <span class="text-gray-400">Aggrandir les posts</span>
+        </div>
+        <div [ngClass]="{'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4': expanded, 
+        'flex flex-wrap justify-center': !expanded}" >
+            @for(item of [0,1,2,3,4]; track item) {
+                <bgd-post></bgd-post>
+            }
+        </div>
+    </div>
+</div>

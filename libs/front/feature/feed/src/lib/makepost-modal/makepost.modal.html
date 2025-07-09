@@ -1,0 +1,36 @@
+<div (click)="close()" [ngClass]="{'visible': this.visible, 'hidden': !this.visible}" class="z-on-map-1 absolute top-0 left-0 w-full h-full bg-black/80">
+</div>
+<div class="z-on-map-1 absolute top-20 left-0 w-full">
+  <div class="flex justify-center items-center mb-2">
+    <img class="inline-block size-12 rounded-full mr-2" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+    <input readonly autocomplete="off" [ngClass]="{'outline-2 -outline-offset-2 outline-primary-bourgad-2': this.visible, 'outline-1 -outline-offset-1 outline-gray-900 hover:outline-2 hover:-outline-offset-2 hover:outline-primary-bourgad-2': !this.visible}" (click)="this.open()" type="text" name="name" id="name" class="block rounded-full bg-black hover:bg-gray-800 px-4 py-1.5 text-base text-gray-300 placeholder:text-gray-400 sm:text-sm/6 w-120 h-12 cursor-pointer pr-4 truncate"
+      placeholder="{{this.placeholder}}" />
+    <!-- <button [ngClass]="{'visible': this.visible, 'hidden': !this.visible}" (click)="close()" class="text-primary-bourgad-2 cursor-pointer -ml-8 hover:text-gray-600 text-2xl leading-none" type="button" aria-label="Fermer">&times;</button> -->
+  </div>
+  <div id="modal-post" [ngClass]="{'visible': this.visible, 'hidden': !this.visible}" class="z-modal flex items-center justify-center inset-0">
+      <div *ngIf="!localize" class="bg-black rounded-lg shadow-lg w-full max-w-lg p-6 relative">
+      <form (ngSubmit)="makePost()">
+
+        <bgd-dropdown class="mb-2" [name]="'category'" [dropdownItems]="dropdownCategories" (selectedItem$)="selectCategory($event)" placeholder="Choisir une catégorie"></bgd-dropdown>
+        <bgd-dropdown class="mb-2" [name]="'subcategory'" [dropdownItems]="dropdownSubCategories" (selectedItem$)="selectSubCategory($event)" placeholder="Choisir une sous-catégorie"></bgd-dropdown>
+
+        <!-- Textarea -->
+        <div class="mb-4">
+          <textarea name="contenu" [(ngModel)]="contenu" id="postText" rows="4" class="bg-gray-950 text-gray-300 w-full border border-gray-500 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:bg-gray-900" placeholder="Un conseil, un souvenir, une idée, un service..."></textarea>
+        </div>
+        <!-- Pictures Upload -->
+        <div class="mb-4 flex rounded-lg border border-gray-200 relative p-3 pt-4">
+          <div class="absolute -top-3 place-content-center bg-black text-gray-200 px-3 uppercase font-bold text-sm">Ajouter</div>
+          <img src="/assets/add_picture.svg" alt="Ajouter une image" class="ml-2 w-6 h-6 cursor-pointer" (click)="openFilePicker()">
+        </div>
+        <!-- Submit Button -->
+        <div class="mt-5 sm:mt-6">
+          <button type="submit" class="cursor-pointer inline-flex w-full justify-center rounded-md bg-primary-bourgad px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-primary-bourgad-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Publier</button>
+        </div>
+        <div class="mt-3 sm:mt-4">
+          <button (click)="close()" class="cursor-pointer inline-flex w-full justify-center rounded-md bg-gray-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-gray-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Annuler</button>
+        </div>
+      </form>
+  </div>
+
+</div>
