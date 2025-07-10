@@ -3,7 +3,7 @@ import { MakePostModal } from '../makepost-modal/makepost.modal';
 import * as L from 'leaflet';
 import { CommonModule } from '@angular/common';
 import { FeedModal } from "../feed-modal/feed.modal";
-import { MapComponent, SearchPlace } from '@bourgad-monorepo/ui';
+import { MapComponent, SearchPlace, SenseOfResults } from '@bourgad-monorepo/ui';
 import { GeoApiService, UserStore } from '@bourgad-monorepo/core';
 import { City } from '@bourgad-monorepo/model';
 
@@ -20,6 +20,7 @@ export class FeedView {
     readonly userStore = inject(UserStore);
 
     feedMap?: L.Map;
+    public senseOfResults: SenseOfResults = SenseOfResults.TOP;
 
     constructor() {
       // Initialize the user store or any other services if needed
