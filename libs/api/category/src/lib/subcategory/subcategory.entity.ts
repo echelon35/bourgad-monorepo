@@ -23,7 +23,7 @@ export class SubCategoryEntity implements Subcategory {
   @Column({ name: 'icon_url', nullable: true })
   iconUrl: string;
 
-  @ManyToOne(() => CategoryEntity, (category) => category.categoryId)
+  @ManyToOne(() => CategoryEntity, (category: CategoryEntity) => category.categoryId)
   @JoinColumn({ name: 'category_id' })
   category: CategoryEntity;
 }
