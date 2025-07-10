@@ -1,0 +1,20 @@
+{
+  "name": "category",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "/libs/api/category/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist//libs/api/category",
+        "tsConfig": "/libs/api/category/tsconfig.lib.json",
+        "packageJson": "/libs/api/category/package.json",
+        "main": "/libs/api/category/src/index.ts",
+        "assets": ["/libs/api/category/*.md"]
+      }
+    }
+  }
+}
