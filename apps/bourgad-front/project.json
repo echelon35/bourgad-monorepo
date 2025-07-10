@@ -22,10 +22,7 @@
         ],
         "styles": ["apps/bourgad-front/src/styles.css", "node_modules/leaflet/dist/leaflet.css"],
         "server": "apps/bourgad-front/src/main.server.ts",
-        "ssr": {
-          "entry": "apps/bourgad-front/src/server.ts"
-        },
-        "outputMode": "server"
+        "ssr": false
       },
       "configurations": {
         "production": {
