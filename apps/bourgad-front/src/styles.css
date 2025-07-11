@@ -1,24 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* You can add global styles to this file, and also import other style files */
-
-@plugin '@tailwindcss/forms';
-
-@theme {
-  --z-index-map: 60;
-  --z-index-on-map-1: 61;
-  --z-index-on-map-2: 62;
-  --z-index-sidebar: 200;
-  --z-index-modal-bg: 899;
-  --z-index-modal: 900;
-  --z-index-modal-2: 901;
-  --z-index-toastr: 999;
-
-  --color-primary-bourgad: #264965;
-  --color-primary-bourgad-2: #5D8A9F;
-}
+@tailwind variants;
 
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,

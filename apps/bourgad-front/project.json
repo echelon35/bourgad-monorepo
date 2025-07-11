@@ -20,7 +20,7 @@
             "input": "apps/bourgad-front/public"
           }
         ],
-        "styles": ["apps/bourgad-front/src/styles.css", "node_modules/leaflet/dist/leaflet.css"],
+        "styles": ["node_modules/leaflet/dist/leaflet.css","apps/bourgad-front/src/styles.css"],
         "server": "apps/bourgad-front/src/main.server.ts",
         "ssr": false
       },
