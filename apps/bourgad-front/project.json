@@ -17,7 +17,8 @@
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/bourgad-front/public"
+            "input": "libs/front/assets",
+            "output": "/assets"
           }
         ],
         "styles": ["node_modules/leaflet/dist/leaflet.css","apps/bourgad-front/src/styles.css"],
