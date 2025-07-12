@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 // import { Picture } from "src/app/core/Model/Picture";
-import { Post, User } from "@bourgad-monorepo/model";
+import { Post, Media, User } from "@bourgad-monorepo/model";
 
 @Component({
   standalone: true,
@@ -17,7 +17,7 @@ export class PostComponent {
     this.post.user.firstname = 'kevin';
     this.post.user.lastname = 'brun';
     this.post.user.displayname = 'echelon';
-    // this.post.user.avatar = '/assets/categories/sante.jpg';
+    this.post.user.avatar = { url: '/assets/categories/sante.jpg'} as Media;
     this.post.user.title = 'Développeur fullstack cherbourgeois et créateur de Bourgad'
 
     // this.post.photos = [new Picture(1,'/assets/categories/carriere.jpg'), new Picture(2,'/assets/categories/nature.jpg')]

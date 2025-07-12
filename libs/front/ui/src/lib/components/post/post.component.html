@@ -1,6 +1,6 @@
       <article class="flex flex-col items-start justify-between p-3 max-w-96 mx-auto">
         <div class="relative mt-2 flex items-center gap-x-4 mb-2">
-            <img src="{{this.post.user?.avatar?.url}}" alt="" class="size-10 rounded-full bg-gray-100" />
+            <img src="{{this.post.user.avatar.url}}" alt="" class="size-10 rounded-full bg-gray-100" />
             <div class="text-sm/6">
                 <p class="font-semibold text-gray-300">
                 <a href="#">
@@ -8,7 +8,7 @@
                     <!-- {{this.post.user?.displayname()}} -->
                 </a>
                 </p>
-                <p class="text-gray-600 truncate max-w-70">{{this.post.user?.title}}</p>
+                <p class="text-gray-600 truncate max-w-70">{{this.post.user.title}}</p>
             </div>
         </div>
         <div class="relative w-full">
@@ -18,7 +18,7 @@
         <div class="mt-2 max-w-xl">
           <div class="flex items-center gap-x-2 text-xs">
             <time datetime="2020-03-16" class="text-gray-500">{{this.post.createdAt | date:"d MMMM y 'à' H:mm"}}</time>
-            <a title="{{this.post.subcategory?.name}}" href="#" class="{{this.post.subcategory?.tagClass}} max-w-42 truncate pr-3">{{this.post.subcategory?.name}}</a>
+            <a title="{{this.post.subcategory.name}}" href="#" class="{{this.post.subcategory.tagClass}} max-w-42 truncate pr-3">{{this.post.subcategory.name}}</a>
           </div>
           <div class="max-w-xl flex items-center text-white pt-2 gap-x-2">
             <div class="flex items-center gap-x-1">
