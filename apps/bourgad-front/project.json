@@ -23,15 +23,16 @@
         ],
         "styles": ["node_modules/leaflet/dist/leaflet.css","apps/bourgad-front/src/styles.css"],
         "server": "apps/bourgad-front/src/main.server.ts",
-        "ssr": false
+        "ssr": false,
+        "allowedCommonJsDependencies": ["leaflet"]
       },
       "configurations": {
         "production": {
           "budgets": [
             {
               "type": "initial",
-              "maximumWarning": "500kb",
-              "maximumError": "1mb"
+              "maximumWarning": "1mb",
+              "maximumError": "3mb"
             },
             {
               "type": "anyComponentStyle",
