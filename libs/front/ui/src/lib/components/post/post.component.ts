@@ -16,7 +16,6 @@ export class PostComponent {
     this.post.user = {} as User;
     this.post.user.firstname = 'kevin';
     this.post.user.lastname = 'brun';
-    this.post.user.displayname = 'echelon';
     this.post.user.avatar = { url: '/assets/categories/sante.jpg'} as Media;
     this.post.user.title = 'Développeur fullstack cherbourgeois et créateur de Bourgad'
 

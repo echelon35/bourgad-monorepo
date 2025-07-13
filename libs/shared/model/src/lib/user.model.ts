@@ -6,10 +6,8 @@ import { Organisation } from "./organisation.model";
 
 export interface User extends Audited {
   userId: number;
-  name: string;
   firstname: string;
   lastname: string;
-  displayname: string;
   mail: string;
   password: string;
   phone?: string;
