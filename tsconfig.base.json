@@ -7,6 +7,7 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "resolveJsonModule": true,
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
@@ -19,6 +20,7 @@
       "@bourgad-monorepo/core": ["libs/front/core/src/index"],
       "@bourgad-monorepo/external": ["libs/shared/dto/external/src/index"],
       "@bourgad-monorepo/feature-feed": ["libs/front/feature/feed/src/index"],
+      "@bourgad-monorepo/internal": ["libs/shared/dto/internal/src/index"],
       "@bourgad-monorepo/model": ["libs/shared/model/src/index"],
       "@bourgad-monorepo/territory": ["libs/api/territory/src/index"],
       "@bourgad-monorepo/ui": ["libs/front/ui/src/index"]

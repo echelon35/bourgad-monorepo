@@ -1,0 +1,14 @@
+{
+  "newUser": {
+    "mail": "john.doe@example.com",
+    "password": "securePassword123",
+    "firstname": "John",
+    "lastname": "Doe",
+    "cguAccepted": true,
+    "newsletterAccepted": true
+  },
+  "existingUser": {
+    "mail": "jane.doe@example.com",
+    "password": "securePassword123"
+  }
+}

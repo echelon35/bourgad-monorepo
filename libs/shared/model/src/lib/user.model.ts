@@ -21,6 +21,14 @@ export interface User extends Audited {
   title: string;
   roleId: Role;
 
+  verifiedMail: boolean;
+  cguAccepted: boolean;
+  newsletterAccepted: boolean;
+
+  // Register by other provider
+  provider: string;
+  providerId: string;
+
   city: City;
   avatar: Media;
   organisation?: Organisation;
