@@ -2,6 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "rootDir": ".",
+    "typeRoots": ["@types"],
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
@@ -19,6 +20,7 @@
       "@bourgad-monorepo/authentication": [
         "libs/api/authentication/src/index.ts"
       ],
+      "@bourgad-monorepo/back-core": ["libs/api/core/src/index.ts"],
       "@bourgad-monorepo/category": ["libs/api/category/src/index"],
       "@bourgad-monorepo/core": ["libs/front/core/src/index"],
       "@bourgad-monorepo/external": ["libs/shared/dto/external/src/index"],
@@ -27,6 +29,8 @@
       ],
       "@bourgad-monorepo/feature-feed": ["libs/front/feature/feed/src/index"],
       "@bourgad-monorepo/internal": ["libs/shared/dto/internal/src/index"],
+      "@bourgad-monorepo/mail": ["libs/api/mail/src/index.ts"],
+      "@bourgad-monorepo/media": ["libs/api/media/src/index.ts"],
       "@bourgad-monorepo/model": ["libs/shared/model/src/index"],
       "@bourgad-monorepo/territory": ["libs/api/territory/src/index"],
       "@bourgad-monorepo/ui": ["libs/front/ui/src/index"],
