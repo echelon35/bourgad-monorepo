@@ -15,7 +15,7 @@ import { LocalAuthGuard, Public } from '@bourgad-monorepo/back-core';
 import * as express from 'express';
 import { ChangePasswordDto } from '@bourgad-monorepo/internal';
 
-@Controller('login')
+@Controller()
 export class LoginController {
   constructor(private loginService: LoginService) {}
 

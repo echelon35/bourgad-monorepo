@@ -15,7 +15,7 @@ import { SignUpService } from './signup.service';
 import { SignUpDto } from '@bourgad-monorepo/internal';
 import * as Express from 'express';
 
-@Controller('signup')
+@Controller()
 export class SignUpController {
   constructor(private signUpService: SignUpService) {}
 

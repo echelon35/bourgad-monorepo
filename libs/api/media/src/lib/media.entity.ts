@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Media } from '@bourgad-monorepo/model';
 
-@Entity('media')
+@Entity('medias')
 export class MediaEntity implements Media {
   @PrimaryGeneratedColumn({ name: 'media_id' })
   mediaId: number;

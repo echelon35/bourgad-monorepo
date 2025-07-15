@@ -13,7 +13,13 @@ import {
   CategoryEntity,
   SubCategoryEntity,
 } from '@bourgad-monorepo/category';
-import { CoreModule } from '@bourgad-monorepo/core';
+import { CoreModule } from '@bourgad-monorepo/back-core';
+import { AuthenticationModule } from '@bourgad-monorepo/authentication';
+import { MediaEntity, MediaModule } from '@bourgad-monorepo/media';
+import { UserEntity, UserModule, RoleEntity } from '@bourgad-monorepo/user';
+import { OrganisationEntity, OrganisationTypeEntity } from '@bourgad-monorepo/organisation';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard, RolesGuard } from '@bourgad-monorepo/back-core';
 
 @Module({
   imports: [
@@ -24,6 +30,9 @@ import { CoreModule } from '@bourgad-monorepo/core';
     TerritoryModule,
     CategoryModule,
     CoreModule,
+    MediaModule,
+    UserModule,
+    AuthenticationModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.BOURGAD_HOST,
@@ -36,12 +45,24 @@ import { CoreModule } from '@bourgad-monorepo/core';
         DepartmentEntity,
         CategoryEntity,
         SubCategoryEntity,
+        MediaEntity,
+        RoleEntity,
+        OrganisationTypeEntity,
+        OrganisationEntity,
+        UserEntity
       ],
       synchronize: true,
       // logging: true,
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },],
 })
 export class AppModule {}

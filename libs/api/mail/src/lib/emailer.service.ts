@@ -11,7 +11,12 @@ export class EmailerService {
   private transporter: any;
 
   constructor(private configService: ConfigService) {
-    const sesClient = new SESv2Client({ region: process.env['AWS_REGION'], apiVersion: '2019-09-27' });
+    const region = this.configService.get<string>('AWS_REGION');
+    const mail_support = this.configService.get<string>('MAIL_SUPPORT');
+    if (!region || !mail_support) {
+      throw new Error('AWS_REGION or MAIL_SUPPORT is not defined in the environment variables');
+    }
+    const sesClient = new SESv2Client({ region: process.env['AWS_REGION'] });
     this.transporter = nodemailer.createTransport({
         SES: { sesClient, SendEmailCommand },
     });
@@ -19,7 +24,7 @@ export class EmailerService {
 
   async sendEmail(toEmail: string, subject: string, htmlContent: any) {
     const mailOptions = {
-      from: 'bourgad.noreply@gmail.com', // Email expéditeur
+      from: process.env['MAIL_SUPPORT'], // Email expéditeur
       to: toEmail, // Destinataire
       subject: subject, // Sujet du mail
       html: htmlContent, // Contenu HTML du mail

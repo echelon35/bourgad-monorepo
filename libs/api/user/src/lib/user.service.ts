@@ -41,7 +41,6 @@ export class UserService {
     verified = true,
     checkVerification = true,
   ): Promise<User> {
-    try {
       const user = checkVerification
         ? await this.userRepository
             .createQueryBuilder('user')
@@ -59,9 +58,6 @@ export class UserService {
             .leftJoinAndSelect('user.roles', 'roles')
             .getOne();
       return user;
-    } catch (e) {
-      console.log(e);
-    }
   }
 
   async findMe(id: number): Promise<User> {
@@ -137,10 +133,13 @@ export class UserService {
     if (defaultRole != null) {
       createUserDto.roles.push(defaultRole);
     }
+    
+    createUserDto.typeUtilisateur = 'particulier';
+    createUserDto.provider = 'bourgad';
 
     try {
       await this.emailerService.sendEmail(
-        `${process.env['BOURGAD_MAIL_FROM']}`,
+        `${createUserDto.mail}`,
         "Un nouvel utilisateur vient de s'inscrire",
         `
         L'utilisateur ${createUserDto.firstname} ${createUserDto.lastname} vient de s'inscrire sur Bourgad.
@@ -150,7 +149,8 @@ export class UserService {
       console.error("Erreur lors de l'envoi de l'email d'inscription :", e);
     }
 
-    const user = this.userRepository.create(createUserDto);
+    const user = this.userRepository.save(createUserDto);
+
     return user;
   }
 }

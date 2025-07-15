@@ -12,11 +12,8 @@ export interface User extends Audited {
   password: string;
   phone?: string;
   typeUtilisateur: string;
-  registerDate: Date;
   presscardNumber?: string;
-  avatarId: number;
-  cityId: number;
-  title: string;
+  title?: string;
 
   verifiedMail: boolean;
   cguAccepted: boolean;
@@ -24,7 +21,7 @@ export interface User extends Audited {
 
   // Register by other provider
   provider: string;
-  providerId: string;
+  providerId?: string;
 
   city: City;
   avatar: Media;

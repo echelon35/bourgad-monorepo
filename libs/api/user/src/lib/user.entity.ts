@@ -2,6 +2,8 @@ import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany
 import { User } from '@bourgad-monorepo/model';
 import { RoleEntity } from './role/role.entity';
 import { CityEntity } from '@bourgad-monorepo/territory';
+import { MediaEntity } from '@bourgad-monorepo/media';
+import { OrganisationEntity } from '@bourgad-monorepo/organisation';
 
 @Entity('users')
 export class UserEntity implements User {
@@ -15,29 +17,23 @@ export class UserEntity implements User {
   mail: string;
   @Column({ name: 'password' })
   password: string;
-  @Column({ name: 'phone' })
-  phone?: string | undefined;
+  @Column({ name: 'phone', nullable: true })
+  phone?: string;
   @Column({ name: 'type_utilisateur' })
   typeUtilisateur: string;
-  @Column({ name: 'register_date' })
-  registerDate: Date;
-  @Column({ name: 'presscard_number' })
-  presscardNumber?: string | undefined;
-  @Column({ name: 'avatar_id' })
-  avatarId: number;
-  @Column({ name: 'city_id' })
-  cityId: number;
-  @Column({ name: 'title' })
-  title: string;
-  @Column({ name: 'verified_mail' })
+  @Column({ name: 'presscard_number', nullable: true })
+  presscardNumber?: string;
+  @Column({ name: 'title', nullable: true })
+  title?: string;
+  @Column({ name: 'verified_mail', default: false })
   verifiedMail: boolean;
-  @Column({ name: 'cgu_accepted' })
+  @Column({ name: 'cgu_accepted', default: false })
   cguAccepted: boolean;
-  @Column({ name: 'newsletter_accepted' })
+  @Column({ name: 'newsletter_accepted', default: false })
   newsletterAccepted: boolean;
   @Column({ name: 'provider' })
   provider: string;
-  @Column({ name: 'provider_id' })
+  @Column({ name: 'provider_id', nullable: true })
   providerId: string;
   @Column({ name: 'created_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
@@ -50,12 +46,12 @@ export class UserEntity implements User {
   @OneToMany(() => CityEntity, (city) => city.cityId)
   @JoinColumn({ name: 'city_id' })
   city: CityEntity;
-  @OneToOne(() => MediaEntity, (media) => media.id)
+  @OneToOne(() => MediaEntity, (media) => media.mediaId)
   @JoinColumn({ name: 'avatar_id' })
   avatar: MediaEntity;
   @ManyToOne(() => OrganisationEntity, (organisation) => organisation.organisationId, { nullable: true })
   @JoinColumn({ name: 'organisation_id' })
-  organisation?: OrganisationEntity | undefined;
+  organisation?: OrganisationEntity;
   @ManyToMany(() => RoleEntity)
   @JoinTable({ name: 'roles_users' })
   roles: RoleEntity[];
