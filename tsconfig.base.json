@@ -2,7 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "rootDir": ".",
-    "typeRoots": ["@types", "node"],
+    "typeRoots": ["@types", "node", "jest"],
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
@@ -32,6 +32,7 @@
       "@bourgad-monorepo/mail": ["libs/api/mail/src/index.ts"],
       "@bourgad-monorepo/media": ["libs/api/media/src/index.ts"],
       "@bourgad-monorepo/model": ["libs/shared/model/src/index"],
+      "@bourgad-monorepo/organisation": ["libs/api/organisation/src/index"],
       "@bourgad-monorepo/territory": ["libs/api/territory/src/index"],
       "@bourgad-monorepo/ui": ["libs/front/ui/src/index"],
       "@bourgad-monorepo/user": ["libs/api/user/src/index.ts"]

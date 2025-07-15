@@ -8,8 +8,7 @@ export interface Organisation {
     phone?: string;
     mail: string;
     website?: string;
-    organisationtypeId: number;
-    hours: JSON;
+    hours?: JSON;
 
     organisationType: OrganisationType;
 }
