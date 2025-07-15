@@ -2,7 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "rootDir": ".",
-    "typeRoots": ["@types"],
+    "typeRoots": ["@types", "node"],
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",

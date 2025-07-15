@@ -13,6 +13,7 @@ import {
   CategoryEntity,
   SubCategoryEntity,
 } from '@bourgad-monorepo/category';
+import { CoreModule } from '@bourgad-monorepo/core';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import {
     }),
     TerritoryModule,
     CategoryModule,
+    CoreModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.BOURGAD_HOST,

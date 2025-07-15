@@ -17,7 +17,6 @@ export interface User extends Audited {
   avatarId: number;
   cityId: number;
   title: string;
-  roleId: Role;
 
   verifiedMail: boolean;
   cguAccepted: boolean;
@@ -30,4 +29,5 @@ export interface User extends Audited {
   city: City;
   avatar: Media;
   organisation?: Organisation;
+  roles: Role[];
 }
