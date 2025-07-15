@@ -1,0 +1,20 @@
+{
+  "name": "mail",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/api/mail/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/api/mail",
+        "tsConfig": "libs/api/mail/tsconfig.lib.json",
+        "packageJson": "libs/api/mail/package.json",
+        "main": "libs/api/mail/src/index.ts",
+        "assets": ["libs/api/mail/*.md"]
+      }
+    }
+  }
+}
