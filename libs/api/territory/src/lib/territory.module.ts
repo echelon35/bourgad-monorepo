@@ -11,6 +11,6 @@ import { CityEntity } from './city/city.entity';
   imports: [TypeOrmModule.forFeature([DepartmentEntity, CityEntity]),],
   controllers: [CityController,DepartmentController],
   providers: [CityService,DepartmentService],
-  exports: [],
+  exports: [CityService],
 })
 export class TerritoryModule {}

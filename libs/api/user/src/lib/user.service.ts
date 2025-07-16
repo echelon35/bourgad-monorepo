@@ -7,6 +7,7 @@ import { EmailerService } from '@bourgad-monorepo/mail';
 import { User } from '@bourgad-monorepo/model';
 import { ConfigService } from '@nestjs/config';
 import { SignUpDto } from '@bourgad-monorepo/internal';
+import { CityService } from '@bourgad-monorepo/territory';
 
 @Injectable()
 export class UserService {
@@ -15,6 +16,7 @@ export class UserService {
     @InjectRepository(UserEntity) private userRepository: Repository<UserEntity>,
     @InjectRepository(RoleEntity) private roleRepository: Repository<RoleEntity>,
     private emailerService: EmailerService,
+    private cityService: CityService
   ) {}
 
   async findAll(): Promise<UserEntity[]> {
@@ -114,6 +116,17 @@ export class UserService {
     });
 
     return userCreated;
+  }
+
+  async changeTown(cityId: number, userId: number): Promise<boolean>{
+    const city = await this.cityService.getCityById(cityId);
+    if(city == null){
+      throw new Error(`Ville id ${cityId} non trouvée`)
+    }
+
+    const result = await this.userRepository.update(userId, { city: city});
+    return result.affected > 0;
+
   }
 
   async createUser(createUserDto: Partial<User>): Promise<User> {

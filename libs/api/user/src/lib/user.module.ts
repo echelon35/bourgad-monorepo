@@ -5,14 +5,16 @@ import { UserEntity } from './user.entity';
 import { RoleEntity } from './role/role.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { MailModule } from '@bourgad-monorepo/mail';
+import { UserController } from './user.controller';
+import { TerritoryModule } from '@bourgad-monorepo/territory';
 
 @Module({
-  controllers: [],
+  controllers: [UserController],
   imports: [TypeOrmModule.forFeature([UserEntity, RoleEntity]), MailModule, JwtModule.register({
         global: true,
         secret: process.env['BOURGAD_SECRET'],
         signOptions: { expiresIn: '36000s' },
-      }),],
+      }),TerritoryModule],
   providers: [UserService],
   exports: [UserService],
 })
