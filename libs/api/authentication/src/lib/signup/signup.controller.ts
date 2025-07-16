@@ -12,7 +12,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { SignUpService } from './signup.service';
-import { SignUpDto } from '@bourgad-monorepo/internal';
+import { ResendConfirmationMailDto, SignUpDto } from '@bourgad-monorepo/internal';
 import * as Express from 'express';
 
 @Controller()
@@ -21,11 +21,11 @@ export class SignUpController {
 
   @Post('resend-confirmation-mail')
   @Public()
-  async resendConfirmationEmail(@Query('mail') mail: string) {
+  async resendConfirmationEmail(@Query() params: ResendConfirmationMailDto) {
     try {
-      await this.signUpService.resendConfirmationEmail(mail);
+      await this.signUpService.resendConfirmationEmail(params.mail);
       return {
-        message: `Un nouveau lien de confirmation a été envoyé à l'adresse ${mail}.`,
+        message: `Un nouveau lien de confirmation a été envoyé à l'adresse ${params.mail}.`,
       };
     } catch (error: any) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
