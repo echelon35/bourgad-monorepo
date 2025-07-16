@@ -1,22 +1,25 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, ValidationPipe } from '@nestjs/common';
 import { CityService } from './city.service';
 import { CityEntity } from './city.entity';
+import { Public } from '@bourgad-monorepo/back-core';
+import { UpdateCityByDeptQueryDto, GetCityByIdParamDto } from '@bourgad-monorepo/internal';
 
 @Controller('city')
 export class CityController {
   constructor(private readonly cityService: CityService) {}
 
   @Get('update-cities')
+  @Public()
   async updateCities(
-    @Query('deptId') deptId: number,
+    @Query(new ValidationPipe({ transform: true })) query: UpdateCityByDeptQueryDto,
   ): Promise<{ success: boolean; message: string }> {
-    await this.cityService.updateCitiesFromDept(deptId);
+    await this.cityService.updateCitiesFromDept(query.deptId);
     return { success: true, message: 'Cities updated successfully' };
   }
 
   @Get('city/:id')
-  async getCityById(@Param('id') cityId: number): Promise<CityEntity | null> {
-    const city = await this.cityService.getCityById(cityId);
+  async getCityById(@Param() params: GetCityByIdParamDto): Promise<CityEntity | null> {
+    const city = await this.cityService.getCityById(params.cityId);
     return city;
   }
 

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Geometry } from 'geojson';
 import { CityEntity } from './city.entity';
 import { Repository } from 'typeorm';
+import { DepartmentEntity } from '../department/department.entity';
 
 interface ICityDto {
   properties: ICityProperties;
@@ -21,13 +22,15 @@ export class CityService {
   constructor(
     @InjectRepository(CityEntity)
     private readonly cityRepository: Repository<CityEntity>,
+    @InjectRepository(DepartmentEntity)
+    private readonly deptRepository: Repository<DepartmentEntity>,
   ) {}
 
   /**
    * Fetches cities from the French government API based on the department ID and saves them to the database.
    * @param deptId : The ID of the department to fetch cities for.
    */
-  async updateCitiesFromDept(deptId: number): Promise<void> {
+  async updateCitiesFromDept(deptId: string): Promise<void> {
     try {
       const response = await fetch(
         `https://geo.api.gouv.fr/communes?codeDepartement=${deptId}&format=geojson&geometry=contour`,
@@ -35,12 +38,19 @@ export class CityService {
       const data = await response.json();
       const features: ICityDto[] = data.features;
 
+      const dept = await this.deptRepository.findOneBy({ departmentId: deptId });
+
+      if(dept == null){
+        throw new Error('');
+      }
+
       await Promise.all(
         features.map(async (feature: ICityDto) => {
           console.log(
             `Feature: ${feature.properties.nom} (${feature.properties.code})`,
           );
           await this.cityRepository.save({
+            department: dept,
             cityId: feature.properties.code,
             name: feature.properties.nom,
             population: feature.properties.population,

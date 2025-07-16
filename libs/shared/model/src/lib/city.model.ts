@@ -7,6 +7,5 @@ export interface City {
     population: number;
     postalCodes: string[];
     surface: Geometry;
-    departmentId: number;
     department: Department;
 }

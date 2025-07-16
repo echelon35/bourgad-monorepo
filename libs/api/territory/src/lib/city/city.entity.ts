@@ -5,8 +5,6 @@ import { City } from '@bourgad-monorepo/model';
 
 @Entity('cities')
 export class CityEntity implements City {
-  @Column({ name: 'department_id' })
-  departmentId: number;
   @PrimaryColumn({ name: 'city_id' })
   cityId: string;
   @Column({ name: 'name' })
@@ -20,6 +18,6 @@ export class CityEntity implements City {
   @Column({ name: 'postal_codes', array: true, type: 'text' })
   postalCodes: string[]; // Array of postal codes
   @ManyToOne(() => DepartmentEntity, (department) => department.departmentId)
-  @JoinColumn({ name: 'department' })
+  @JoinColumn({ name: 'department_id' })
   department: DepartmentEntity;
 }

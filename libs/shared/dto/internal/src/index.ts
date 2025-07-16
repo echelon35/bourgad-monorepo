@@ -3,3 +3,5 @@ export * from './lib/login.dto';
 export * from './lib/changePassword.dto';
 export * from './lib/googleLogin.dto';
 export * from './lib/media.dto';
+export * from './lib/territory/city/getCityByIdParam.dto';
+export * from './lib/territory/city/updateCityByDeptQuery.dto';
