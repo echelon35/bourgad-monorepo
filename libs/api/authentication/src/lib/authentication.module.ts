@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity, UserModule } from '@bourgad-monorepo/user';
-import { LoginController } from './login/login.controller';
-import { LoginService } from './login/login.service';
+import { LoginService } from './application/login.service';
 import { MediaModule } from '@bourgad-monorepo/media';
-import { SignUpService } from './signup/signup.service';
-import { SignUpController } from './signup/signup.controller';
+import { SignUpService } from './application/signup.service';
 import { MailModule } from '@bourgad-monorepo/mail';
-import { JwtStrategy } from './strategy/jwt.strategy';
-import { GoogleLoginStrategy } from './strategy/google-login.strategy';
-import { GoogleSigninStrategy } from './strategy/google-signin.strategy';
-import { GoogleStrategy } from './strategy/google.strategy';
-import { LocalStrategy } from './strategy/local.strategy';
+import { JwtStrategy } from './infrastructure/strategy/jwt.strategy';
+import { GoogleLoginStrategy } from './infrastructure/strategy/google-login.strategy';
+import { GoogleSigninStrategy } from './infrastructure/strategy/google-signin.strategy';
+import { GoogleStrategy } from './infrastructure/strategy/google.strategy';
+import { LocalStrategy } from './infrastructure/strategy/local.strategy';
+import { SignUpController } from './controller/signup.controller';
+import { LoginController } from './controller/login.controller';
 
 @Module({
   imports: [

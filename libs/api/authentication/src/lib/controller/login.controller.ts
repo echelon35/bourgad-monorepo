@@ -10,10 +10,10 @@ import {
   HttpException,
   Query,
 } from '@nestjs/common';
-import { LoginService } from './login.service';
 import { LocalAuthGuard, Public } from '@bourgad-monorepo/back-core';
 import * as express from 'express';
 import { ChangePasswordDto } from '@bourgad-monorepo/internal';
+import { LoginService } from '../application/login.service';
 
 @Controller()
 export class LoginController {

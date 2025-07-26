@@ -11,9 +11,9 @@ import {
   HttpException,
   Query,
 } from '@nestjs/common';
-import { SignUpService } from './signup.service';
 import { ResendConfirmationMailDto, SignUpDto } from '@bourgad-monorepo/internal';
 import * as Express from 'express';
+import { SignUpService } from '../application/signup.service';
 
 @Controller()
 export class SignUpController {
