@@ -1,11 +1,11 @@
 import { SignUpDto, GoogleLoginDto, MediaDto } from "@bourgad-monorepo/internal";
-import { MediaService } from "@bourgad-monorepo/media";
+import { MediaService } from "@bourgad-monorepo/api/media";
 import { User } from "@bourgad-monorepo/model";
-import { UserService } from "@bourgad-monorepo/user";
+import { UserService } from "@bourgad-monorepo/api/user";
 import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import * as jwt from "jsonwebtoken";
-import { EmailerService } from "@bourgad-monorepo/mail";
+import { EmailerService } from "@bourgad-monorepo/api/mail";
 
 @Injectable()
 export class SignUpService {

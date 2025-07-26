@@ -1,5 +1,5 @@
 {
-  "name": "@bourgad-monorepo/authentication",
+  "name": "@bourgad-monorepo/api/authentication",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",

@@ -7,19 +7,19 @@ import {
   TerritoryModule,
   CityEntity,
   DepartmentEntity,
-} from '@bourgad-monorepo/territory';
+} from '@bourgad-monorepo/api/territory';
 import {
   CategoryModule,
   CategoryEntity,
   SubCategoryEntity,
-} from '@bourgad-monorepo/category';
-import { CoreModule } from '@bourgad-monorepo/back-core';
-import { AuthenticationModule } from '@bourgad-monorepo/authentication';
-import { MediaEntity, MediaModule } from '@bourgad-monorepo/media';
-import { UserEntity, UserModule, RoleEntity } from '@bourgad-monorepo/user';
-import { OrganisationEntity, OrganisationTypeEntity } from '@bourgad-monorepo/organisation';
+} from '@bourgad-monorepo/api/category';
+import { CoreModule } from '@bourgad-monorepo/api/core';
+import { AuthenticationModule } from '@bourgad-monorepo/api/authentication';
+import { MediaEntity, MediaModule } from '@bourgad-monorepo/api/media';
+import { UserEntity, UserModule, RoleEntity } from '@bourgad-monorepo/api/user';
+import { OrganisationEntity, OrganisationTypeEntity } from '@bourgad-monorepo/api/organisation';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard, RolesGuard } from '@bourgad-monorepo/back-core';
+import { JwtAuthGuard, RolesGuard } from '@bourgad-monorepo/api/core';
 
 @Module({
   imports: [

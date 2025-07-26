@@ -10,7 +10,7 @@ import {
   HttpException,
   Query,
 } from '@nestjs/common';
-import { LocalAuthGuard, Public } from '@bourgad-monorepo/back-core';
+import { LocalAuthGuard, Public } from '@bourgad-monorepo/api/core';
 import * as express from 'express';
 import { ChangePasswordDto } from '@bourgad-monorepo/internal';
 import { LoginService } from '../application/login.service';

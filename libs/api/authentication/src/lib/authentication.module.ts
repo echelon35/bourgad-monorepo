@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity, UserModule } from '@bourgad-monorepo/user';
+import { UserEntity, UserModule } from '@bourgad-monorepo/api/user';
 import { LoginService } from './application/login.service';
-import { MediaModule } from '@bourgad-monorepo/media';
+import { MediaModule } from '@bourgad-monorepo/api/media';
 import { SignUpService } from './application/signup.service';
-import { MailModule } from '@bourgad-monorepo/mail';
+import { MailModule } from '@bourgad-monorepo/api/mail';
 import { JwtStrategy } from './infrastructure/strategy/jwt.strategy';
 import { GoogleLoginStrategy } from './infrastructure/strategy/google-login.strategy';
 import { GoogleSigninStrategy } from './infrastructure/strategy/google-signin.strategy';

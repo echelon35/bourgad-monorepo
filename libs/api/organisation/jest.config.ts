@@ -1,5 +1,5 @@
 export default {
-  displayName: 'organisation',
+  displayName: 'api/organisation',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {

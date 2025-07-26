@@ -3,7 +3,7 @@ import { Strategy, StrategyOptions, VerifyCallback } from 'passport-google-oauth
 import { config } from 'dotenv';
 
 import { Injectable } from '@nestjs/common';
-import { UserService } from '@bourgad-monorepo/user';
+import { UserService } from '@bourgad-monorepo/api/user';
 
 config();
 

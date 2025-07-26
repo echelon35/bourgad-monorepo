@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Query, ValidationPipe } from '@nestjs/common';
 import { CityService } from './city.service';
 import { CityEntity } from './city.entity';
-import { Public } from '@bourgad-monorepo/back-core';
+import { Public } from '@bourgad-monorepo/api/core';
 import { UpdateCityByDeptQueryDto, GetCityByIdParamDto } from '@bourgad-monorepo/internal';
 
 @Controller('city')

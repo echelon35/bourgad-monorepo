@@ -1,11 +1,11 @@
-# territory
+# api/territory
 
 This library was generated with [Nx](https://nx.dev).
 
 ## Building
 
-Run `nx build territory` to build the library.
+Run `nx build api/territory` to build the library.
 
 ## Running unit tests
 
-Run `nx test territory` to execute the unit tests via [Jest](https://jestjs.io).
+Run `nx test api/territory` to execute the unit tests via [Jest](https://jestjs.io).

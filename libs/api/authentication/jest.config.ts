@@ -1,5 +1,5 @@
 export default {
-  displayName: 'authentication',
+  displayName: 'api/authentication',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {

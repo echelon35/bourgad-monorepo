@@ -3,7 +3,7 @@ import { MediaEntity } from './media.entity';
 import { Repository } from 'typeorm';
 import { MediaDto } from '@bourgad-monorepo/internal';
 import { Injectable } from '@nestjs/common';
-import { EmailerService } from '@bourgad-monorepo/mail';
+import { EmailerService } from '@bourgad-monorepo/api/mail';
 
 @Injectable()
 export class MediaService {

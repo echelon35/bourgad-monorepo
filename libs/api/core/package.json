@@ -1,5 +1,5 @@
 {
-  "name": "@bourgad-monorepo/back-core",
+  "name": "@bourgad-monorepo/api/core",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",

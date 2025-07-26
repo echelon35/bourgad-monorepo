@@ -1,5 +1,5 @@
 {
-  "name": "@bourgad-monorepo/territory",
+  "name": "@bourgad-monorepo/api/territory",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",

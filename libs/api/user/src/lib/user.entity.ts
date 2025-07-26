@@ -1,9 +1,9 @@
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from '@bourgad-monorepo/model';
 import { RoleEntity } from './role/role.entity';
-import { CityEntity } from '@bourgad-monorepo/territory';
-import { MediaEntity } from '@bourgad-monorepo/media';
-import { OrganisationEntity } from '@bourgad-monorepo/organisation';
+import { CityEntity } from '@bourgad-monorepo/api/territory';
+import { MediaEntity } from '@bourgad-monorepo/api/media';
+import { OrganisationEntity } from '@bourgad-monorepo/api/organisation';
 
 @Entity('users')
 export class UserEntity implements User {

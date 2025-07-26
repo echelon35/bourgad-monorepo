@@ -1,5 +1,5 @@
 export default {
-  displayName: 'media',
+  displayName: 'api/media',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {

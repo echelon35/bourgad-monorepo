@@ -5,8 +5,8 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
-import { EmailerService } from '@bourgad-monorepo/mail';
-import { UserService } from '@bourgad-monorepo/user';
+import { EmailerService } from '@bourgad-monorepo/api/mail';
+import { UserService } from '@bourgad-monorepo/api/user';
 import { ChangePasswordDto, GoogleLoginDto, LoginDto } from '@bourgad-monorepo/internal';
 import * as bcrypt from 'bcrypt';
 

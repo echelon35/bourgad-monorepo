@@ -1,5 +1,5 @@
 {
-  "name": "@bourgad-monorepo/mail",
+  "name": "@bourgad-monorepo/api/mail",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",

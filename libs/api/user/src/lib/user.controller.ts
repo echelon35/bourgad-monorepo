@@ -1,7 +1,7 @@
 import { Controller, HttpException, HttpStatus, Post, Query, Request } from "@nestjs/common";
 import { UserService } from "./user.service";
 import * as Express from 'express';
-import { Public } from '@bourgad-monorepo/back-core';
+import { Public } from '@bourgad-monorepo/api/core';
 
 @Controller('user')
 export class UserController {

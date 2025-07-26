@@ -1,5 +1,5 @@
 export default {
-  displayName: 'territory',
+  displayName: 'api/territory',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {

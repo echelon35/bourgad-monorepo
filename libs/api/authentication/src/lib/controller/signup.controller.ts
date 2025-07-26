@@ -1,4 +1,4 @@
-import { GoogleSigninGuard, Public } from '@bourgad-monorepo/back-core';
+import { GoogleSigninGuard, Public } from '@bourgad-monorepo/api/core';
 import {
   Controller,
   Post,

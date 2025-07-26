@@ -1,5 +1,5 @@
 {
-  "name": "territory",
+  "name": "api/territory",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "/libs/api/territory/src",
   "projectType": "library",

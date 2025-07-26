@@ -3,11 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
 import { RoleEntity } from './role/role.entity';
 import { Repository } from 'typeorm';
-import { EmailerService } from '@bourgad-monorepo/mail';
+import { EmailerService } from '@bourgad-monorepo/api/mail';
 import { User } from '@bourgad-monorepo/model';
 import { ConfigService } from '@nestjs/config';
 import { SignUpDto } from '@bourgad-monorepo/internal';
-import { CityService } from '@bourgad-monorepo/territory';
+import { CityService } from '@bourgad-monorepo/api/territory';
 
 @Injectable()
 export class UserService {

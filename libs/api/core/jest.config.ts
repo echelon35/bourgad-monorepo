@@ -1,5 +1,5 @@
 export default {
-  displayName: 'back-core',
+  displayName: 'api/core',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {

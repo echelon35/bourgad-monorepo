@@ -1,5 +1,5 @@
 {
-  "name": "organisation",
+  "name": "api/organisation",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/api/organisation/src",
   "projectType": "library",

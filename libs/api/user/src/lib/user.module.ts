@@ -4,9 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
 import { RoleEntity } from './role/role.entity';
 import { JwtModule } from '@nestjs/jwt';
-import { MailModule } from '@bourgad-monorepo/mail';
+import { MailModule } from '@bourgad-monorepo/api/mail';
 import { UserController } from './user.controller';
-import { TerritoryModule } from '@bourgad-monorepo/territory';
+import { TerritoryModule } from '@bourgad-monorepo/api/territory';
 
 @Module({
   controllers: [UserController],

@@ -1,5 +1,5 @@
 {
-  "name": "category",
+  "name": "api/category",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "/libs/api/category/src",
   "projectType": "library",
