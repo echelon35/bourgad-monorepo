@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { CategoryService } from './category.service';
-import { CategoryEntity } from './category.entity';
-import { SubCategoryEntity } from '../subcategory/subcategory.entity';
+import { CategoryService } from '../application/category.service';
+import { CategoryEntity } from '../infrastructure/category.entity';
+import { SubCategoryEntity } from '../infrastructure/subcategory.entity';
 
 @Controller('category')
 export class CategoryController {

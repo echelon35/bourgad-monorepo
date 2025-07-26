@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CategoryEntity } from './category/category.entity';
-import { SubCategoryEntity } from './subcategory/subcategory.entity';
-import { CategoryController } from './category/category.controller';
-import { CategoryService } from './category/category.service';
+import { CategoryEntity } from './infrastructure/category.entity';
+import { CategoryService } from './application/category.service';
+import { SubCategoryEntity } from './infrastructure/subcategory.entity';
+import { CategoryController } from './controller/category.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([CategoryEntity, SubCategoryEntity])],

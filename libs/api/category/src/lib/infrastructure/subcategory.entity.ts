@@ -5,7 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { CategoryEntity } from '../category/category.entity';
+import { CategoryEntity } from '../infrastructure/category.entity';
 import { Subcategory } from '@bourgad-monorepo/model';
 
 @Entity('subcategories')
