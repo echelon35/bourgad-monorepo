@@ -20,11 +20,12 @@ import { UserEntity, UserModule, RoleEntity } from '@bourgad-monorepo/api/user';
 import { OrganisationEntity, OrganisationTypeEntity } from '@bourgad-monorepo/api/organisation';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard, RolesGuard } from '@bourgad-monorepo/api/core';
+import { SeedModule } from '@bourgad-monorepo/api/seed';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: './.env',
+      envFilePath: 'apps/bourgad-api/.env',
       isGlobal: true,
     }),
     TerritoryModule,
@@ -32,6 +33,7 @@ import { JwtAuthGuard, RolesGuard } from '@bourgad-monorepo/api/core';
     CoreModule,
     MediaModule,
     UserModule,
+    SeedModule,
     AuthenticationModule,
     TypeOrmModule.forRoot({
       type: 'postgres',

@@ -1,0 +1,27 @@
+{
+  "name": "api/seed",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/api/seed/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/api/seed",
+        "tsConfig": "libs/api/seed/tsconfig.lib.json",
+        "packageJson": "libs/api/seed/package.json",
+        "main": "libs/api/seed/src/index.ts",
+        "assets": ["libs/api/seed/*.md"]
+      }
+    },
+    "seed": {
+      "executor": "@nx/js:ts-node",
+      "options": {
+        "main": "libs/seed/src/main.ts",
+        "tsConfig": "libs/seed/tsconfig.lib.json"
+      }
+    }
+  }
+}
