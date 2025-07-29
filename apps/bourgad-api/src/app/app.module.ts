@@ -54,7 +54,7 @@ import { SeedModule } from '@bourgad-monorepo/api/seed';
         UserEntity
       ],
       synchronize: true,
-      // logging: true,
+      logging: true,
     }),
   ],
   controllers: [AppController],

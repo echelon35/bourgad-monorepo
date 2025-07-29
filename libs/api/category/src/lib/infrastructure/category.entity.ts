@@ -1,9 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 import { Category } from '@bourgad-monorepo/model';
 
 @Entity('categories')
 export class CategoryEntity implements Category {
-  @PrimaryGeneratedColumn({ name: 'category_id' })
+  @PrimaryColumn({ name: 'category_id' })
   categoryId!: number;
   @Column({ name: 'name', nullable: false })
   name: string;

@@ -3,14 +3,14 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,
+  PrimaryColumn
 } from 'typeorm';
 import { CategoryEntity } from '../infrastructure/category.entity';
 import { Subcategory } from '@bourgad-monorepo/model';
 
 @Entity('subcategories')
 export class SubCategoryEntity implements Subcategory {
-  @PrimaryGeneratedColumn({ name: 'subcategory_id' })
+  @PrimaryColumn({ name: 'subcategory_id' })
   subcategoryId: number;
   @Column({ name: 'category_id' })
   categoryId: number;

@@ -1,6 +1,6 @@
 import { Category } from "@bourgad-monorepo/model";
 
-export const Categories : Category[] = [
+export const CategoriesDto : Category[] = [
     {
         "categoryId": 1,
         "name": "Patrimoine local",

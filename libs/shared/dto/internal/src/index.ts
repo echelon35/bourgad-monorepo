@@ -7,3 +7,4 @@ export * from './lib/auth/token.dto';
 export * from './lib/territory/city/getCityByIdParam.dto';
 export * from './lib/territory/city/updateCityByDeptQuery.dto';
 export * from './lib/auth/resendConfirmationMail.dto';
+export * from './lib/subcategories/AddSubcategory.dto';
