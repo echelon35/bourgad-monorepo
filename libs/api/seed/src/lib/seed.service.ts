@@ -1,28 +1,41 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CategoryEntity } from '@bourgad-monorepo/api/category';
+import { CategoryEntity, SubCategoryEntity } from '@bourgad-monorepo/api/category';
 import { CityEntity, DepartmentEntity } from '@bourgad-monorepo/api/territory';
 import { Category } from '@bourgad-monorepo/model';
 import { CategoriesDto } from './data/categories.dto';
+import { SubcategoriesDto } from './data/subcategories.dto';
 import { CityDto, DepartmentDto } from '@bourgad-monorepo/external';
+import { AddSubcategoryDto } from '@bourgad-monorepo/internal';
 
 @Injectable()
 export class SeedService {
   constructor(
     @InjectRepository(CategoryEntity)
     private readonly categoryRepository: Repository<CategoryEntity>,
+    @InjectRepository(SubCategoryEntity)
+    private readonly subcategoryRepository: Repository<SubCategoryEntity>,
     @InjectRepository(DepartmentEntity)
     private readonly departmentRepository: Repository<DepartmentEntity>,
     @InjectRepository(CityEntity)
     private readonly cityRepository: Repository<CityEntity>,
   ) {}
 
+  /** Seed categories from JSON */
   async seedCategories(){
     await this.categoryRepository.query("TRUNCATE TABLE categories CASCADE");
 
     const categories: Category[] = CategoriesDto;
     await this.categoryRepository.save(categories);
+  }
+
+  /** Seed subcategories from JSON */
+  async seedSubcategories(){
+    await this.subcategoryRepository.query("TRUNCATE TABLE subcategories CASCADE");
+
+    const subcategories: AddSubcategoryDto[] = SubcategoriesDto;
+    await this.subcategoryRepository.save(subcategories);
   }
 
   /**
