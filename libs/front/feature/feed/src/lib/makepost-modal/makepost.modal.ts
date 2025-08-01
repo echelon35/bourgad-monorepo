@@ -23,31 +23,6 @@ export class MakePostModal {
     dropdownSubCategories: DropdownItem[] = [];
     categories: Category[] = [];
     subcategories: Subcategory[] = [];
-    // categories: Category[] = [
-    //     { category_id: 1, name: 'Patrimoine local', description: 'Partagez sur le patrimoine, souvenir, coutumes et traditions', icon: new Picture(1,'https://bourgad.s3.fr-par.scw.cloud/assets/patrimoine.svg') },
-    //     { category_id: 2, name: 'Services et conseils', description: 'Les événements à venir', icon: new Picture(2,'https://bourgad.s3.fr-par.scw.cloud/assets/service.svg') },
-    //     { category_id: 3, name: 'Evènements', description: 'Posez vos questions', icon: new Picture(3,'https://bourgad.s3.fr-par.scw.cloud/assets/evenement.svg') },
-    //     { category_id: 4, name: 'Emploi et carrière', description: 'Tout le reste', icon: new Picture(4,'https://bourgad.s3.fr-par.scw.cloud/assets/carriere.svg') },
-    //     { category_id: 5, name: 'Santé et bien-être', description: 'Tout le reste', icon: new Picture(5,'https://bourgad.s3.fr-par.scw.cloud/assets/sante.svg') },
-    //     { category_id: 6, name: 'Jeunesse et puériculture', description: 'Tout le reste', icon: new Picture(6,'https://bourgad.s3.fr-par.scw.cloud/assets/jeunesse.svg') },
-    //     { category_id: 7, name: 'Nature et animaux', description: 'Tout le reste', icon: new Picture(7,'https://bourgad.s3.fr-par.scw.cloud/assets/nature.svg') },
-    //     { category_id: 8, name: 'Travaux et perturbations', description: 'Tout le reste', icon: new Picture(8,'https://bourgad.s3.fr-par.scw.cloud/assets/travaux.svg') },
-    // ];
-
-    // subcategories: SubCategory[] = [
-    //     {
-    //         id: 1, name: 'Traditions et coutumes', description: 'Les dernières nouvelles de votre quartier', icon: new Picture(1, '📰'), category: this.categories.filter(item => item.name == 'Patrimoine local')[0],
-    //         category_id: 0
-    //     },
-    //     {
-    //         id: 2, name: 'Photos et souvenirs locaux', description: 'Les dernières nouvelles de votre quartier', icon: new Picture(2, '📰'), category: this.categories.filter(item => item.name == 'Patrimoine local')[0],
-    //         category_id: 0
-    //     },
-    //     {
-    //         id: 3, name: 'Musées et expositions', description: 'Les dernières nouvelles de votre quartier', icon: new Picture(3, '📰'), category: this.categories.filter(item => item.name == 'Patrimoine local')[0],
-    //         category_id: 0
-    //     },
-    // ]
 
     selectedCategory: Category | null = null;
     selectedSubCategory: Subcategory | null = null;
@@ -63,6 +38,7 @@ export class MakePostModal {
     constructor() {
         this.categoryApiService.getCategories().subscribe(cats => {
             this.categories = cats;
+            console.log(cats);
             this.feedDropdownCategories();
         });
         this.placeholder = (this.userStore.city?.() != null) ? `${this.userStore.firstname?.()}, que souhaitez-vous partager à ${this.userStore.city()?.name} ?` : `${this.userStore.firstname?.()}, que souhaitez-vous partager dans votre Bourgade ?`;

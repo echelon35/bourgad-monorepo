@@ -35,6 +35,7 @@ export class DropdownComponent {
     }
   }
   selectItem(item: DropdownItem) {
+    console.log(item.icon);
     const dropdown = document.getElementById(`dropdownBtn-${this.name}`);
     if (dropdown) {
       dropdown.innerHTML = (item.icon ? `<img src="${item.icon}" alt="${item.label}" class="size-6 mx-1 text-primary-bourgad">` : '');
