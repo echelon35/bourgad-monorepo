@@ -15,7 +15,8 @@ export class CategoryService {
 
   async getCategories(): Promise<CategoryEntity[]> {
     return await this.categoryRepository.query(
-      `SELECT * FROM categories ORDER BY name`,
+      `SELECT "name","description", "background_url" as "backgroundUrl", "icon_url" as "iconUrl", 
+      "tag_class" as "tagClass" FROM categories ORDER BY name`,
     );
   }
 
