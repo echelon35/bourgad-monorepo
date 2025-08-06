@@ -36,7 +36,7 @@ export class SignUpController {
   @Public()
   async signUp(@Body() createUserDto: SignUpDto) {
     try {
-      return await this.signUpService.register(createUserDto);
+      return await this.signUpService.signUp(createUserDto);
     } catch (error: any) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
@@ -67,7 +67,7 @@ export class SignUpController {
   @UseGuards(GoogleSigninGuard)
   async googleSignInRedirect(@Request() req: Express.Request, @Response() res: Express.Response) {
     try {
-      const user = await this.signUpService.googleRegister(req.user);
+      const user = await this.signUpService.googleSignup(req.user);
       const mail = user?.mail;
       return res.redirect(
         `${process.env['BOURGAD_FRONT_BASE_URI']}?mail=${mail}`,

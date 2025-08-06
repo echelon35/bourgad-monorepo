@@ -1,7 +1,6 @@
-import { User } from '@bourgad-monorepo/model';
-import { IsNotEmpty, IsEmail, IsBoolean, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsEmail, IsBoolean, IsOptional, IsStrongPassword } from 'class-validator';
 
-export class SignUpDto implements Partial<User> {
+export class SignUpDto {
   @IsNotEmpty()
   firstname: string;
   @IsNotEmpty()
@@ -10,11 +9,11 @@ export class SignUpDto implements Partial<User> {
   @IsNotEmpty()
   mail: string;
   @IsNotEmpty()
+  @IsStrongPassword()
   password: string;
 
   @IsBoolean()
-  @IsOptional()
-  cguAccepted?: boolean;
+  cguAccepted: boolean;
   @IsBoolean()
   @IsOptional()
   newsletterAccepted?: boolean;

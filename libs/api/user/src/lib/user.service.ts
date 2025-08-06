@@ -135,7 +135,7 @@ export class UserService {
       where: [{ mail: createUserDto.mail }],
     });
     if (userExists) {
-      throw new ConflictException('Adresse email déjà utilisé');
+      throw new ConflictException('Adresse email déjà utilisée');
     }
 
     createUserDto.roles = [];

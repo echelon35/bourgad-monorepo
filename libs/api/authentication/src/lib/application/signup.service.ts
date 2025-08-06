@@ -5,6 +5,7 @@ import { UserService } from "@bourgad-monorepo/api/user";
 import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import * as jwt from "jsonwebtoken";
+import * as bcrypt from 'bcryptjs';
 import { EmailerService } from "@bourgad-monorepo/api/mail";
 
 @Injectable()
@@ -14,9 +15,14 @@ export class SignUpService {
     private mailService: EmailerService,
     private configService: ConfigService) {}
 
-  async register(createUserDto: SignUpDto): Promise<User> {
-    const user = await this.userService.createUser(createUserDto);
-    return user;
+  async signUp(createUserDto: SignUpDto): Promise<User> {
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    const user = {
+      ...createUserDto,
+      password: hashedPassword
+    };
+    const createdUser = await this.userService.createUser(user);
+    return createdUser;
   }
 
   async resendConfirmationEmail(mail: string): Promise<void> {
@@ -42,7 +48,7 @@ export class SignUpService {
     await this.mailService.sendConfirmationMail(user.mail, confirmationUrl);
   }
 
-  async googleRegister(googleLogin: GoogleLoginDto): Promise<any> {
+  async googleSignup(googleLogin: GoogleLoginDto): Promise<any> {
     const userExists = await this.userService.findOne(googleLogin.mail);
     if (userExists) {
       throw new ConflictException(
