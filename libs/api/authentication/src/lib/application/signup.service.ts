@@ -15,6 +15,20 @@ export class SignUpService {
     private mailService: EmailerService,
     private configService: ConfigService) {}
 
+  async sendRegisterMail(user: User){
+    const bourgadSecret = this.configService.get<string>('BOURGAD_SECRET');
+    if(!bourgadSecret) {
+      throw new Error('BOURGAD_SECRET is not defined in the environment variables');
+    }
+    const newToken = jwt.sign(
+      { id: user.userId, mail: user.mail },
+      bourgadSecret,
+      { expiresIn: '1h' },
+    );
+    const confirmationUrl = `${process.env["BOURGAD_FRONT_BASE_URI"]}/confirm-email?token=${encodeURIComponent(newToken)}`;
+    await this.mailService.sendConfirmationMail(user.mail, confirmationUrl);
+  }
+
   async signUp(createUserDto: SignUpDto): Promise<User> {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
     const user = {
@@ -22,6 +36,8 @@ export class SignUpService {
       password: hashedPassword
     };
     const createdUser = await this.userService.createUser(user);
+    await this.sendRegisterMail(createdUser);
+
     return createdUser;
   }
 
@@ -31,21 +47,8 @@ export class SignUpService {
       throw new Error('Aucun utilisateur trouvé');
     }
 
-    const bourgadSecret = this.configService.get<string>('BOURGAD_SECRET');
+    await this.sendRegisterMail(user);
 
-    if(!bourgadSecret) {
-      throw new Error('BOURGAD_SECRET is not defined in the environment variables');
-    }
-
-    const newToken = jwt.sign(
-      { id: user.userId, mail: user.mail },
-      bourgadSecret,
-      { expiresIn: '1h' },
-    );
-
-    // Envoyer le nouveau lien de confirmation par email
-    const confirmationUrl = `${process.env["BOURGAD_FRONT_BASE_URI"]}/confirm-email?token=${encodeURIComponent(newToken)}`;
-    await this.mailService.sendConfirmationMail(user.mail, confirmationUrl);
   }
 
   async googleSignup(googleLogin: GoogleLoginDto): Promise<any> {
