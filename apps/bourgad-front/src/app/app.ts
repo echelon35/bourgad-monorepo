@@ -3,11 +3,12 @@ import { RouterOutlet } from '@angular/router';
 import { UserStore } from '@bourgad-monorepo/core';
 import { User } from '@bourgad-monorepo/model';
 import { GeoApiService } from '@bourgad-monorepo/core';
+import { ToastrComponent } from '@bourgad-monorepo/ui';
 
 @Component({
     selector: 'bgd-root',
     templateUrl: './app.html',
-    imports: [RouterOutlet],
+    imports: [RouterOutlet, ToastrComponent],
     standalone: true
 })
 export class App {

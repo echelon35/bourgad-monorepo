@@ -5,3 +5,5 @@ export * from './lib/components/map/map.component';
 export * from './lib/components/searchPlace/searchPlace.modal';
 export * from './lib/components/spinner/spinner.component';
 export * from './lib/components/post/post.component';
+export * from './lib/components/toastr/toastr.component';
+export * from './lib/services/toastr.service';
