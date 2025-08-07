@@ -62,7 +62,7 @@ export class AuthenticationApiService {
     }
 
     public login(userDto: LoginDto): Observable<TokenDto>{
-        return this.http.post<TokenDto>(this.API_URL + '/auth/login',userDto,this.httpOptions)
+        return this.http.post<TokenDto>(this.API_URL + '/login',userDto,this.httpOptions)
     }
 
     public resend(mail: string): Observable<string>{

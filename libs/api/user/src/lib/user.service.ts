@@ -148,7 +148,6 @@ export class UserService {
     }
     
     createUserDto.typeUtilisateur = 'particulier';
-    createUserDto.provider = 'bourgad';
 
     try {
       await this.emailerService.sendEmail(

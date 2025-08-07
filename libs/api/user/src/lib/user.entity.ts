@@ -31,7 +31,7 @@ export class UserEntity implements User {
   cguAccepted: boolean;
   @Column({ name: 'newsletter_accepted', default: false })
   newsletterAccepted: boolean;
-  @Column({ name: 'provider' })
+  @Column({ name: 'provider', default: 'LOCAL' })
   provider: string;
   @Column({ name: 'provider_id', nullable: true })
   providerId: string;
