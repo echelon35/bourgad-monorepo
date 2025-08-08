@@ -102,11 +102,12 @@ export class SignUpService {
       bourgadSecret,
     ) as jwt.JwtPayload;
 
-    if (payload["id"] == null) {
+    const userId = payload["id"];
+    if (userId == null) {
       throw new UnauthorizedException('Token incorrect');
     }
 
-    const user = await this.userService.findOneByPk(payload["id"]);
+    const user = await this.userService.findOneByPk(userId);
     if (!user) {
       throw new Error('Utilisateur non trouvé');
     }

@@ -66,7 +66,7 @@ export class AuthenticationApiService {
     }
 
     public resend(mail: string): Observable<string>{
-        return this.http.post<string>(this.API_URL + '/auth/resend-confirmation-email?mail=' + mail,this.httpOptions);
+        return this.http.post<string>(this.API_URL + '/resend-confirmation-mail?mail=' + mail,this.httpOptions);
     }
 
     public signUp(createUserDto: SignUpDto): Observable<User>{
@@ -75,7 +75,7 @@ export class AuthenticationApiService {
     }
 
     public confirm(token: string){
-        return this.http.get<User>(this.API_URL + '/auth/confirm-email?token=' + token,this.httpOptions)
+        return this.http.get<User>(this.API_URL + '/confirm-email?token=' + token,this.httpOptions)
     }
 
     public checkExpiration(){

@@ -1,0 +1,33 @@
+<div class="absolute h-full w-full bg-[url(/assets/village.webp)] bg-cover z-0">
+</div>
+<div class="relative flex h-screen z-10 bg-primary-bourgad/80">
+    <div class="my-auto border-2 border-gray-300 mx-auto w-full max-w-md rounded-md p-10 bg-gray-900/80">
+        <div class="flex justify-center">
+            <img class="h-20 text-center" src="/assets/bourgad_dark.svg" alt="Logo Bourgad">
+        </div>
+        @if(this.loading){
+            <div class="mt-4 flex justify-center">
+                <bgd-spinner></bgd-spinner>
+            </div>
+        }
+        @else if(this.message !== ''){
+            <div class="mt-5 mb-2 text-center space-y-6">
+                <h1 class="text-white">{{this.message}}</h1>
+                <button (click)="goLogin()" type="button" class="rounded-md bg-white/10 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-white/20">Se connecter</button>
+            </div>
+        }
+        @else if(this.error !== ''){
+            <div class="mt-5 mb-2 text-center">
+                <h1 class="text-red-400">{{this.error}}</h1>
+                <form class="space-y-6" [formGroup]="resendForm" (ngSubmit)="resend()">
+                    <input placeholder="Email" formControlName="mail" type="email" required  class="mt-2 block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm/6">
+                    @if(mailFormField?.invalid){
+                        <div class="text-red-400 text-sm" [innerHTML]="this.errorMessage">
+                        </div>
+                    }
+                    <button class="rounded-md bg-white/10 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-white/20">Renvoyer un lien</button>
+                </form>
+            </div>
+        }
+    </div>
+</div>

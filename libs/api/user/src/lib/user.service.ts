@@ -48,7 +48,7 @@ export class UserService {
             .createQueryBuilder('user')
             .where({
               mail: `${mail}`,
-              isEmailVerified: verified,
+              verifiedMail: verified,
             })
             .leftJoinAndSelect('user.roles', 'roles')
             .getOne()
