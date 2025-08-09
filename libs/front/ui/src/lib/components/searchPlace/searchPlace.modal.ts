@@ -32,6 +32,8 @@ export class SearchPlace implements OnInit {
     public townList: PlaceDto[] = [];
     @Input() areaMap?: L.Map;
     @Input() senseOfResults: SenseOfResults = SenseOfResults.BOTTOM;
+    @Input() placeholder = "Vous cherchez un lieu ?";
+    @Input() inputClasses = "block rounded-full bg-black hover:bg-gray-800 pl-10 pr-10 py-1.5 text-base text-gray-400 placeholder:text-gray-400 sm:text-sm/6 w-80 truncate";
     SenseOfResults = SenseOfResults;
 
     // acceptedTypes: string[] = [

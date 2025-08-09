@@ -5,7 +5,7 @@
             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                 <svg class="size-5 text-primary-bourgad-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8c0 3.613-3.869 7.429-5.393 8.795a1 1 0 0 1-1.214 0C9.87 15.429 6 11.613 6 8a6 6 0 0 1 12 0"/><circle cx="12" cy="8" r="2"/><path d="M8.714 14h-3.71a1 1 0 0 0-.948.683l-2.004 6A1 1 0 0 0 3 22h18a1 1 0 0 0 .948-1.316l-2-6a1 1 0 0 0-.949-.684h-3.712"/></svg>
             </div>
-            <input autocomplete="off" [ngModel]="this.filterPlace" id="search-country" placeholder="Vous cherchez un lieu ?" type="text" class="block rounded-full bg-black hover:bg-gray-800 pl-10 pr-10 py-1.5 text-base text-gray-400 placeholder:text-gray-400 sm:text-sm/6 w-80 truncate">
+            <input autocomplete="off" [ngModel]="this.filterPlace" id="search-country" [placeholder]="placeholder" type="text" [ngClass]="inputClasses">
             <div class="absolute inset-y-0 right-0 flex items-center">
                 <bgd-spinner *ngIf="this.loading" [width]="'w-4'" [dark]="false"></bgd-spinner>
                 <svg (click)="this.clear()" *ngIf="!this.loading && this.filterPlace != ''" class="size-5 text-red-300 cursor-pointer hover:text-red-400" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><path d="m14.5 7.5-5 5"/><path d="m9.5 7.5 5 5"/></svg>

@@ -35,6 +35,9 @@
       ],
       "@bourgad-monorepo/feature-feed": ["libs/front/feature/feed/src/index"],
       "@bourgad-monorepo/internal": ["libs/shared/dto/internal/src/index"],
+      "@bourgad-monorepo/localize": [
+        "libs/front/feature/localize/src/index.ts"
+      ],
       "@bourgad-monorepo/model": ["libs/shared/model/src/index"],
       "@bourgad-monorepo/ui": ["libs/front/ui/src/index"]
     }
