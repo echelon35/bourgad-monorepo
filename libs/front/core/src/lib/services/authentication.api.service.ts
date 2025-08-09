@@ -7,8 +7,6 @@ import { User } from "@bourgad-monorepo/model";
 import { ChangePasswordDto, LoginDto, SignUpDto, TokenDto } from "@bourgad-monorepo/internal"
 import { loginUser, logoutUser } from "../store/user/user.action";
 
-const TOKEN_KEY = 'auth-token';
-
 @Injectable({
     providedIn: 'root'
 })
@@ -19,6 +17,7 @@ export class AuthenticationApiService {
     private readonly store = inject(Store);
     private readonly coreConfigService = inject(CoreConfigService);
     API_URL: string = this.coreConfigService.apiUrl;
+    TOKEN_KEY = 'auth-token';
 
     constructor(){
         this.httpOptions = {
@@ -37,8 +36,8 @@ export class AuthenticationApiService {
     }
 
     public saveToken(token: string): void {
-        window.localStorage.removeItem(TOKEN_KEY);
-        window.localStorage.setItem(TOKEN_KEY, token);
+        window.localStorage.removeItem(this.TOKEN_KEY);
+        window.localStorage.setItem(this.TOKEN_KEY, token);
     }
 
     public storeUser(user: User): void {
@@ -46,11 +45,12 @@ export class AuthenticationApiService {
     }
     
     public getToken(): string | null {
-        const token = localStorage.getItem(TOKEN_KEY);
+        const token = localStorage.getItem(this.TOKEN_KEY);
         return token;
     }
 
     public logOut() {
+        window.localStorage.removeItem(this.TOKEN_KEY);
         this.store.dispatch(logoutUser())
         window.location.href = '/';
     }

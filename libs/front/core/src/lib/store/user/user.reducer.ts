@@ -14,14 +14,20 @@ export const initialState: UserState = {
 
 export const userReducer = createReducer(
   initialState,
-  on(loginUser, (state, { user }) => ({
-    ...state,
-    user,
-    isAuthenticated: true
-  })),
-  on(logoutUser, (state) => ({
-    ...state,
-    user: null, // Réinitialise l'état utilisateur à la déconnexion
-    isAuthenticated: false,
-  }))
+  on(loginUser, (state, { user }) => {
+    console.log('Updating user in reducer:', user);
+    return {
+      ...state,
+      user,
+      isAuthenticated: true
+    }
+  }),
+  on(logoutUser, (state) => {
+    console.log('Log out user');
+    return {
+      ...state,
+      user: null, // Réinitialise l'état utilisateur à la déconnexion
+      isAuthenticated: false,
+    };
+  })
 );

@@ -1,9 +1,10 @@
 import { computed } from "@angular/core";
-import { User } from "@bourgad-monorepo/model";
+import { User, Media } from "@bourgad-monorepo/model";
 import { patchState, signalStore, withComputed, withMethods, withState } from "@ngrx/signals";
 
 const initialState = {
         id: 0,
+        avatar: {} as Media,
         firstname: 'John',
         lastname: 'Doe',
         city: undefined

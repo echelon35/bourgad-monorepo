@@ -2,25 +2,36 @@
     <div class="w-full h-full relative">
         <div class="z-on-map-1 absolute top-0 left-0 w-full h-full pointer-events-none bg-radial-[at_50%_100%] from-primary-bourgad/0 via-primary-bourgad/30 to-primary-bourgad to-90%">
         </div>
-        <div class="z-on-map-1 absolute top-0 left-0 w-full bg-transparent flex justify-between items-center p-4">
-            <img class="w-40" src="/assets/bourgad_dark.svg" alt="Logo de Bourgad" />
+        <div class="bg-primary-bourgad z-on-map-1 absolute top-0 left-0 w-full flex justify-between items-center p-4">
+            <img class="h-10" src="/assets/bourgad_dark.svg" alt="Logo de Bourgad" />
             <div class="flex items-center gap-x-2">
-                <a class="cursor-pointer rounded-sm bg-primary-bourgad-2 px-3 py-2 mr-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">Changer ma Bourgade</a>
-                <button (click)="openFeed()">
-                    <svg class="size-12 hover:scale-110 transition-transform cursor-pointer" id="fi_7184120" height="512" viewBox="0 0 24 24" width="512" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1"><path d="m21 11.077a9.006 9.006 0 0 1 -9 9 9.143 9.143 0 0 1 -1.652-.157l-4.542 1.948a.659.659 0 0 1 -.268.055.683.683 0 0 1 -.415-.138.668.668 0 0 1 -.268-.637l.453-3.619.046-.387a9 9 0 0 1 6.646-15.065 8.865 8.865 0 0 1 5.483 1.874 8.961 8.961 0 0 1 3.517 7.126z" fill="#13e4ea"></path><path d="m13 9.75h-4a.75.75 0 0 1 0-1.5h4a.75.75 0 0 1 0 1.5z" fill="#edf9f8"></path><path d="m15 13.75h-6a.75.75 0 0 1 0-1.5h6a.75.75 0 0 1 0 1.5z" fill="#edf9f8"></path><path d="m6.2 22.146a1.752 1.752 0 0 1 -1.732-1.968l.257-2.063a1.172 1.172 0 0 0 -.24-.9 9.684 9.684 0 0 1 -2.1-7.9 9.8 9.8 0 0 1 7.878-7.915 9.751 9.751 0 0 1 4.371 18.983 9.609 9.609 0 0 1 -4.03.265 1.353 1.353 0 0 0 -.725.078l-2.979 1.274a1.747 1.747 0 0 1 -.7.146zm4.319-19.267a8.245 8.245 0 0 0 -4.874 13.377 2.682 2.682 0 0 1 .573 2.044l-.258 2.063a.251.251 0 0 0 .348.261l2.979-1.277a2.858 2.858 0 0 1 1.532-.183 8.141 8.141 0 0 0 3.409-.225 8.251 8.251 0 0 0 -3.709-16.06z" fill="#007da1"></path></svg>
-                </button>
-                <button (click)="openFeed()">
-                    <svg class="size-12 hover:scale-110 transition-transform cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="48.877" height="57.494" viewBox="0 0 48.877 57.494">
-                        <g id="Groupe_53" data-name="Groupe 53" transform="translate(-1846 -38.506)">
-                            <path id="Tracé_96" data-name="Tracé 96" d="M152.1,399.435a7.457,7.457,0,1,0-7.452,7.177A7.318,7.318,0,0,0,152.1,399.435Zm0,0" transform="translate(1725.795 -310.611)" fill="#f7c92b"/>
-                            <path id="Tracé_97" data-name="Tracé 97" d="M181.9,392.258a7.71,7.71,0,0,0-2.166.309,7.1,7.1,0,0,1,0,13.735,7.71,7.71,0,0,0,2.166.309,7.182,7.182,0,1,0,0-14.354Zm0,0" transform="translate(1688.542 -310.612)" fill="#f2b51d"/>
-                            <path id="Tracé_98" data-name="Tracé 98" d="M166.877,40.8a4.417,4.417,0,0,1-5.2-3.335,4.265,4.265,0,0,1,3.462-5.012,4.417,4.417,0,0,1,5.2,3.335A4.265,4.265,0,0,1,166.877,40.8Zm0,0" transform="translate(1704.433 6.139)" fill="#f7c92b"/>
-                            <path id="Tracé_99" data-name="Tracé 99" d="M190.81,35.787a4.417,4.417,0,0,0-5.2-3.335,4.646,4.646,0,0,0-.645.174,4.307,4.307,0,0,1,2.818,3.161,4.235,4.235,0,0,1-2.817,4.837,4.56,4.56,0,0,0,2.386.174,4.265,4.265,0,0,0,3.462-5.012Zm0,0" transform="translate(1683.962 6.139)" fill="#f2b51d"/>
-                            <path id="Tracé_100" data-name="Tracé 100" d="M43.4,132.458H6.48A5.873,5.873,0,0,1,.5,126.7a5.745,5.745,0,0,1,2.251-4.533l1.186-.922a11.071,11.071,0,0,0,4.338-8.736v-6.053c0-8.931,7.517-16.17,16.791-16.17s16.791,7.24,16.791,16.17v6.165a11.063,11.063,0,0,0,4.191,8.62l1.155.927a5.74,5.74,0,0,1,2.175,4.473v.058a5.873,5.873,0,0,1-5.981,5.759Zm0,0" transform="translate(1845.501 -44.836)" fill="#f7e249"/>
-                            <path id="Tracé_101" data-name="Tracé 101" d="M186.981,122.165l-1.155-.927a11.064,11.064,0,0,1-4.191-8.621v-6.165c0-8.93-7.518-16.17-16.791-16.17a17.386,17.386,0,0,0-4.731.652,16.273,16.273,0,0,1,12.06,15.518v6.165a11.064,11.064,0,0,0,4.191,8.621l1.155.927a5.742,5.742,0,0,1,2.175,4.473v.058a5.873,5.873,0,0,1-5.981,5.759h9.462a5.873,5.873,0,0,0,5.98-5.759v-.058a5.74,5.74,0,0,0-2.175-4.473Zm0,0" transform="translate(1705.722 -44.833)" fill="#f7c92b"/>
-                        </g>
-                    </svg>
-                </button>
+                @if(isAuthenticated$ | async) {
+                    <button>
+                        <img class="size-8 hover:scale-110 transition-transform cursor-pointer" src="/assets/demenagement.svg" alt="Déménagement" title="Changer ma bourgade" />
+                    </button>
+                    <button (click)="openFeed()">
+                        <svg class="size-8 hover:scale-110 transition-transform cursor-pointer" id="fi_7184120" height="512" viewBox="0 0 24 24" width="512" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1"><path d="m21 11.077a9.006 9.006 0 0 1 -9 9 9.143 9.143 0 0 1 -1.652-.157l-4.542 1.948a.659.659 0 0 1 -.268.055.683.683 0 0 1 -.415-.138.668.668 0 0 1 -.268-.637l.453-3.619.046-.387a9 9 0 0 1 6.646-15.065 8.865 8.865 0 0 1 5.483 1.874 8.961 8.961 0 0 1 3.517 7.126z" fill="#13e4ea"></path><path d="m13 9.75h-4a.75.75 0 0 1 0-1.5h4a.75.75 0 0 1 0 1.5z" fill="#edf9f8"></path><path d="m15 13.75h-6a.75.75 0 0 1 0-1.5h6a.75.75 0 0 1 0 1.5z" fill="#edf9f8"></path><path d="m6.2 22.146a1.752 1.752 0 0 1 -1.732-1.968l.257-2.063a1.172 1.172 0 0 0 -.24-.9 9.684 9.684 0 0 1 -2.1-7.9 9.8 9.8 0 0 1 7.878-7.915 9.751 9.751 0 0 1 4.371 18.983 9.609 9.609 0 0 1 -4.03.265 1.353 1.353 0 0 0 -.725.078l-2.979 1.274a1.747 1.747 0 0 1 -.7.146zm4.319-19.267a8.245 8.245 0 0 0 -4.874 13.377 2.682 2.682 0 0 1 .573 2.044l-.258 2.063a.251.251 0 0 0 .348.261l2.979-1.277a2.858 2.858 0 0 1 1.532-.183 8.141 8.141 0 0 0 3.409-.225 8.251 8.251 0 0 0 -3.709-16.06z" fill="#007da1"></path></svg>
+                    </button>
+                    <button (click)="openFeed()">
+                        <svg class="size-8 hover:scale-110 transition-transform cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="48.877" height="57.494" viewBox="0 0 48.877 57.494">
+                            <g id="Groupe_53" data-name="Groupe 53" transform="translate(-1846 -38.506)">
+                                <path id="Tracé_96" data-name="Tracé 96" d="M152.1,399.435a7.457,7.457,0,1,0-7.452,7.177A7.318,7.318,0,0,0,152.1,399.435Zm0,0" transform="translate(1725.795 -310.611)" fill="#f7c92b"/>
+                                <path id="Tracé_97" data-name="Tracé 97" d="M181.9,392.258a7.71,7.71,0,0,0-2.166.309,7.1,7.1,0,0,1,0,13.735,7.71,7.71,0,0,0,2.166.309,7.182,7.182,0,1,0,0-14.354Zm0,0" transform="translate(1688.542 -310.612)" fill="#f2b51d"/>
+                                <path id="Tracé_98" data-name="Tracé 98" d="M166.877,40.8a4.417,4.417,0,0,1-5.2-3.335,4.265,4.265,0,0,1,3.462-5.012,4.417,4.417,0,0,1,5.2,3.335A4.265,4.265,0,0,1,166.877,40.8Zm0,0" transform="translate(1704.433 6.139)" fill="#f7c92b"/>
+                                <path id="Tracé_99" data-name="Tracé 99" d="M190.81,35.787a4.417,4.417,0,0,0-5.2-3.335,4.646,4.646,0,0,0-.645.174,4.307,4.307,0,0,1,2.818,3.161,4.235,4.235,0,0,1-2.817,4.837,4.56,4.56,0,0,0,2.386.174,4.265,4.265,0,0,0,3.462-5.012Zm0,0" transform="translate(1683.962 6.139)" fill="#f2b51d"/>
+                                <path id="Tracé_100" data-name="Tracé 100" d="M43.4,132.458H6.48A5.873,5.873,0,0,1,.5,126.7a5.745,5.745,0,0,1,2.251-4.533l1.186-.922a11.071,11.071,0,0,0,4.338-8.736v-6.053c0-8.931,7.517-16.17,16.791-16.17s16.791,7.24,16.791,16.17v6.165a11.063,11.063,0,0,0,4.191,8.62l1.155.927a5.74,5.74,0,0,1,2.175,4.473v.058a5.873,5.873,0,0,1-5.981,5.759Zm0,0" transform="translate(1845.501 -44.836)" fill="#f7e249"/>
+                                <path id="Tracé_101" data-name="Tracé 101" d="M186.981,122.165l-1.155-.927a11.064,11.064,0,0,1-4.191-8.621v-6.165c0-8.93-7.518-16.17-16.791-16.17a17.386,17.386,0,0,0-4.731.652,16.273,16.273,0,0,1,12.06,15.518v6.165a11.064,11.064,0,0,0,4.191,8.621l1.155.927a5.742,5.742,0,0,1,2.175,4.473v.058a5.873,5.873,0,0,1-5.981,5.759h9.462a5.873,5.873,0,0,0,5.98-5.759v-.058a5.74,5.74,0,0,0-2.175-4.473Zm0,0" transform="translate(1705.722 -44.833)" fill="#f7c92b"/>
+                            </g>
+                        </svg>
+                    </button>
+                    <a (click)="this.authenticationApiService.logOut()" class="text-sm/6 font-semibold text-white">
+                        <img class="inline-block size-10 rounded-full mr-2" src="{{avatarUrl$ | async}}" alt="Avatar">
+                    </a>
+                }
+                @else{
+                    <button (click)="this.router.navigate(['/login'])" class="btn rounded-md py-1 px-2.5 bg-primary-bourgad text-sm/6 font-semibold text-white bg">Se connecter</button>
+                    <button (click)="this.router.navigate(['/signup'])" class="btn border-2 rounded-md py-1 px-2.5 bg-primary-bourgad text-sm/6 font-semibold text-white bg">S'inscrire</button>
+                }
             </div>
         </div>
         <div id="map" class="z-map w-full h-full">

@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { EmailerService } from '@bourgad-monorepo/api/mail';
 import { User } from '@bourgad-monorepo/model';
 import { ConfigService } from '@nestjs/config';
-import { SignUpDto } from '@bourgad-monorepo/internal';
+import { GetProfileDto, SignUpDto } from '@bourgad-monorepo/internal';
 import { CityService } from '@bourgad-monorepo/api/territory';
 
 @Injectable()
@@ -62,16 +62,14 @@ export class UserService {
       return user;
   }
 
-  async findMe(id: number): Promise<User> {
-    return await this.userRepository.findOne({
-      where: { userId: id },
-      select: {
-        mail: true,
-        firstname: true,
-        lastname: true,
-        avatar: true,
-      },
-    });
+  async findMe(id: number): Promise<GetProfileDto> {
+    const users = await this.userRepository.query(`
+      SELECT users.mail, users.firstname, users.lastname, medias.url as avatar 
+      FROM users
+      LEFT JOIN medias
+      ON medias.media_id = users.avatar_id 
+      WHERE users.user_id = ${id};`)
+    return users[0];
   }
 
   async findOneByPk(id: number): Promise<User> {

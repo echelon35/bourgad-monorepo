@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { UserStore } from '@bourgad-monorepo/core';
-import { User } from '@bourgad-monorepo/model';
+import { AuthenticationApiService, selectIsAuthenticated, UserApiService, UserStore } from '@bourgad-monorepo/core';
 import { GeoApiService } from '@bourgad-monorepo/core';
 import { ToastrComponent } from '@bourgad-monorepo/ui';
+import { Store } from '@ngrx/store';
 
 @Component({
     selector: 'bgd-root',
@@ -15,27 +15,21 @@ export class App {
   title = 'bourgad';
   isSidebarOpen = false;
   readonly userStore = inject(UserStore);
+  readonly store = inject(Store);
   readonly geoApiService = inject(GeoApiService);
+  readonly userService = inject(UserApiService);
+  readonly authenticationService = inject(AuthenticationApiService);
 
   constructor() {
     this.userStore.resetUser();
-    this.geoApiService.getCityById("50129").subscribe(city => {
-      console.log("City received in app component: ", city);
-      this.updateUser({ city: city });
-      console.log("Updated user in app component: ", this.userStore);
-    });
-    this.updateUser({
-      firstname: 'Kevin',
-      lastname: 'Bourgade'
-    });
-  }
-
-  updateUser(user: Partial<User>) {
-    this.userStore.updateUser(user);
-  }
-
-  resetUser() {
-    this.userStore.resetUser();
+    // If user is authenticated, get profile
+    if(this.store.select(selectIsAuthenticated)) {
+      this.userService.getProfile().subscribe((user) => {
+        console.log(user);
+        this.authenticationService.storeUser(user);
+        console.log(this.userStore);
+      })
+    }
   }
 
   toggleSidebar(): void {

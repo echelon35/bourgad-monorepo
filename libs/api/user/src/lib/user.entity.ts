@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from '@bourgad-monorepo/model';
 import { RoleEntity } from './role/role.entity';
 import { CityEntity } from '@bourgad-monorepo/api/territory';
@@ -43,7 +43,7 @@ export class UserEntity implements User {
   deletedAt: Date | null;
 
   /** ASSOCIATIONS */
-  @OneToMany(() => CityEntity, (city) => city.cityId)
+  @ManyToOne(() => CityEntity, (city) => city.cityId)
   @JoinColumn({ name: 'city_id' })
   city: CityEntity;
   @OneToOne(() => MediaEntity, (media) => media.mediaId)

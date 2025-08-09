@@ -23,7 +23,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException(
         'Un compte Google existe à cette adresse, veuillez-vous connecter via le bouton Google',
       );
-    } else if (!user?.isEmailVerified) {
+    } else if (!user?.verifiedMail) {
       throw new UnauthorizedException(
         `Veuillez vérifier votre adresse mail en cliquant sur le lien envoyé par mail. <a class="text-indigo-400" href="${process.env['BASE_URI']}/api/resend-confirmation-mail">Renvoyer l'email de vérification</a>`,
       );
