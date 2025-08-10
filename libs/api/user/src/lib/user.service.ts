@@ -116,7 +116,7 @@ export class UserService {
     return userCreated;
   }
 
-  async changeTown(cityId: number, userId: number): Promise<boolean>{
+  async changeTown(cityId: string, userId: number): Promise<boolean>{
     const city = await this.cityService.getCityById(cityId);
     if(city == null){
       throw new Error(`Ville id ${cityId} non trouvée`)

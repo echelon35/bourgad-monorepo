@@ -1,8 +1,7 @@
-import { Controller, Get, HttpException, HttpStatus, NotFoundException, Post, Query, Request, Response, UnauthorizedException } from "@nestjs/common";
+import { Body, Controller, Get, HttpException, HttpStatus, NotFoundException, Post, Request, Response, UnauthorizedException } from "@nestjs/common";
 import { UserService } from "./user.service";
 import * as Express from 'express';
-import { Public } from '@bourgad-monorepo/api/core';
-import { GetProfileDto } from "@bourgad-monorepo/internal";
+import { GetCityByIdParamDto, GetProfileDto } from "@bourgad-monorepo/internal";
 
 @Controller('user')
 export class UserController {
@@ -12,10 +11,10 @@ export class UserController {
     }
 
     @Post('change-town')
-    @Public()
-    async changeTown(@Request() req: Express.Request, @Query('cityId') cityId: number) {
+    async changeTown(@Request() req: Express.Request, @Body() GetCityByIdParamDto: GetCityByIdParamDto): Promise<any> {
         try {
-            const userId = req.user?.id;
+            const userId = req.user?.user?.userId;
+            const cityId = GetCityByIdParamDto.cityId;
             if(userId == null || cityId == null){
                 throw new Error('Une erreur est survenue lors du changement de ville de l\'utilisateur');
             }

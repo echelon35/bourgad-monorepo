@@ -1,5 +1,6 @@
 import * as L from 'leaflet';
 import { PlaceTypeDto } from './placeType.dto';
+import { City } from '@bourgad-monorepo/model';
 const dec = new TextDecoder("utf-8");
 
 export class PlaceDto {
@@ -21,6 +22,7 @@ export class PlaceDto {
     cover?: string;
 
     boundingbox!: L.LatLngBounds;
+    surface!: L.GeoJSON;
     marker!: L.Marker;
 
     copyFromGeoApiProvider(obj:any){
@@ -83,6 +85,23 @@ export class PlaceDto {
             }
 
             
+        }
+    }
+
+    copyFromBourgad(obj: City){
+        this.id = obj.cityId || null;
+        this.label = obj.name || null;
+        this.name = obj.name || null;
+        // this.longitude = obj.surface.bbox[0] || null;
+        // this.latitude = obj.surface.bbox[1] || null;
+        // this.state = obj.department.name || null;
+        // this.department = obj.department.name || null;
+        this.country = 'France';
+        this.countryCode = 'fr';
+
+        if(obj.surface){
+            this.boundingbox = L.geoJSON(obj.surface).getBounds();
+            this.surface = L.geoJSON(obj.surface);
         }
     }
 

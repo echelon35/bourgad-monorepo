@@ -8,14 +8,16 @@
             <input autocomplete="off" [ngModel]="this.filterPlace" id="search-country" [placeholder]="placeholder" type="text" [ngClass]="inputClasses">
             <div class="absolute inset-y-0 right-0 flex items-center">
                 <bgd-spinner *ngIf="this.loading" [width]="'w-4'" [dark]="false"></bgd-spinner>
-                <svg (click)="this.clear()" *ngIf="!this.loading && this.filterPlace != ''" class="size-5 text-red-300 cursor-pointer hover:text-red-400" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><path d="m14.5 7.5-5 5"/><path d="m9.5 7.5 5 5"/></svg>
+                @if(!this.loading && this.filterPlace !== ''){
+                    <svg (click)="this.clear()" class="size-5 text-red-300 cursor-pointer hover:text-red-400" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><path d="m14.5 7.5-5 5"/><path d="m9.5 7.5 5 5"/></svg>
+                }
             </div>
         </div>
         @if(townList.length > 0){
             <div *ngIf="isVisible"
             [ngClass]="{
-                'bottom-full mb-1': this.senseOfResults == SenseOfResults.TOP,
-                'top-full mt-1': this.senseOfResults == SenseOfResults.BOTTOM,
+                'bottom-full mb-1': this.senseOfResults === SenseOfResults.TOP,
+                'top-full mt-1': this.senseOfResults === SenseOfResults.BOTTOM,
             }"
             class="absolute z-on-map-2 left-0 divide-y divide-gray-200 w-full border-2 border-gray-400 max-h-64 overflow-auto">
                 <div class="bg-primary-bourgad text-white flex items-center border-black px-2 py-2">

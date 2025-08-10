@@ -18,10 +18,10 @@ export class CityService {
    * @param cityId : The ID of the city to fetch.
    * @returns The city object or null if not found.
    */
-  async getCityById(cityId: number): Promise<CityEntity | null> {
+  async getCityById(cityId: string): Promise<CityEntity | null> {
     try {
       const city = await this.cityRepository.findOne({
-        where: { cityId: cityId.toString() },
+        where: { cityId: cityId },
       });
       return city || null;
     } catch (error) {

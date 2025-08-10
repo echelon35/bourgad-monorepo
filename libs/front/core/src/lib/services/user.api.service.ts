@@ -24,22 +24,14 @@ export class UserApiService {
     }
 
     getSummaryInfos(){
-      this.httpOptions = {
-        headers: new HttpHeaders({ 
-          'Content-Type': 'application/json', 
-          'Authorization': `Bearer ${this.authService.getToken()}`
-        })
-      };
       return this.http.get<User>(this.API_URL + '/user/summary', this.httpOptions);
     }
 
     getProfile(){
-      this.httpOptions = {
-        headers: new HttpHeaders({ 
-          'Content-Type': 'application/json', 
-          'Authorization': `Bearer ${this.authService.getToken()}`
-        })
-      };
       return this.http.get<User>(this.API_URL + '/user/profile', this.httpOptions);
+    }
+    
+    changeTown(cityId: string){
+      return this.http.post<User>(this.API_URL + '/user/change-town', { cityId: cityId }, this.httpOptions);
     }
 }

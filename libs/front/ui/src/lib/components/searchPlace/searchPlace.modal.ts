@@ -1,12 +1,14 @@
 
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, inject, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostListener, inject, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import * as L from "leaflet";
 import { EsriProvider, GeoApiFrProvider, OpenStreetMapProvider } from 'leaflet-geosearch';
 import { debounceTime, fromEvent, map } from 'rxjs';
 import { SpinnerComponent } from '../spinner/spinner.component';
-import { PlaceDto } from '@bourgad-monorepo/external';
+import { CityDto, PlaceDto } from '@bourgad-monorepo/external';
+import {GeoApiService} from '@bourgad-monorepo/core';
+import { City } from '@bourgad-monorepo/model';
 
 export enum SenseOfResults {
   TOP,
@@ -31,10 +33,15 @@ export class SearchPlace implements OnInit {
     public filterPlace = "";
     public townList: PlaceDto[] = [];
     @Input() areaMap?: L.Map;
+    @Input() zoomLevel = 15;
+    @Input() providerType: 'geoApi' | 'openStreetMap' | 'bourgad' = 'geoApi';
     @Input() senseOfResults: SenseOfResults = SenseOfResults.BOTTOM;
     @Input() placeholder = "Vous cherchez un lieu ?";
     @Input() inputClasses = "block rounded-full bg-black hover:bg-gray-800 pl-10 pr-10 py-1.5 text-base text-gray-400 placeholder:text-gray-400 sm:text-sm/6 w-80 truncate";
+    @Output() selectedPlace$ = new EventEmitter<PlaceDto>();
     SenseOfResults = SenseOfResults;
+
+    private readonly geoApiService = inject(GeoApiService);
 
     // acceptedTypes: string[] = [
     //     "administrative",
@@ -75,13 +82,14 @@ export class SearchPlace implements OnInit {
 
     chooseTown(town: PlaceDto){
       this.selectedTown = town;
-      // if(town.boundingbox){
+      this.selectedPlace$.emit(this.selectedTown);
       console.log(town.marker);
+      if(town.marker){
         this.locationZoom(town.marker);
-      // }
-      // else{
-      //   this.
-      // }
+      }
+      else if(town.boundingbox){
+        this.locationZoom(town.boundingbox);
+      }
 
       if(town.name != null){
         this.filterPlace = town.name!;
@@ -100,18 +108,24 @@ export class SearchPlace implements OnInit {
         this.close();
       },100);
     }
-  
-    searchPlace(){
-      this.loading = true;
-      this.townList = [];
-      // const provider = new OpenStreetMapProvider({ params: {
-      //   'accept-language': 'fr',
-      //   addressdetails: 1,
-      //   format: "json",
-      //   countrycodes: "fr",
-      //   limit: 100,
-      //   extratags: 1
-      // }});
+
+    searchFromProvider(){
+      switch(this.providerType) {
+        case 'geoApi':
+          this.searchWithGeoApi();
+          break;
+        case 'openStreetMap':
+          this.searchWithOpenStreetMap();
+          break;
+        case 'bourgad':
+          this.searchWithBourgad();
+          break;
+        default:
+          this.searchWithGeoApi();
+      }
+    }
+
+    searchWithGeoApi(){
       const provider = new GeoApiFrProvider({
         searchUrl: 'https://api-adresse.data.gouv.fr/search',
         reverseUrl: 'https://api-adresse.data.gouv.fr/reverse',
@@ -127,6 +141,55 @@ export class SearchPlace implements OnInit {
           })
           this.loading = false;
       });
+    }
+
+    searchWithOpenStreetMap(){
+      const provider = new OpenStreetMapProvider({
+        params: {
+          'accept-language': 'fr',
+          addressdetails: 1,
+          format: "json",
+          countrycodes: "fr",
+          limit: 100,
+          extratags: 1
+        }
+      });
+      provider.search({ query: this.filterPlace }).then((res) => {
+        console.log(res);
+          this.townList = [];
+          this.show();
+          res.forEach(cursor => {
+            const thisPlace = new PlaceDto();
+            thisPlace.copyFromGeoApiProvider(cursor);
+            this.townList.push(thisPlace);
+          })
+          this.loading = false;
+      });
+    }
+
+    searchWithBourgad(){
+      this.geoApiService.searchCityByName(this.filterPlace).subscribe({
+        next: (res) => {
+          this.townList = [];
+          this.show();
+          res.forEach((thisPlace:City) => {
+            const placeDto = new PlaceDto();
+            placeDto.copyFromBourgad(thisPlace);
+            this.townList.push(placeDto);
+          })
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error(err);
+          this.loading = false;
+        }
+      });
+    }
+
+    searchPlace(){
+      this.loading = true;
+      this.townList = [];
+      this.searchFromProvider();
   
     }
 
@@ -137,7 +200,7 @@ export class SearchPlace implements OnInit {
           }
           else{
             this.areaMap.addLayer(location);
-            this.areaMap.flyTo(location.getLatLng(),15);
+            this.areaMap.flyTo(location.getLatLng(),this.zoomLevel);
           }
       }
     }

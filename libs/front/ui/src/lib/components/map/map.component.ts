@@ -23,6 +23,7 @@ export class MapComponent implements OnInit,OnDestroy {
   @Input() scrollZoom = true;
   @Input() dragMarker = false;
   @Input() zoomDelta = 1;
+  @Input() defaultZoom = 3;
 
   @Input() locationBox?: L.LatLngBounds;
 
@@ -90,7 +91,7 @@ export class MapComponent implements OnInit,OnDestroy {
       this.mapDetail = L.map(this.mapId,{
         center: [0, 0],
         boxZoom: true,
-        zoom: 3,
+        zoom: this.defaultZoom,
         zoomControl: false,
         maxBoundsViscosity: 1.0,
         worldCopyJump: false,

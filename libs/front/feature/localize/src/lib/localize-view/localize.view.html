@@ -20,13 +20,13 @@
         </p>
       }
       <div class="mt-6">
-        <bgd-search-place-modal  [placeholder]="'Recherchez votre Bourgade'" [areaMap]="localizeMap" [inputClasses]="'block rounded-md pl-10 pr-10 py-1.5 text-base placeholder:text-gray-400 sm:text-sm/6 w-80 truncate'"></bgd-search-place-modal>
+        <bgd-search-place-modal (selectedPlace$)="updateLocation($event)" [providerType]="'bourgad'" [zoomLevel]="8" [placeholder]="'Recherchez votre Bourgade'" [areaMap]="localizeMap" [inputClasses]="'block rounded-md pl-10 pr-10 py-1.5 text-base placeholder:text-gray-400 sm:text-sm/6 w-80 truncate'"></bgd-search-place-modal>
         <div id="map" class="z-map w-full h-40 rounded-md">
-            <bgd-map [mapId]="'map'" (map$)="receiveMap($event)" [displayScale]="false" [displayZoom]="false" [displayLayers]="false"></bgd-map>
+            <bgd-map [mapId]="'map'" (map$)="receiveMap($event)" [defaultZoom]="2" [displayScale]="false" [displayZoom]="false" [displayLayers]="false"></bgd-map>
         </div>
       </div>
       <div class="mt-6">
-        <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-400 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-400 disabled:bg-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Enregistrer ma bourgade</button>
+        <button (click)="saveUserLocation()" type="submit" class="flex w-full justify-center rounded-md bg-indigo-400 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-400 disabled:bg-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Enregistrer ma bourgade</button>
       </div>
     </div>
 

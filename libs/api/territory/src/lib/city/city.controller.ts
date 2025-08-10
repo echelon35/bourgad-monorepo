@@ -3,7 +3,7 @@ import { CityService } from './city.service';
 import { CityEntity } from './city.entity';
 import { GetCityByIdParamDto } from '@bourgad-monorepo/internal';
 
-@Controller('city')
+@Controller('geo')
 export class CityController {
   constructor(private readonly cityService: CityService) {}
 

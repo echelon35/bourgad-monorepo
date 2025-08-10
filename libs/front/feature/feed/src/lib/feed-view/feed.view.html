@@ -6,7 +6,7 @@
             <img class="h-10" src="/assets/bourgad_dark.svg" alt="Logo de Bourgad" />
             <div class="flex items-center gap-x-2">
                 @if(isAuthenticated$ | async) {
-                    <button>
+                    <button (click)="this.router.navigate(['/localize'])" class="btn rounded-md py-1 px-2.5 bg-primary-bourgad text-sm/6 font-semibold text-white bg">
                         <img class="size-8 hover:scale-110 transition-transform cursor-pointer" src="/assets/demenagement.svg" alt="Déménagement" title="Changer ma bourgade" />
                     </button>
                     <button (click)="openFeed()">
