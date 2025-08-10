@@ -20,7 +20,6 @@ import { map, Observable } from 'rxjs';
 export class FeedView {
     @ViewChild('makePostModal') makePostModal?: MakePostModal;
     readonly geoApiService = inject(GeoApiService);
-    readonly userStore = inject(UserStore);
     readonly authenticationApiService = inject(AuthenticationApiService);
     readonly route = inject(ActivatedRoute);
     private readonly store = inject(Store);
@@ -29,19 +28,13 @@ export class FeedView {
     private readonly toastrService = inject(ToastrService);
     isAuthenticated$: Observable<boolean>;
     avatarUrl$: Observable<string>;
+    city$: Observable<City | undefined>;
 
     feedMap?: L.Map;
+    feedLayer?: L.LayerGroup = new L.LayerGroup();
     public senseOfResults: SenseOfResults = SenseOfResults.TOP;
 
     constructor() {
-      // Initialize the user store or any other services if needed
-      effect(() => {
-        const city = this.userStore.city ? this.userStore.city() : undefined;
-        console.log("City in feed view: ", city);
-        if (city) {
-          this.updateMap(city);
-        }
-      });
 
       const token = this.route.snapshot.queryParamMap.get('access_token');
       const mail = this.route.snapshot.queryParamMap.get('mail');
@@ -59,6 +52,9 @@ export class FeedView {
                   map(user => user?.avatar ? user?.avatar?.url : 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'))
               
       this.isAuthenticated$ = this.store.select(selectIsAuthenticated);
+      this.city$ = this.store.select(selectUser).pipe(
+        map(user => user?.city)
+      );
     }
 
     /**
@@ -67,30 +63,32 @@ export class FeedView {
      */
     receiveMap(map: L.Map) {
       this.feedMap = map;
-      if (this.userStore && typeof this.userStore.city === 'function') {
-        const city = this.userStore.city();
-        if (city != null) {
-          this.updateMap(city);
-        }
+      if (this.city$ != null) {
+        this.city$.subscribe(city => {
+          if (city) {
+            this.updateMap(city);
+          }
+        });
       }
     }
 
     updateMap(city: City) {
       if(this.feedMap) {
-        const city = this.userStore.city ? this.userStore.city() : undefined;
         console.log("City received in feed view: ", city);
         if (!city || !city.surface) {
           return;
         }
+        this.feedLayer?.clearLayers();
         const cityLayer = L.geoJSON(city.surface, {
               style: {
                   color: '#50A3C5',
                   weight: 3,
                   opacity: 0.5
               }
-          });
-          this.feedMap!.flyToBounds(cityLayer.getBounds());
-          cityLayer.addTo(this.feedMap!);
+        });
+        this.feedMap!.flyToBounds(cityLayer.getBounds());
+        cityLayer.addTo(this.feedLayer!);
+        this.feedLayer.addTo(this.feedMap!);
       }
     }
 

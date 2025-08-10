@@ -24,6 +24,7 @@ export interface User extends Audited {
   providerId?: string;
 
   city: City;
+  cityId: string;
   avatar: Media;
   organisation?: Organisation;
   roles: Role[];

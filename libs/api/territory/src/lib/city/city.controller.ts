@@ -7,7 +7,7 @@ import { GetCityByIdParamDto } from '@bourgad-monorepo/internal';
 export class CityController {
   constructor(private readonly cityService: CityService) {}
 
-  @Get('city/:id')
+  @Get('city/:cityId')
   async getCityById(@Param() params: GetCityByIdParamDto): Promise<CityEntity | null> {
     const city = await this.cityService.getCityById(params.cityId);
     return city;

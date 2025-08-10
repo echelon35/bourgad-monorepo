@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AuthenticationApiService, selectIsAuthenticated, UserApiService, UserStore } from '@bourgad-monorepo/core';
 import { GeoApiService } from '@bourgad-monorepo/core';
+import { User } from '@bourgad-monorepo/model';
 import { ToastrComponent } from '@bourgad-monorepo/ui';
 import { Store } from '@ngrx/store';
 
@@ -14,21 +15,23 @@ import { Store } from '@ngrx/store';
 export class App {
   title = 'bourgad';
   isSidebarOpen = false;
-  readonly userStore = inject(UserStore);
   readonly store = inject(Store);
   readonly geoApiService = inject(GeoApiService);
   readonly userService = inject(UserApiService);
   readonly authenticationService = inject(AuthenticationApiService);
 
   constructor() {
-    this.userStore.resetUser();
     // If user is authenticated, get profile
     if(this.store.select(selectIsAuthenticated)) {
-      this.userService.getProfile().subscribe((user) => {
+      console.log("User is authenticated, fetching profile...");
+      this.userService.getProfile().subscribe((user: User) => {
         console.log(user);
         this.authenticationService.storeUser(user);
-        console.log(this.userStore);
-      })
+        this.geoApiService.getCityById(user.cityId).subscribe((city) => {
+          console.log("City from API: ", city);
+          this.authenticationService.storeUser({ ...user, city: city });
+        });
+      });
     }
   }
 

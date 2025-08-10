@@ -22,6 +22,7 @@ export class LocalizeView {
   localizeLayer?: L.LayerGroup = new L.LayerGroup();
   userCity$: Observable<City | undefined>;
   place: PlaceDto | undefined;
+  success = false;
 
   constructor(){
     this.userCity$ = this.store.select(selectUser).pipe(map(user => user?.city));
@@ -53,7 +54,10 @@ export class LocalizeView {
     if(this.place){
       console.log(this.place);
       this.userApiService.changeTown(this.place.id).subscribe({
-        next: () => this.toastrService.success('Bourgade sauvegardée avec succès.'),
+        next: () => {
+          this.toastrService.success('Bourgade sauvegardée avec succès.');
+          this.success = true;
+        },
         error: () => this.toastrService.error('Erreur lors de la sauvegarde de la bourgade.')
       });
     }

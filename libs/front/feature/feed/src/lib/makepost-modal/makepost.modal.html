@@ -3,8 +3,8 @@
 <div class="z-on-map-1 absolute top-20 left-0 w-full">
   <div class="flex justify-center items-center mb-2">
     <img class="inline-block size-12 rounded-full mr-2" src="{{avatarUrl$ | async}}" alt="Avatar">
-    <input readonly autocomplete="off" [ngClass]="{'outline-2 -outline-offset-2 outline-primary-bourgad-2': visible, 'outline-1 -outline-offset-1 outline-gray-900 hover:outline-2 hover:-outline-offset-2 hover:outline-primary-bourgad-2': !visible}" (click)="open()" type="text" name="name" id="name" class="block rounded-full bg-black hover:bg-gray-800 px-4 py-1.5 text-base text-gray-300 placeholder:text-gray-400 sm:text-sm/6 w-120 h-12 cursor-pointer pr-4 truncate"
-      [placeholder]="placeholder$ | async | titlecase" />
+    <input readonly autocomplete="off" [ngClass]="{'outline-2 -outline-offset-2 outline-primary-bourgad-2': visible, 'outline-1 -outline-offset-1 outline-gray-900 hover:outline-2 hover:-outline-offset-2 hover:outline-primary-bourgad-2': !visible}" (click)="open()" type="text" name="name" id="name" class="block rounded-full bg-black hover:bg-gray-800 px-4 py-1.5 text-base text-gray-300 placeholder:text-gray-400 sm:text-sm/6 w-96 h-12 cursor-pointer pr-4 truncate"
+      [placeholder]="placeholder$ | async" />
     <!-- <button [ngClass]="{'visible': visible, 'hidden': !visible}" (click)="close()" class="text-primary-bourgad-2 cursor-pointer -ml-8 hover:text-gray-600 text-2xl leading-none" type="button" aria-label="Fermer">&times;</button> -->
   </div>
   <div id="modal-post" [ngClass]="{'visible': visible, 'hidden': !visible}" class="z-modal flex items-center justify-center inset-0">

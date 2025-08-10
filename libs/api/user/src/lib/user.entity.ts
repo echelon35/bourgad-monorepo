@@ -46,6 +46,8 @@ export class UserEntity implements User {
   @ManyToOne(() => CityEntity, (city) => city.cityId)
   @JoinColumn({ name: 'city_id' })
   city: CityEntity;
+  @Column({ name: 'city_id', nullable: true })
+  cityId: string;
   @OneToOne(() => MediaEntity, (media) => media.mediaId)
   @JoinColumn({ name: 'avatar_id' })
   avatar: MediaEntity;

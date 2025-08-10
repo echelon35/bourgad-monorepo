@@ -64,7 +64,7 @@ export class UserService {
 
   async findMe(id: number): Promise<GetProfileDto> {
     const users = await this.userRepository.query(`
-      SELECT users.mail, users.firstname, users.lastname, medias.url as avatar 
+      SELECT users.mail, users.firstname, users.lastname, medias.url as avatar, users.city_id as "cityId"
       FROM users
       LEFT JOIN medias
       ON medias.media_id = users.avatar_id 
