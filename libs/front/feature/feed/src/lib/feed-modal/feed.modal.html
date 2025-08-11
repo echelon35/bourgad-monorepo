@@ -1,16 +1,20 @@
 <div id="feed-modal" [ngClass]="{'max-w-md': !expanded, 'max-w-full': expanded}" class="z-modal inset-0 h-full overflow-y-auto overflow-x-hidden w-screen bg-black hidden">
-    <div [ngClass]="{'max-h-42 max-w-md': !expanded, 'max-h-72': expanded}" *ngIf="this.selectedCategory != null" class="absolute top-0 w-full h-full pointer-events-none opacity-50" style="mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0) 100%); -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0) 100%);background: center center / cover url('{{ this.selectedCategory.backgroundUrl }}');"></div>
-    <div class="flex justify-end items-center left-auto p-3 gap-x-2">
-            <a (click)="closeFeed()" title="Fermer le feed" class="cursor-pointer text-white text-sm/6 p-1">
-                <svg class="size-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-            </a>
+    @if(this.selectedCategory !== null){
+            <div [ngClass]="{'max-h-44 max-w-md': !expanded, 'max-h-80': expanded}" class="z-0 absolute top-0 w-full h-full pointer-events-none opacity-50" style="mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0) 100%); -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0) 100%);background: center center / cover url('{{ this.selectedCategory.backgroundUrl }}');"></div>
+    }
+    <div class="flex justify-end items-center left-auto p-3 gap-x-2 z-20">
+        <a tabindex="0" (click)="closeFeed()" (keypress)="closeFeed()" title="Fermer le feed" class="cursor-pointer text-white text-sm/6 p-1">
+            <svg class="size-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </a>
     </div> 
-    <div [ngClass]="{'pt-24':selectedCategory&&!expanded,'pt-42':selectedCategory&&expanded}" class="pt-24 overflow-auto">
+    <div [ngClass]="{'pt-24':selectedCategory&&!expanded,'pt-44':selectedCategory&&expanded}" class="z-10 pt-24 overflow-auto">
         <div class="flex flex-wrap gap-2 justify-center mb-4 p-4">
-            <span *ngFor="let item of categories" title="{{ item.description }}" (click)="selectedCategory = item" [ngClass]="{
-                'border border-indigo-400 bg-indigo-400/10 text-indigo-400 ring-indigo-400/30': selectedCategory === item, 
-                'bg-gray-400/10 text-gray-400 ring-1 ring-gray-400/20': selectedCategory !== item
-                }" class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset cursor-pointer hover:bg-indigo-500">{{ item.name }}</span>
+            @for(item of categories; track item; let idx = $index) {
+                <span tabindex="{{idx}}" title="{{ item.description }}" (click)="selectedCategory = item" (keypress)="selectedCategory = item" [ngClass]="{
+                    'border border-indigo-400 bg-indigo-400 text-gray-100 ring-indigo-400': selectedCategory === item, 
+                    'bg-gray-400/10 text-gray-400 ring-1 ring-gray-400/20': selectedCategory !== item
+                    }" class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset cursor-pointer hover:bg-indigo-500">{{ item.name }}</span>
+            }
         </div>
         <div class="w-84 flex items-center justify-center mx-auto rounded-lg text-sm gap-x-2">
             <span class="text-gray-400">Afficher la carte</span>

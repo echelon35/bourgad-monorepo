@@ -8,10 +8,7 @@
     <!-- <button [ngClass]="{'visible': visible, 'hidden': !visible}" (click)="close()" class="text-primary-bourgad-2 cursor-pointer -ml-8 hover:text-gray-600 text-2xl leading-none" type="button" aria-label="Fermer">&times;</button> -->
   </div>
   <div id="modal-post" [ngClass]="{'visible': visible, 'hidden': !visible}" class="z-modal flex items-center justify-center inset-0">
-      @if(!localize){
-        <div class="bg-black rounded-lg shadow-lg w-full max-w-lg p-6 relative"></div>
-      }
-      <form (ngSubmit)="makePost()">
+      <form class="bg-gray-900 rounded-lg shadow-lg w-full max-w-lg p-6 relative" (ngSubmit)="makePost()">
 
         <bgd-dropdown class="mb-2" [name]="'category'" [dropdownItems]="dropdownCategories" (selectedItem$)="selectCategory($event)" placeholder="Choisir une catégorie"></bgd-dropdown>
         <bgd-dropdown class="mb-2" [name]="'subcategory'" [dropdownItems]="dropdownSubCategories" (selectedItem$)="selectSubCategory($event)" placeholder="Choisir une sous-catégorie"></bgd-dropdown>
@@ -22,7 +19,7 @@
         </div>
         <!-- Pictures Upload -->
         <div class="mb-4 flex rounded-lg border border-gray-200 relative p-3 pt-4">
-          <div class="absolute -top-3 place-content-center bg-black text-gray-200 px-3 uppercase font-bold text-sm">Ajouter</div>
+          <div class="absolute -top-3 place-content-center bg-gray-900 text-gray-200 px-3 uppercase font-bold text-sm">Ajouter</div>
           <button type="button"
                   class="ml-2 w-6 h-6 cursor-pointer bg-transparent border-none p-0 flex items-center justify-center focus:outline-primary-bourgad-2"
                   (click)="openFilePicker()"

@@ -1,10 +1,10 @@
 import { CommonModule } from "@angular/common";
-import { Component, computed, effect, inject, signal } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Category, Post, Subcategory } from "@bourgad-monorepo/model";
 // import { Picture } from "src/app/core/Model/Picture";
 import { DropdownComponent, DropdownItem } from "@bourgad-monorepo/ui";
-import { CategoryApiService, selectUser, UserStore } from "@bourgad-monorepo/core";
+import { CategoryApiService, selectUser, TitlecaseString } from "@bourgad-monorepo/core";
 import { Store } from "@ngrx/store";
 import { map, Observable } from "rxjs";
 
@@ -20,7 +20,6 @@ export class MakePostModal {
     visible = false;
     visibleCategories = false;
     post: Post = {} as Post;
-    localize = false;
     dropdownCategories: DropdownItem[] = [];
     dropdownSubCategories: DropdownItem[] = [];
     categories: Category[] = [];
@@ -45,16 +44,22 @@ export class MakePostModal {
 
         this.placeholder$ = this.store.select(selectUser).pipe(
             map(user => {
-                const firstname = user?.firstname ?? 'Vous';
-                const cityName = user?.city?.name;
-                return cityName
-                ? `${firstname}, que souhaitez-vous partager à ${cityName} ?`
-                : `${firstname}, que souhaitez-vous partager dans votre Bourgade ?`;
+                if(user?.firstname){
+                    const firstname = TitlecaseString(user?.firstname);
+                    const cityName = user?.city?.name;
+                    return cityName
+                    ? `${firstname}, que souhaitez-vous partager à ${cityName} ?`
+                    : `${firstname}, que souhaitez-vous partager dans votre Bourgade ?`;
+                }
+                else{
+                    return 'Que souhaitez-vous partager dans votre Bourgade ?';
+                }
+
             })
         );
 
         this.avatarUrl$ = this.store.select(selectUser).pipe(
-            map(user => user?.avatar ? user?.avatar?.url : 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'))
+            map(user => user?.avatar ? user?.avatar?.url : '/assets/village.svg'))
         
     }
 

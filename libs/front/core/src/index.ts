@@ -8,3 +8,4 @@ export * from './lib/store/user/user.selector';
 export * from './lib/store/user/user.action';
 export * from './lib/store/user/user.reducer';
 export * from './lib/utils/const/StrongPasswordRegex';
+export * from './lib/utils/TitlecaseString';

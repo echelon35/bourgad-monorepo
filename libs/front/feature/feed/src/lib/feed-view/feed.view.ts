@@ -40,20 +40,25 @@ export class FeedView {
       const mail = this.route.snapshot.queryParamMap.get('mail');
       if(token){
         this.authenticationApiService.saveToken(token);
-        this.userApiService.getProfile().subscribe((user) => {
-          this.authenticationApiService.storeUser(user);
-          if(user.cityId == null){
-            this.router.navigate(['/localize']);
-          }
+        this.router.navigate(['/'])
+        .then(() => {
+          window.location.reload();
         });
       }
       else if(mail){
         this.toastrService.success(`Inscription réalisée avec succès.`,`Un mail de confirmation vient de vous être envoyé à <b>${mail}</b>.`);
       }
 
+      this.userApiService.getProfile().subscribe((user) => {
+        this.authenticationApiService.storeUser(user);
+        if(user.cityId == null){
+          this.router.navigate(['/localize']);
+        }
+      });
+
       this.avatarUrl$ = this.store.select(selectUser).pipe(
-                  map(user => user?.avatar ? user?.avatar?.url : 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'))
-              
+                  map(user => user?.avatar ? user?.avatar?.url : '/assets/village.svg'))
+
       this.isAuthenticated$ = this.store.select(selectIsAuthenticated);
       this.city$ = this.store.select(selectUser).pipe(
         map(user => user?.city)

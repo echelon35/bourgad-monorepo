@@ -85,7 +85,7 @@ export class AuthenticationApiService {
                 'Authorization': `Bearer ${this.getToken()}`
             })
         };
-        return this.http.get<boolean>(this.API_URL + '/auth/expiration',httpOptions);
+        return this.http.get<boolean>(this.API_URL + '/expiration',httpOptions);
     }
 
     public forgotPassword(mail: string){
