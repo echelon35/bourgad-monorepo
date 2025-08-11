@@ -42,6 +42,9 @@ export class FeedView {
         this.authenticationApiService.saveToken(token);
         this.userApiService.getProfile().subscribe((user) => {
           this.authenticationApiService.storeUser(user);
+          if(user.cityId == null){
+            this.router.navigate(['/localize']);
+          }
         });
       }
       else if(mail){

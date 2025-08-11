@@ -92,7 +92,7 @@ export class MapComponent implements OnInit,OnDestroy {
         center: [0, 0],
         boxZoom: true,
         zoom: this.defaultZoom,
-        zoomControl: false,
+        zoomControl: this.displayZoom,
         maxBoundsViscosity: 1.0,
         worldCopyJump: false,
         zoomDelta: this.zoomDelta,

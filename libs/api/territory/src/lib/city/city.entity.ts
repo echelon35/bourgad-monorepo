@@ -9,7 +9,7 @@ export class CityEntity implements City {
   cityId: string;
   @Column({ name: 'name' })
   name: string;
-  @Column({ name: 'population' })
+  @Column({ name: 'population', nullable: true })
   population: number;
   @Column({ type: 'geometry', name: 'geometry' })
   surface: Geometry;
