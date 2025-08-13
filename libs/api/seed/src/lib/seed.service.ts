@@ -4,10 +4,11 @@ import { Repository } from 'typeorm';
 import { CategoryEntity, SubCategoryEntity } from '@bourgad-monorepo/api/category';
 import { CityEntity, DepartmentEntity } from '@bourgad-monorepo/api/territory';
 import { Category } from '@bourgad-monorepo/model';
-import { CategoriesDto } from './data/categories.dto';
-import { SubcategoriesDto } from './data/subcategories.dto';
 import { CityDto, DepartmentDto } from '@bourgad-monorepo/external';
 import { AddSubcategoryDto } from '@bourgad-monorepo/internal';
+import { readFileSync } from 'fs';
+import * as path from 'path';
+import { csvJSONArray } from '@bourgad-monorepo/api/core';
 
 @Injectable()
 export class SeedService {
@@ -25,16 +26,33 @@ export class SeedService {
   /** Seed categories from JSON */
   async seedCategories(){
     await this.categoryRepository.query("TRUNCATE TABLE categories CASCADE");
-
-    const categories: Category[] = CategoriesDto;
+    const csvFilePath = path.resolve(__dirname, './data/categories.csv');
+    const csv = readFileSync(csvFilePath, { encoding: 'utf-8' });
+    const rawCategories = csvJSONArray(csv);
+    const categories: Category[] = rawCategories.map((item: any) => ({
+      name: item['name'],
+      categoryId: +item['categoryId'],
+      iconUrl: item['iconUrl'],
+      backgroundUrl: item['backgroundUrl'],
+      description: item['description'],
+    }));
+    console.log(categories);
     await this.categoryRepository.save(categories);
   }
 
   /** Seed subcategories from JSON */
   async seedSubcategories(){
     await this.subcategoryRepository.query("TRUNCATE TABLE subcategories CASCADE");
-
-    const subcategories: AddSubcategoryDto[] = SubcategoriesDto;
+    const csvFilePath = path.resolve(__dirname, './data/subcategories.csv');
+    const csv = readFileSync(csvFilePath, { encoding: 'utf-8' });
+    const rawSubcategories = csvJSONArray(csv);
+    const subcategories: AddSubcategoryDto[] = rawSubcategories.map((item: any) => ({
+      subcategoryId: +item['subcategoryId'],
+      name: item['name'],
+      categoryId: +item['categoryId'],
+      iconUrl: item['iconUrl'],
+    }));
+    console.log(subcategories);
     await this.subcategoryRepository.save(subcategories);
   }
 

@@ -1,0 +1,11 @@
+﻿categoryId,name,description,iconUrl,backgroundUrl
+1,Patrimoine local,"Monuments, musées, traditions et histoire locale.",https://bourgad.s3.fr-par.scw.cloud/assets/patrimoine.svg,https://bourgad.s3.fr-par.scw.cloud/assets/patrimoine.jpg
+2,Services et conseils,Propositions de services ou demandes de conseils pratiques.,https://bourgad.s3.fr-par.scw.cloud/assets/service.svg,https://bourgad.s3.fr-par.scw.cloud/assets/service.jpg
+3,Evènements,"Annonces d'événements, festivités, sports et activités.",https://bourgad.s3.fr-par.scw.cloud/assets/evenement.svg,https://bourgad.s3.fr-par.scw.cloud/assets/evenement.jpg
+4,Emploi et carrière,"Offres d'emplois, stages et conseils de carrière.",https://bourgad.s3.fr-par.scw.cloud/assets/carriere.svg,https://bourgad.s3.fr-par.scw.cloud/assets/carriere.jpg
+5,Santé et bien-être,"Recherche de médecins, soins esthétiques et activités bien-être.",https://bourgad.s3.fr-par.scw.cloud/assets/sante.svg,https://bourgad.s3.fr-par.scw.cloud/assets/sante.jpg
+6,Jeunesse et puériculture,Moyens de garde et activités pour enfants,https://bourgad.s3.fr-par.scw.cloud/assets/jeunesse.svg,https://bourgad.s3.fr-par.scw.cloud/assets/jeunesse.jpg
+7,Nature et environnement,"Jardin, sorties de plein-air, découverte et protection de la nature.",https://bourgad.s3.fr-par.scw.cloud/assets/nature.svg,https://bourgad.s3.fr-par.scw.cloud/assets/nature.jpg
+8,Travaux et perturbations,"Annonces de travaux, perturbations de la voirie.",https://bourgad.s3.fr-par.scw.cloud/assets/travaux.svg,https://bourgad.s3.fr-par.scw.cloud/assets/travaux.jpg
+9,Animaux de compagnie,"Bien-être et santé de l'animal, animaux perdus ou trouvés.",https://bourgad.s3.fr-par.scw.cloud/assets/travaux.svg,https://bourgad.s3.fr-par.scw.cloud/assets/travaux.jpg
+10,Vie locale,"Annonces et informations sur la vie quotidienne, commerces, services de proximité.",https://bourgad.s3.fr-par.scw.cloud/assets/travaux.svg,https://bourgad.s3.fr-par.scw.cloud/assets/travaux.jpg
