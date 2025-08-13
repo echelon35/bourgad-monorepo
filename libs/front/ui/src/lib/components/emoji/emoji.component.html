@@ -1,0 +1,77 @@
+<div [ngClass]="containerClasses">
+<button (click)="toggleOpen()" type="button" [ngClass]="{'bg-indigo-500': isVisible}" class="inline-flex items-center gap-x-1.5 rounded-md px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:shadow-none dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500">
+  😀
+</button>
+<div id="emoji-container"
+        [ngClass]="{
+            'ease-out duration-300 translate-y-0 opacity-100 sm:translate-x-0': isVisible,
+            'ease-in duration-300 opacity-0 pointer-events-none': !isVisible,
+            'translate-y-2 sm:translate-y-0 sm:translate-x-2': !isVisible
+        }" class="p-4 mr-2 absolute top-10 left-0 h-80 w-96 overflow-y-auto bg-primary-bourgad" aria-labelledby="dropEmoji">
+    <div class="border-b border-gray-200 dark:border-white/10 mb-2">
+      <nav aria-label="Tabs" class="-mb-px flex">
+        <!-- Current: "border-indigo-500 dark:border-indigo-400 text-indigo-600 dark:text-indigo-400", Default: "border-transparent text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-white/20 hover:text-gray-700 dark:hover:text-gray-300" -->
+        <a href="#" (click)="selectedPanel = 'smileys'" [ngClass]="{'border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400': selectedPanel === 'smileys'}" class="w-1/4 border-b-2 border-transparent px-1 py-2 text-center text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-300">😀</a>
+        <a href="#" (click)="selectedPanel = 'personnages'" [ngClass]="{'border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400': selectedPanel === 'personnages'}" class="w-1/4 border-b-2 border-transparent px-1 py-2 text-center text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-300">👨‍✈️</a>
+        <a href="#" (click)="selectedPanel = 'accessoires'" [ngClass]="{'border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400': selectedPanel === 'accessoires'}" class="w-1/4 border-b-2 border-transparent px-1 py-2 text-center text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-300">👓</a>
+        <a href="#" (click)="selectedPanel = 'lieux'" [ngClass]="{'border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400': selectedPanel === 'lieux'}" class="w-1/4 border-b-2 border-transparent px-1 py-2 text-center text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-300">🌎</a>
+        <a href="#" (click)="selectedPanel = 'meteos'" [ngClass]="{'border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400': selectedPanel === 'meteos'}" class="w-1/4 border-b-2 border-transparent px-1 py-2 text-center text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-300">⛅</a>
+        <a href="#" (click)="selectedPanel = 'sports'" [ngClass]="{'border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400': selectedPanel === 'sports'}" class="w-1/4 border-b-2 border-transparent px-1 py-2 text-center text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-300">⚽️</a>
+        <a href="#" (click)="selectedPanel = 'animaux'" [ngClass]="{'border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400': selectedPanel === 'animaux'}" class="w-1/4 border-b-2 border-transparent px-1 py-2 text-center text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-300">🐶</a>
+        <a href="#" (click)="selectedPanel = 'aliments'" [ngClass]="{'border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400': selectedPanel === 'aliments'}" class="w-1/4 border-b-2 border-transparent px-1 py-2 text-center text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-300">🍎</a>
+        <a href="#" (click)="selectedPanel = 'sentiments'" [ngClass]="{'border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400': selectedPanel === 'sentiments'}" class="w-1/4 border-b-2 border-transparent px-1 py-2 text-center text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-300">💗</a>
+        <a href="#" (click)="selectedPanel = 'gestes'" [ngClass]="{'border-indigo-500 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400': selectedPanel === 'gestes'}" class="w-1/4 border-b-2 border-transparent px-1 py-2 text-center text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-300">👍</a>
+      </nav>
+    </div>
+    <div [ngClass]="{'hidden': selectedPanel !== 'smileys'}">
+        @for(smiley of smileys; track $index) {
+            <a class="cursor-pointer hover:bg-gray-400 text-lg p-1" (click)="chooseEmoji(smiley)">{{smiley}}</a>
+        }
+    </div>
+    <div class="mt-1" [ngClass]="{'hidden': selectedPanel !== 'meteos'}">
+        @for(meteo of meteos; track $index) {
+            <a class="cursor-pointer hover:bg-gray-400 text-lg p-1" (click)="chooseEmoji(meteo)">{{meteo}}</a>
+        }
+    </div>
+    <div class="mt-1" [ngClass]="{'hidden': selectedPanel !== 'lieux'}">
+        @for(lieu of lieux; track $index) {
+            <a class="cursor-pointer hover:bg-gray-400 text-lg p-1" (click)="chooseEmoji(lieu)">{{lieu}}</a>
+        }
+    </div>
+    <div class="mt-1" [ngClass]="{'hidden': selectedPanel !== 'personnages'}">
+        @for(personnage of personnages; track $index) {
+            <a class="cursor-pointer hover:bg-gray-400 text-lg p-1" (click)="chooseEmoji(personnage)">{{personnage}}</a>
+        }
+    </div>
+    <div class="mt-1" [ngClass]="{'hidden': selectedPanel !== 'gestes'}">
+        @for(geste of gestes; track $index) {
+            <a class="cursor-pointer hover:bg-gray-400 text-lg p-1" (click)="chooseEmoji(geste)">{{geste}}</a>
+        }
+    </div>
+    <div class="mt-1" [ngClass]="{'hidden': selectedPanel !== 'sentiments'}">
+        @for(sentiment of sentiments; track $index) {
+            <a class="cursor-pointer hover:bg-gray-400 text-lg p-1" (click)="chooseEmoji(sentiment)">{{sentiment}}</a>
+        }
+    </div>
+    <div class="margin-t10" [ngClass]="{'hidden': selectedPanel !== 'accessoires'}">
+        @for(accessoire of accessoires; track $index) {
+            <a class="cursor-pointer hover:bg-gray-400 text-lg p-1" (click)="chooseEmoji(accessoire)">{{accessoire}}</a>    
+        }
+    </div>
+    <div class="mt-1" [ngClass]="{'hidden': selectedPanel !== 'sports'}">
+        @for(sport of sports; track $index) {
+            <a class="cursor-pointer hover:bg-gray-400 text-lg p-1" (click)="chooseEmoji(sport)">{{sport}}</a>    
+        }
+    </div>
+    <div class="mt-1" [ngClass]="{'hidden': selectedPanel !== 'animaux'}">
+        @for(animal of animaux; track $index) {
+            <a class="cursor-pointer hover:bg-gray-400 text-lg p-1" (click)="chooseEmoji(animal)">{{animal}}</a>    
+        }
+    </div>
+    <div class="mt-1" [ngClass]="{'hidden': selectedPanel !== 'aliments'}">
+        @for(aliment of aliments; track $index) {
+            <a class="cursor-pointer hover:bg-gray-400 text-lg p-1" (click)="chooseEmoji(aliment)">{{aliment}}</a> 
+        }      
+    </div>
+</div>
+</div>

@@ -8,35 +8,53 @@
     <!-- <button [ngClass]="{'visible': visible, 'hidden': !visible}" (click)="close()" class="text-primary-bourgad-2 cursor-pointer -ml-8 hover:text-gray-600 text-2xl leading-none" type="button" aria-label="Fermer">&times;</button> -->
   </div>
   <div id="modal-post" [ngClass]="{'visible': visible, 'hidden': !visible}" class="z-modal flex items-center justify-center inset-0">
-      <form class="bg-gray-900 rounded-lg shadow-lg w-full max-w-lg p-6 relative" (ngSubmit)="makePost()">
 
-        <bgd-dropdown class="mb-2" [name]="'category'" [dropdownItems]="dropdownCategories" (selectedItem$)="selectCategory($event)" placeholder="Choisir une catégorie"></bgd-dropdown>
-        <bgd-dropdown class="mb-2" [name]="'subcategory'" [dropdownItems]="dropdownSubCategories" (selectedItem$)="selectSubCategory($event)" placeholder="Choisir une sous-catégorie"></bgd-dropdown>
+        <form [formGroup]="makePostForm" class="bg-gray-900 rounded-lg shadow-lg w-full max-w-lg p-6 relative" (ngSubmit)="makePost()">
 
-        <!-- Textarea -->
-        <div class="mb-4">
-          <textarea name="contenu" [(ngModel)]="contenu" id="postText" rows="4" class="bg-gray-950 text-gray-300 w-full border border-gray-500 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:bg-gray-900" placeholder="Un conseil, un souvenir, une idée, un service..."></textarea>
-        </div>
-        <!-- Pictures Upload -->
-        <div class="mb-4 flex rounded-lg border border-gray-200 relative p-3 pt-4">
-          <div class="absolute -top-3 place-content-center bg-gray-900 text-gray-200 px-3 uppercase font-bold text-sm">Ajouter</div>
-          <button type="button"
-                  class="ml-2 w-6 h-6 cursor-pointer bg-transparent border-none p-0 flex items-center justify-center focus:outline-primary-bourgad-2"
-                  (click)="openFilePicker()"
-                  (keydown.enter)="openFilePicker()"
-                  (keypress)="openFilePicker()"
-                  aria-label="Ajouter une image">
-            <img src="assets/add_picture.svg" alt="" class="w-6 h-6 pointer-events-none" />
-          </button>
-        </div>
-        <!-- Submit Button -->
-        <div class="mt-5 sm:mt-6">
-          <button type="submit" class="cursor-pointer inline-flex w-full justify-center rounded-md bg-primary-bourgad px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-primary-bourgad-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Publier</button>
-        </div>
-        <div class="mt-3 sm:mt-4">
-          <button (click)="close()" class="cursor-pointer inline-flex w-full justify-center rounded-md bg-gray-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-gray-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Annuler</button>
-        </div>
-      </form>
+          @if(this.formVisible){
+            <bgd-dropdown class="mb-2" [name]="'category'" [dropdownItems]="dropdownCategories" (selectedItem$)="selectCategory($event)" placeholder="Choisir une catégorie"></bgd-dropdown>
+            <bgd-dropdown class="mb-2" [name]="'subcategory'" [dropdownItems]="dropdownSubCategories" (selectedItem$)="selectSubCategory($event)" placeholder="Choisir une sous-catégorie"></bgd-dropdown>
+            
+            <div class="mb-2">
+              <input placeholder="Titre" formControlName="title" type="text" required  class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm/6">
+            </div>
+            <!-- Textarea -->
+            <div class="mb-4 relative">
+              <bgd-text-editor
+                formControlName="content"
+                placeholder="Ajoute un commentaire...">
+              </bgd-text-editor>
+            </div>
+            <!-- Pictures Upload -->
+            <div class="mb-4 flex rounded-lg border border-gray-200 relative p-3 pt-4">
+              <div class="absolute -top-3 place-content-center bg-gray-900 text-gray-200 px-3 uppercase font-bold text-sm">Ajouter</div>
+              <button type="button"
+                      class="ml-2 w-6 h-6 cursor-pointer bg-transparent border-none p-0 flex items-center justify-center focus:outline-primary-bourgad-2"
+                      (click)="openPicture()"
+                      (keydown.enter)="openPicture()"
+                      (keypress)="openPicture()"
+                      aria-label="Ajouter une image">
+                <img src="assets/add_picture.svg" alt="" class="w-6 h-6 pointer-events-none" />
+              </button>
+            </div>
+            <!-- Submit Button -->
+            <div class="mt-5 sm:mt-6">
+              @if(this.isLoading){
+                <button class="cursor-pointer inline-flex w-full justify-center rounded-md bg-primary-bourgad px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-primary-bourgad-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                  <bgd-spinner [width]="'w-auto'"></bgd-spinner>
+                </button>
+              }
+              @else{
+                <button type="submit" class="cursor-pointer inline-flex w-full justify-center rounded-md bg-primary-bourgad px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-primary-bourgad-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Publier</button>
+              }
+            </div>
+            <div class="mt-3 sm:mt-4">
+              <button (click)="close()" class="cursor-pointer inline-flex w-full justify-center rounded-md bg-gray-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-gray-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Annuler</button>
+            </div>
+          }
+          <bgd-loadpicture #loadPicture></bgd-loadpicture>
+          
+        </form>
   </div>
 
 </div>

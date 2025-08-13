@@ -1,7 +1,7 @@
 import { Post } from './post.model';
 import { User } from './user.model';
 
-export interface LikePost {
+export interface Like {
     likeId: number;
     userId: number;
     postId: number;

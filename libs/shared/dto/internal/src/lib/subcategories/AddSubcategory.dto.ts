@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString, IsUrl } from "class-validator";
 
 export class AddSubcategoryDto {
     @IsNotEmpty()
@@ -9,5 +9,8 @@ export class AddSubcategoryDto {
     @IsNotEmpty()
     @IsNumber()
     categoryId: number;
+    @IsUrl()
     iconUrl: string;
+    @IsString()
+    description?: string;
 }

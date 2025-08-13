@@ -18,7 +18,7 @@ export enum SenseOfResults {
 @Component({
     selector: "bgd-search-place-modal",
     standalone: true,
-    templateUrl: './SearchPlace.modal.html',
+    templateUrl: './Search-place.modal.html',
     imports: [CommonModule, FormsModule, SpinnerComponent],
 })
 export class SearchPlace implements OnInit {

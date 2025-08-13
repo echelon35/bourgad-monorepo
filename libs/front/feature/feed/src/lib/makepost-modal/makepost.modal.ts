@@ -1,10 +1,10 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject } from "@angular/core";
-import { FormsModule } from "@angular/forms";
+import { Component, inject, ViewChild } from "@angular/core";
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Category, Post, Subcategory } from "@bourgad-monorepo/model";
 // import { Picture } from "src/app/core/Model/Picture";
-import { DropdownComponent, DropdownItem } from "@bourgad-monorepo/ui";
-import { CategoryApiService, selectUser, TitlecaseString } from "@bourgad-monorepo/core";
+import { DropdownComponent, DropdownItem, ToastrService, SpinnerComponent, LoadPictureComponent, EmojiComponent, TextEditorComponent } from "@bourgad-monorepo/ui";
+import { CategoryApiService, PostApiService, selectUser, TitlecaseString } from "@bourgad-monorepo/core";
 import { Store } from "@ngrx/store";
 import { map, Observable } from "rxjs";
 
@@ -13,29 +13,42 @@ import { map, Observable } from "rxjs";
     selector: 'bgd-makepost',
     templateUrl: './makepost.modal.html',
     standalone: true,
-    imports: [CommonModule, FormsModule, DropdownComponent],
+    imports: [CommonModule, ReactiveFormsModule, DropdownComponent, SpinnerComponent, LoadPictureComponent, TextEditorComponent],
     providers: [CategoryApiService]
 })
 export class MakePostModal {
     visible = false;
+    formVisible = true;
     visibleCategories = false;
     post: Post = {} as Post;
     dropdownCategories: DropdownItem[] = [];
     dropdownSubCategories: DropdownItem[] = [];
     categories: Category[] = [];
     subcategories: Subcategory[] = [];
+    makePostForm: FormGroup;
+    isLoading = false;
 
     selectedCategory: Category | null = null;
     selectedSubCategory: Subcategory | null = null;
-    contenu = "";
+
+    @ViewChild('loadPicture') loadPicture?: LoadPictureComponent;
 
     readonly store = inject(Store);
     readonly categoryApiService = inject(CategoryApiService);
+    readonly postApiService = inject(PostApiService);
+    private readonly toastrService = inject(ToastrService);
+    private readonly fb = inject(FormBuilder);
 
     placeholder$: Observable<string>;
     avatarUrl$: Observable<string>;
 
     constructor() {
+
+        this.makePostForm = this.fb.group({
+            title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+            content: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(1000)]]
+        });
+
         this.categoryApiService.getCategories().subscribe(cats => {
             this.categories = cats;
             console.log(cats);
@@ -118,25 +131,94 @@ export class MakePostModal {
         this.visibleCategories = !this.visibleCategories;
     }
 
-    openFilePicker(){
-        // Logic to open file picker for image upload
-        // This could involve using an input element of type file
-        console.log('File picker opened');
-    }
-
-    makePost(){
-        this.post.content = this.contenu;
-        this.post.subcategory = this.selectedSubCategory!;
-        // Logic to handle post creation
-        // This could involve gathering form data and sending it to a backend service
-        console.log('Post created :', this.post);
-    }
-
     open(){
         this.visible = true;
     }
 
     close(){
         this.visible = false;
+    }
+
+    sendPost(userId: number){
+        this.post.userId = userId;
+        this.post.content = this.content.value;
+        this.post.title = this.title.value;
+        this.post.subcategoryId = this.selectedSubCategory.subcategoryId!;
+        this.postApiService.postPost(this.post).subscribe({
+            next: (response) => {
+                this.toastrService.success('Post créé avec succès ! Celui-ci sera visible après modération.');
+                this.close();
+                this.post = {} as Post;
+                this.isLoading = false;
+            },
+            error: (error) => {
+                this.toastrService.error('Erreur lors de la création du post.');
+                this.isLoading = false;
+            },
+        });
+    }
+
+    get title() {
+        return this.makePostForm.get('title');
+    }
+
+    get content() {
+        return this.makePostForm.get('content');
+    }
+
+    handleErrors(): boolean{
+        if(this.title.getError('required')) {
+            this.toastrService.error('Veuillez entrer un titre pour votre publication.');
+            this.isLoading = false;
+            return true;
+        }
+        else if(this.title.getError('minlength') || this.title.getError('maxlength')) {
+            this.toastrService.error('Le titre doit contenir entre 3 et 50 caractères.');
+            this.isLoading = false;
+            return true;
+        }
+
+        if(this.selectedSubCategory == null){
+            this.toastrService.error('Veuillez sélectionner une sous-catégorie dans la liste déroulante.');
+            this.isLoading = false;
+            return true;
+        }
+        
+        if(this.content.getError('required')) {
+            this.toastrService.error('Veuillez entrer un contenu pour votre publication.');
+            this.isLoading = false;
+            return true;
+        }
+        else if(this.content.getError('minlength') || this.content.getError('maxlength')) {
+            this.toastrService.error('Le contenu doit contenir entre 3 et 500 caractères.');
+            this.isLoading = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    makePost() {
+        this.isLoading = true;
+        setTimeout(() => {
+            if(!this.handleErrors()) {
+                this.store.select(selectUser).subscribe(user => {
+                    this.sendPost(user?.userId);
+                });
+            }
+        }, 500);
+
+    }
+
+    openPicture(){
+        this.loadPicture?.open();
+    }
+
+    hideForm(){
+        this.formVisible = false;
+    }
+
+    addEmojiToPost(emoji: string){
+        this.content.setValue(this.content.value.toString() + emoji);
     }
 }
