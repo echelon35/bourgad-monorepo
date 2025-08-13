@@ -21,6 +21,7 @@ import { OrganisationEntity, OrganisationTypeEntity } from '@bourgad-monorepo/ap
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard, RolesGuard } from '@bourgad-monorepo/api/core';
 import { SeedModule } from '@bourgad-monorepo/api/seed';
+import { CommentEntity, LikeEntity, PostEntity, PostModule } from '@bourgad-monorepo/api/post';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { SeedModule } from '@bourgad-monorepo/api/seed';
     MediaModule,
     UserModule,
     SeedModule,
+    PostModule,
     AuthenticationModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -51,7 +53,10 @@ import { SeedModule } from '@bourgad-monorepo/api/seed';
         RoleEntity,
         OrganisationTypeEntity,
         OrganisationEntity,
-        UserEntity
+        UserEntity,
+        PostEntity,
+        CommentEntity,
+        LikeEntity,
       ],
       synchronize: true,
       logging: true,

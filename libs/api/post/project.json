@@ -1,0 +1,20 @@
+{
+  "name": "post",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/api/post/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/api/post",
+        "tsConfig": "libs/api/post/tsconfig.lib.json",
+        "packageJson": "libs/api/post/package.json",
+        "main": "libs/api/post/src/index.ts",
+        "assets": ["libs/api/post/*.md"]
+      }
+    }
+  }
+}

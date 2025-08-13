@@ -25,6 +25,7 @@
       "@bourgad-monorepo/api/mail": ["libs/api/mail/src/index.ts"],
       "@bourgad-monorepo/api/media": ["libs/api/media/src/index.ts"],
       "@bourgad-monorepo/api/organisation": ["libs/api/organisation/src/index"],
+      "@bourgad-monorepo/api/post": ["libs/api/post/src/index.ts"],
       "@bourgad-monorepo/api/seed": ["libs/api/seed/src/index.ts"],
       "@bourgad-monorepo/api/territory": ["libs/api/territory/src/index"],
       "@bourgad-monorepo/api/user": ["libs/api/user/src/index.ts"],
