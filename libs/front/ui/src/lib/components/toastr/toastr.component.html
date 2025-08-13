@@ -7,7 +7,7 @@
         'ease-in duration-300 opacity-0': !toastr.visible,
         'translate-y-2 sm:translate-y-0 sm:translate-x-2': !toastr.visible
       }"
-       class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black/5  ease-out duration-300 transition">
+       class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-gray-800 shadow-lg ring-1 ring-black/5  ease-out duration-300 transition">
         <div class="p-4">
           <div class="flex items-start">
             <div class="shrink-0">
@@ -29,7 +29,7 @@
             <div class="ml-3 w-0 flex-1 pt-0.5">
               <p 
               [class.text-orange-500]="toastr.type === ToastrType.WARNING"
-              [class.text-red-500]="toastr.type === ToastrType.ERROR"
+              [class.text-red-400]="toastr.type === ToastrType.ERROR"
               [class.text-blue-500]="toastr.type === ToastrType.INFO"
               [class.text-green-500]="toastr.type === ToastrType.SUCCESS"
               class="text-sm font-medium">{{toastr.title}}</p>
@@ -38,7 +38,7 @@
               }
             </div>
             <div class="ml-4 flex shrink-0 cursor-pointer">
-              <button (click)="hide(toastr)" type="button" class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+              <button (click)="hide(toastr)" type="button" class="inline-flex rounded-md bg-gray-800 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                 <span class="sr-only">Close</span>
                 <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
                   <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
