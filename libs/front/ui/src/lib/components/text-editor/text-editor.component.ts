@@ -8,7 +8,7 @@ import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from "@angular/forms";
     templateUrl: './text-editor.component.html',
     standalone: true,
     selector: 'bgd-text-editor',
-      providers: [
+    providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => TextEditorComponent),
@@ -18,6 +18,7 @@ import { NG_VALUE_ACCESSOR, ReactiveFormsModule } from "@angular/forms";
 })
 export class TextEditorComponent {
   @Input() placeholder = 'Écris un commentaire...';
+  @Input() maxLength = 200;
   content = '';
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onChange: (value: string) => void = () => {};
