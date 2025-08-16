@@ -1,23 +1,39 @@
 <div class="relative w-full my-2">
     <button (click)="openDropdown()" id="dropdownBtn-{{this.name}}" data-dropdown-toggle="dropdown" class="border-0 border-gray-500 flex w-full bg-white/5 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm/6 text-gray-200 rounded-md px-3 py-1 cursor-pointer items-center justify-between" type="button">
-        <span class="text-gray-500">{{placeholder}}</span>
-        <svg class="absolute right-4 w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+        @if(selectedItem){
+            @if(selectedItem.icon){
+                <img [src]="selectedItem.icon" alt="{{ selectedItem.label }}" class="size-6 mx-1 text-primary-bourgad">
+            }
+            <a href="#" class="text-left block px-4 py-1 w-full sm:text-xs/6">
+                {{selectedItem.label}}
+                <p class="text-gray-500 dark:text-gray-400 sm:text-xs/6 truncate pr-6">{{selectedItem.description}}</p>
+            </a>
+            <svg class="absolute right-4 w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-        </svg>
+            </svg>
+        }
+        @else{
+            <span class="text-gray-500">{{placeholder}}</span>
+            <svg class="absolute right-4 w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+            </svg>
+        }
     </button>
 
     <!-- Dropdown menu -->
     <div id="dropdown-{{this.name}}" class="hidden z-modal-2 absolute bg-white divide-y divide-gray-100 rounded-lg shadow-sm dark:bg-gray-700 w-full max-h-80 overflow-y-auto overflow-x-hidden">
         <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
-            <li class="flex items-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white w-full px-2" *ngFor="let item of dropdownItems" (click)="selectItem(item)">
-                @if(item.icon){
-                    <img [src]="item.icon" alt="{{ item.label }}" class="size-6 mx-1 text-primary-bourgad">
-                }
-                <a href="#" class="block px-4 py-1 w-full sm:text-xs/6">
-                    {{ item.label }}
-                    <p class="text-gray-500 dark:text-gray-400 sm:text-xs/6 truncate pr-4">{{ item.description }}</p>
-                </a>
-            </li>
+            @for(item of dropdownItems; track $index){
+                <li class="flex items-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white w-full px-2" (click)="selectItem(item)">
+                    @if(item.icon){
+                        <img [src]="item.icon" alt="{{ item.label }}" class="size-6 mx-1 text-primary-bourgad">
+                    }
+                    <a href="#" class="block px-4 py-1 w-full sm:text-xs/6">
+                        {{ item.label }}
+                        <p class="text-gray-500 dark:text-gray-400 sm:text-xs/6 truncate pr-4">{{ item.description }}</p>
+                    </a>
+                </li>
+            }
         </ul>
     </div>
 
