@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { PostEntity } from "./post.entity";
 import { UserEntity } from "@bourgad-monorepo/api/user";
 import { Comment } from "@bourgad-monorepo/model";
@@ -21,10 +21,10 @@ export class CommentEntity implements Comment {
     deletedAt: Date | null;
 
     /** Associations */
-    @ManyToOne(() => PostEntity, (post) => post.postId)
+    @OneToMany(() => PostEntity, (post) => post.postId)
     @JoinColumn({ name: 'post_id' })
     post: PostEntity;
-    @ManyToOne(() => UserEntity, (user) => user.userId)
+    @OneToOne(() => UserEntity, (user) => user.userId)
     @JoinColumn({ name: 'user_id' })
     user: UserEntity;
 }
