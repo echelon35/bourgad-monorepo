@@ -1,9 +1,9 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { Category, Post, Subcategory } from "@bourgad-monorepo/model";
+import { Category, Media, Post, Subcategory } from "@bourgad-monorepo/model";
 // import { Picture } from "src/app/core/Model/Picture";
-import { DropdownComponent, DropdownItem, ToastrService, SpinnerComponent, LoadPictureComponent, EmojiComponent, TextEditorComponent } from "@bourgad-monorepo/ui";
+import { DropdownComponent, DropdownItem, ToastrService, SpinnerComponent, LoadPictureComponent, TextEditorComponent, Preview } from "@bourgad-monorepo/ui";
 import { CategoryApiService, PostApiService, selectUser, TitlecaseString } from "@bourgad-monorepo/core";
 import { Store } from "@ngrx/store";
 import { map, Observable } from "rxjs";
@@ -18,7 +18,7 @@ import { map, Observable } from "rxjs";
 })
 export class MakePostModal {
     visible = false;
-    formVisible = true;
+    formVisible: 'files' | 'form' | 'location' = 'form';
     visibleCategories = false;
     post: Post = {} as Post;
     dropdownCategories: DropdownItem[] = [];
@@ -27,10 +27,13 @@ export class MakePostModal {
     subcategories: Subcategory[] = [];
     makePostForm: FormGroup;
     isLoading = false;
+    savedPreviews: Preview[] = [];
 
     selectedCategory: Category | null = null;
     selectedSubCategory: Subcategory | null = null;
 
+    @ViewChild('category') category?: DropdownComponent;
+    @ViewChild('subcategory') subcategory?: DropdownComponent;
     @ViewChild('loadPicture') loadPicture?: LoadPictureComponent;
 
     readonly store = inject(Store);
@@ -46,7 +49,8 @@ export class MakePostModal {
 
         this.makePostForm = this.fb.group({
             title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-            content: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(1000)]]
+            content: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(1000)]],
+            pictures: []
         });
 
         this.categoryApiService.getCategories().subscribe(cats => {
@@ -144,18 +148,53 @@ export class MakePostModal {
         this.post.content = this.content.value;
         this.post.title = this.title.value;
         this.post.subcategoryId = this.selectedSubCategory.subcategoryId!;
-        this.postApiService.postPost(this.post).subscribe({
-            next: (response) => {
-                this.toastrService.success('Post créé avec succès ! Celui-ci sera visible après modération.');
-                this.close();
-                this.post = {} as Post;
-                this.isLoading = false;
-            },
-            error: (error) => {
-                this.toastrService.error('Erreur lors de la création du post.');
-                this.isLoading = false;
-            },
-        });
+        if(this.savedPreviews.length > 0) {
+            this.postApiService.postMedia(this.pictures.value).subscribe({
+                next: (medias: Media[]) => {
+                        this.post.medias = medias;
+                        this.postApiService.postPost(this.post).subscribe({
+                            next: () => {
+                                this.toastrService.success('Post créé avec succès ! Celui-ci sera visible après modération.');
+                                this.close();
+                                this.resetFormAfterPost();
+                                this.isLoading = false;
+                            },
+                            error: (error) => {
+                                this.toastrService.error('Erreur lors de la création du post.');
+                                this.isLoading = false;
+                            },
+                        });
+                },
+                error: (error) => {
+                    this.toastrService.error('Erreur lors du téléchargement des médias.');
+                },
+            });
+        }
+        else{
+            this.postApiService.postPost(this.post).subscribe({
+                next: () => {
+                    this.toastrService.success('Post créé avec succès ! Celui-ci sera visible après modération.');
+                    this.close();
+                    this.resetFormAfterPost();
+                    this.isLoading = false;
+                },
+                error: (error) => {
+                    this.toastrService.error('Erreur lors de la création du post.');
+                    this.isLoading = false;
+                },
+            });
+        }
+
+    }
+
+    resetFormAfterPost(){
+        this.post = {} as Post;
+        this.selectedCategory = null;
+        this.selectedSubCategory = null;
+        this.category?.resetDropdown();
+        this.subcategory?.resetDropdown();
+        this.makePostForm.reset();
+        this.savedPreviews = [];
     }
 
     get title() {
@@ -164,6 +203,10 @@ export class MakePostModal {
 
     get content() {
         return this.makePostForm.get('content');
+    }
+
+    get pictures() {
+        return this.makePostForm.get('pictures');
     }
 
     handleErrors(): boolean{
@@ -211,14 +254,19 @@ export class MakePostModal {
     }
 
     openPicture(){
-        this.loadPicture?.open();
+        this.formVisible = 'files';
     }
 
     hideForm(){
-        this.formVisible = false;
+        this.formVisible = 'form';
     }
 
     addEmojiToPost(emoji: string){
         this.content.setValue(this.content.value.toString() + emoji);
+    }
+
+    savedFiles(previews: Preview[]): void {
+        this.savedPreviews = previews;
+        this.formVisible = 'form';
     }
 }

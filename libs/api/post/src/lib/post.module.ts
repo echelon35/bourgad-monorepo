@@ -5,9 +5,10 @@ import { LikeEntity } from './infrastructure/like.entity';
 import { CommentEntity } from './infrastructure/comment.entity';
 import { PostController } from './controller/post.controller';
 import { PostService } from './application/post.service';
+import { MediaModule } from '@bourgad-monorepo/api/media';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PostEntity, LikeEntity, CommentEntity])],
+  imports: [TypeOrmModule.forFeature([PostEntity, LikeEntity, CommentEntity]), MediaModule],
   controllers: [PostController],
   providers: [PostService],
   exports: [],

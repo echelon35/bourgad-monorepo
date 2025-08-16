@@ -32,16 +32,16 @@ export class PostEntity implements Post {
 
     /** Associations */
     @ManyToOne(() => SubCategoryEntity, (subcategory) => subcategory.subcategoryId)
+    @JoinColumn({ name: 'subcategory_id' })
     subcategory: SubCategoryEntity;
-    @OneToMany(() => MediaEntity, (media) => media.mediaId)
+    @ManyToMany(() => MediaEntity)
+    @JoinTable({ name: 'post_medias' })
     medias: MediaEntity[];
-    @ManyToMany(() => LikeEntity)
-    @JoinTable({ name: 'posts_likes' })
+    @OneToMany(() => LikeEntity, (like) => like.postId)
     likes: LikeEntity[];
-    @ManyToMany(() => CommentEntity)
-    @JoinTable({ name: 'posts_comments' })
+    @OneToMany(() => CommentEntity, (comment) => comment.postId)
     comments: CommentEntity[];
-    @OneToMany(() => UserEntity, (user) => user.userId)
-    @JoinColumn({name: 'user_id'})
+    @ManyToOne(() => UserEntity, (user) => user.userId)
+    @JoinColumn({ name: 'user_id' })
     user: UserEntity;
 }

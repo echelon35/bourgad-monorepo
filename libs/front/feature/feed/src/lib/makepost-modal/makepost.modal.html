@@ -11,10 +11,10 @@
 
         <form [formGroup]="makePostForm" class="bg-gray-900 rounded-lg shadow-lg w-full max-w-lg p-6 relative" (ngSubmit)="makePost()">
 
-          @if(this.formVisible){
-            <bgd-dropdown class="mb-2" [name]="'category'" [dropdownItems]="dropdownCategories" (selectedItem$)="selectCategory($event)" placeholder="Choisir une catégorie"></bgd-dropdown>
-            <bgd-dropdown class="mb-2" [name]="'subcategory'" [dropdownItems]="dropdownSubCategories" (selectedItem$)="selectSubCategory($event)" placeholder="Choisir une sous-catégorie"></bgd-dropdown>
-            
+          <div [ngClass]="{'visible': formVisible === 'form', 'hidden': formVisible !== 'form'}">
+            <bgd-dropdown #category class="mb-2" [name]="'category'" [dropdownItems]="dropdownCategories" (selectedItem$)="selectCategory($event)" placeholder="Choisir une catégorie"></bgd-dropdown>
+            <bgd-dropdown #subcategory class="mb-2" [name]="'subcategory'" [dropdownItems]="dropdownSubCategories" (selectedItem$)="selectSubCategory($event)" placeholder="Choisir une sous-catégorie"></bgd-dropdown>
+
             <div class="mb-2">
               <input placeholder="Titre" formControlName="title" type="text" required  class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm/6">
             </div>
@@ -37,6 +37,16 @@
                 <img src="assets/add_picture.svg" alt="" class="w-6 h-6 pointer-events-none" />
               </button>
             </div>
+            @if(savedPreviews?.length > 0){
+                <div class="mt-4 mb-6 flex flex-wrap gap-4">
+                    @for(preview of savedPreviews; track preview){
+                        <div class="relative text-gray-400 size-16">
+                            <img [src]="preview.url" alt="{{preview.file.name}}" class="w-full h-auto rounded-lg">
+                            <p class="absolute bottom-0 left-0 right-0 text-center text-xs/5 bg-gray-900 bg-opacity-75 text-white truncate">{{preview.file.name}}</p>
+                        </div>
+                    }
+                </div>
+            }
             <!-- Submit Button -->
             <div class="mt-5 sm:mt-6">
               @if(this.isLoading){
@@ -51,9 +61,10 @@
             <div class="mt-3 sm:mt-4">
               <button (click)="close()" class="cursor-pointer inline-flex w-full justify-center rounded-md bg-gray-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-gray-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Annuler</button>
             </div>
-          }
-          <bgd-loadpicture #loadPicture></bgd-loadpicture>
-          
+          </div>
+
+          <bgd-loadpicture [ngClass]="{'visible': formVisible === 'files', 'hidden': formVisible !== 'files'}" formControlName="pictures" [multiple]="true" [maxMo]="5" #loadPicture (closed)="savedFiles($event)"></bgd-loadpicture>
+
         </form>
   </div>
 

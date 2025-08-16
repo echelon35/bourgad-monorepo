@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { City, Post } from "@bourgad-monorepo/model";
+import { Media, Post } from "@bourgad-monorepo/model";
 import { CoreConfigService } from "./core.config.service";
 import { AuthenticationApiService } from "./authentication.api.service";
 
@@ -27,7 +27,21 @@ export class PostApiService {
     }
 
     postPost(post: Post): Observable<void> {
+        console.log('postPost called with:', post);
         return this.http.post<void>(this.API_URL + `/post`, post, this.httpOptions);
+    }
+
+    postMedia(medias: File[]): Observable<Media[]> {
+        const formData = new FormData();
+        medias.forEach(media => {
+            formData.append('medias', media);
+        });
+
+        return this.http.post<Media[]>(this.API_URL + `/media/upload`, formData, {
+            headers: {
+                'Authorization': `Bearer ${this.auth_service.getToken()}`
+            }
+        });
     }
 
 }

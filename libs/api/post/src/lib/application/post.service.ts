@@ -12,7 +12,15 @@ export class PostService {
   ) {}
 
   async createPost(postData: Partial<Post>): Promise<Post> {
-    const savedPost = await this.postRepository.save(postData);
-    return savedPost;
+    return this.postRepository.manager.transaction(async (manager) => {
+      const post = manager.create(PostEntity, { 
+        title: postData.title, 
+        content: postData.content, 
+        medias: postData.medias,
+        subcategoryId: postData.subcategoryId,
+        userId: postData.userId,
+      });
+      return manager.save(post);
+    });
   }
 }
