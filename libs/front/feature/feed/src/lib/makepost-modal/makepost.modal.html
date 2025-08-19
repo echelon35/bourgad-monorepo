@@ -26,7 +26,7 @@
               </bgd-text-editor>
             </div>
             <!-- Pictures Upload -->
-            <div class="mb-4 flex rounded-lg border border-gray-200 relative p-3 pt-4">
+            <div class="mb-4 flex items-center rounded-lg border border-gray-200 relative p-3 pt-4">
               <div class="absolute -top-3 place-content-center bg-gray-900 text-gray-200 px-3 uppercase font-bold text-sm">Ajouter</div>
               <button type="button"
                       class="ml-2 w-6 h-6 cursor-pointer bg-transparent border-none p-0 flex items-center justify-center focus:outline-primary-bourgad-2"
@@ -36,11 +36,25 @@
                       aria-label="Ajouter une image">
                 <img src="assets/add_picture.svg" alt="" class="w-6 h-6 pointer-events-none" />
               </button>
+              <button type="button"
+                      class="ml-3 w-6 h-6 cursor-pointer bg-transparent border-none p-0 flex items-center justify-center focus:outline-primary-bourgad-2"
+                      (click)="openLocalisation()"
+                      (keydown.enter)="openLocalisation()"
+                      (keypress)="openLocalisation()"
+                      aria-label="Ajouter une localisation">
+                <img src="assets/add_location.svg" alt="" class="w-6 h-6 pointer-events-none" />
+              </button>
             </div>
+            @if(post.location){
+              <div (click)="openLocalisation()" class="cursor-pointer text-gray-400 hover:text-gray-300 flex items-center mt-2 mb-2 px-2 gap-x-3">
+                <img src="assets/add_location.svg" alt="" class="size-10 inline-block mr-1" />
+                <p class="text-sm">Post localisé à {{post.location.label}}</p>
+              </div>
+            }
             @if(savedPreviews?.length > 0){
                 <div class="mt-4 mb-6 flex flex-wrap gap-4">
                     @for(preview of savedPreviews; track preview){
-                        <div class="relative text-gray-400 size-16">
+                        <div class="relative size-16">
                             <img [src]="preview.url" alt="{{preview.file.name}}" class="w-full h-auto rounded-lg">
                             <p class="absolute bottom-0 left-0 right-0 text-center text-xs/5 bg-gray-900 bg-opacity-75 text-white truncate">{{preview.file.name}}</p>
                         </div>
@@ -64,7 +78,7 @@
           </div>
 
           <bgd-loadpicture [ngClass]="{'visible': formVisible === 'files', 'hidden': formVisible !== 'files'}" formControlName="pictures" [multiple]="true" [maxMo]="5" #loadPicture (closed)="savedFiles($event)"></bgd-loadpicture>
-
+          <bgd-localize-post #localizePost (closed)="saveLocation($event)" [ngClass]="{'visible': formVisible === 'location', 'hidden': formVisible !== 'location'}" ></bgd-localize-post>
         </form>
   </div>
 

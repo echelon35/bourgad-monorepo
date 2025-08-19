@@ -1,20 +1,17 @@
-import { EventEmitter, Input, OnDestroy, Output } from '@angular/core';
-import { SimpleChanges } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, EventEmitter, inject, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component } from '@angular/core';
 import * as L from 'leaflet';
-
-import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import { Observable, Subscription } from 'rxjs';
+import { MapService } from '../../services/map.service';
 
 @Component({
   standalone: true,
   selector: 'bgd-map',
   templateUrl: './map.component.html'
 })
-export class MapComponent implements OnInit,OnDestroy {
+export class MapComponent implements AfterViewInit, OnInit, OnChanges, OnDestroy {
 
   @Input() mapId = 'map';
-  @Input() displayFullscreen = true;
   @Input() allowSearch = false;
   @Input() displayLayers = true;
   @Input() displayScale = true;
@@ -24,12 +21,7 @@ export class MapComponent implements OnInit,OnDestroy {
   @Input() dragMarker = false;
   @Input() zoomDelta = 1;
   @Input() defaultZoom = 3;
-
-  @Input() locationBox?: L.LatLngBounds;
-
-  // @Output() finishedLoading: EventEmitter<boolean> = new EventEmitter<boolean>();
-  @Output() map$ = new EventEmitter<L.Map>();
-  @Output() layer$ = new EventEmitter<L.LayerGroup>();
+  @Input() isVisible = true;
 
   public isLoading = false;
   
@@ -47,28 +39,16 @@ export class MapComponent implements OnInit,OnDestroy {
 
   public mapDetail!: L.Map;
   public mapLayer!: L.LayerGroup;
-  //Prepare the layer group that contains the layer we want to display
 
-  ngOnInit():void{
-    this.initMap();
-    this.updateMap();
-    if(this.cursorEvent != null){
-      this.markerSubscription = this.cursorEvent.subscribe(point => {
-        ////console.log("le curseur de la map se déplace : " + JSON.stringify(point));
-        this.mapDetail.setView(L.latLng(point.coordinates[1],point.coordinates[0]),10)
-        this.markerPost.setLatLng(L.latLng(point.coordinates[1],point.coordinates[0]))
-        this.markerEvent.emit(this.markerPost);
-      })
-    }
-    // if(this.fullscreenMe != null){
-    //   this.fullscreenSubscription = this.fullscreenMe.subscribe(() => $(".leaflet-control-zoom-fullscreen")[0].click())
-    // }
-    this.selectMapZone("METROPOLE");
+  private readonly mapService = inject(MapService);
+
+  ngOnInit(): void {
+    this.mapService.setMap(this.mapId, null, this.isVisible);
   }
 
-  ngOnChanges(changes: SimpleChanges){
-    if(this.mapDetail != undefined){
-      this.updateMap();
+  ngAfterViewInit(): void {
+    if (this.isVisible && !this.mapDetail) {
+      this.initMap();
     }
   }
 
@@ -87,6 +67,7 @@ export class MapComponent implements OnInit,OnDestroy {
   }
 
   initMap(){
+    console.log(this.mapId);
       // Déclaration de la carte avec les coordonnées du centre et le niveau de zoom.
       this.mapDetail = L.map(this.mapId,{
         center: [0, 0],
@@ -99,14 +80,12 @@ export class MapComponent implements OnInit,OnDestroy {
         zoomSnap: 0
       });
 
+      //Map limited to world
       this.limitMap(-90,-360,90,360);
       this.setZoom(6,6,18);
 
       if(this.dragMarker){
         this.draggableMarker();
-      }
-      else if(this.allowSearch){
-        this.addSearchProvider();
       }
 
       if(this.displayScale){
@@ -130,6 +109,30 @@ export class MapComponent implements OnInit,OnDestroy {
         this.movedMap.emit(this.mapDetail);
       },this)
 
+      this.mapService.setMap(this.mapId, this.mapDetail);
+
+      if(this.cursorEvent != null){
+        this.markerSubscription = this.cursorEvent.subscribe(point => {
+          ////console.log("le curseur de la map se déplace : " + JSON.stringify(point));
+          this.mapDetail.setView(L.latLng(point.coordinates[1],point.coordinates[0]),10)
+          this.markerPost.setLatLng(L.latLng(point.coordinates[1],point.coordinates[0]))
+          this.markerEvent.emit(this.markerPost);
+        })
+      }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['isVisible']){
+      console.log('Visibility changed:', this.isVisible);
+    }
+    if (changes['isVisible'] && this.isVisible && !this.mapDetail) {
+      console.log('Map is visible and not initialized, initializing now...');
+      this.initMap();
+    } else if (changes['isVisible'] && this.isVisible && this.mapDetail) {
+      console.log('Map is visible and already initialized, just updating size...');
+      // Si la carte existe et devient visible, on force un redimensionnement
+      setTimeout(() => this.mapDetail?.invalidateSize(), 0);
+    }
   }
 
   layers(){
@@ -224,63 +227,14 @@ export class MapComponent implements OnInit,OnDestroy {
     this.markerPost.addTo(this.mapDetail);
   }
 
-  addSearchProvider(){
-    const provider = new OpenStreetMapProvider({  params: {
-      email: 'a.world.of.disasters@gmail.com', // auth for large number of requests
-      'accept-language': 'fr',
-      addressdetails: 1
-    }});
-
-    this.draggableMarker();
-
-    const searchControl = GeoSearchControl({
-      provider: provider,
-      style: 'button',
-      showPopup: false,
-      autoCompleteDelay: 250,
-      showMarker: true,
-      marker: {
-        icon: new L.Icon({
-          iconUrl: "assets/icones/markers/epingle.png",	
-          iconSize:     [30, 35], // size of icon
-          iconAnchor:   [15, 35], // marker position on icon
-          popupAnchor:  [0, -20] // point depuis lequel la popup doit s'ouvrir relativement à l'iconAnchor
-        }),
-        attribution: "searchControl"
-      },
-      position: 'topleft',
-      keepResult: 'false',
-      autoClose: true,
-      searchLabel: 'Rechercher un lieu',
-      classNames: { container:'form-inline form-group input-group text-light', button: '', resetButton: 'd-none', msgbox: 'bg-dark', form: 'col-10', input: 'search-disaster form-control' }
-    });
-
-    this.mapDetail.addControl(searchControl);
-
-    this.mapDetail.on('geosearch/showlocation',(e)=>{
-      this.mapDetail.eachLayer((item: any) => {
-
-        //Don des coordonnées du marqueur du geosearch au marqueur du témoignage
-        if (item instanceof L.Marker && item != undefined) {
-          if(item.getAttribution !== undefined){
-            const attribution = item.getAttribution();
-            if(attribution == "searchControl"){
-              this.markerPost.setLatLng(item.getLatLng());
-              this.markerEvent.emit(this.markerPost);
-              //Suppression du marqueur du geosearch
-              this.mapDetail.removeLayer(item);
-            }
-          }
-        }
-      });
-    },this);
-
+  getMap(): L.Map {
+    return this.mapDetail;
   }
 
-  updateMap(){
-    this.map$.emit(this.mapDetail);
-    this.layer$.emit(this.mapLayer);
-  }
+  // updateMap(){
+  //   this.map$.emit(this.mapDetail);
+  //   this.layer$.emit(this.mapLayer);
+  // }
 
   selectMapZone(zone: string){
 

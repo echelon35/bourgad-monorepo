@@ -9,4 +9,6 @@ export * from './lib/components/emoji/emoji.component';
 export * from './lib/components/toastr/toastr.component';
 export * from './lib/components/load-picture/load-picture.component';
 export * from './lib/components/text-editor/text-editor.component';
+export * from './lib/components/localize-post/localize-post.component';
 export * from './lib/services/toastr.service';
+export * from './lib/services/map.service';

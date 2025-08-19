@@ -1,14 +1,15 @@
 
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostListener, inject, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, HostListener, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import * as L from "leaflet";
-import { EsriProvider, GeoApiFrProvider, OpenStreetMapProvider } from 'leaflet-geosearch';
-import { debounceTime, fromEvent, map } from 'rxjs';
+import { debounceTime, fromEvent, map, Observable, Subscription } from 'rxjs';
 import { SpinnerComponent } from '../spinner/spinner.component';
-import { CityDto, PlaceDto } from '@bourgad-monorepo/external';
-import {GeoApiService} from '@bourgad-monorepo/core';
+import { PlaceDto } from '@bourgad-monorepo/external';
+import { SearchPlaceService, selectUser } from '@bourgad-monorepo/core';
+import { MapService } from '../../services/map.service';
 import { City } from '@bourgad-monorepo/model';
+import { Store } from '@ngrx/store';
 
 export enum SenseOfResults {
   TOP,
@@ -21,43 +22,62 @@ export enum SenseOfResults {
     templateUrl: './Search-place.modal.html',
     imports: [CommonModule, FormsModule, SpinnerComponent],
 })
-export class SearchPlace implements OnInit {
+export class SearchPlace implements OnInit, OnDestroy, AfterViewInit {
 
     loading = false;
-
+    //Results visibility
     isVisible = false;
-    private wasInside = false;
-
-    public selectedPlace = "";
     public selectedTown?: PlaceDto;
     public filterPlace = "";
     public townList: PlaceDto[] = [];
-    @Input() areaMap?: L.Map;
+    areaMap?: L.Map;
+    searchPlaceLayer = new L.LayerGroup();
+    SenseOfResults: typeof SenseOfResults = SenseOfResults;
+    userCity$: Observable<City | undefined>;
+
+    //Level of zoom when clicking on result
     @Input() zoomLevel = 15;
+    //Type of provider to use for search
     @Input() providerType: 'geoApi' | 'openStreetMap' | 'bourgad' = 'geoApi';
+    //Results on top or bottom of the input
     @Input() senseOfResults: SenseOfResults = SenseOfResults.BOTTOM;
     @Input() placeholder = "Vous cherchez un lieu ?";
     @Input() inputClasses = "block rounded-full bg-black hover:bg-gray-800 pl-10 pr-10 py-1.5 text-base text-gray-400 placeholder:text-gray-400 sm:text-sm/6 w-80 truncate";
+    //Id of the searchPlace (useful when several components in the same view)
+    @Input() mapId = 'bgd';
+    @Input() useGeographicContext = false;
+    
     @Output() selectedPlace$ = new EventEmitter<PlaceDto>();
-    SenseOfResults = SenseOfResults;
 
-    private readonly geoApiService = inject(GeoApiService);
+    private readonly searchPlaceService = inject(SearchPlaceService);
+    private readonly mapService = inject(MapService);
+    private mapSubscription!: Subscription;
+    private readonly store = inject(Store);
 
-    // acceptedTypes: string[] = [
-    //     "administrative",
-    //     "volcano", //VOLCANS
-    //     "river", //COURS D'EAU
-    //     "peak", //MONTAGNE
-    //     "mountain_range", //CHAINE DE MONTAGNES
-    //     "ocean", //OCEAN
-    //     "sea", //MER
-    //     "desert", //DESERT
-    //     "wood", //BOIS
-    //     "attraction" //LIEUX TOURISTIQUES
-    // ]
+    constructor(){
+      this.userCity$ = this.store.select(selectUser).pipe(map(user => user?.city));
+    }
 
-    ngOnInit(){
-      const searchBox = document.getElementById('search-country');
+    ngOnInit(): void {
+      //Wait map initialization before using map from service
+      this.mapSubscription = this.mapService.getMap(this.mapId).subscribe(map => {
+        if (map) {
+          this.areaMap = map;
+        }
+      });
+      if (this.userCity$ != null && this.useGeographicContext) {
+        this.userCity$.subscribe(city => {
+          if (!city || !city.surface) {
+            return;
+          }
+          const cityLayer = L.geoJSON(city.surface);
+          this.searchPlaceService.geographicContext = cityLayer.getBounds();
+        });
+      }
+    }
+
+    ngAfterViewInit(): void {
+      const searchBox = document.getElementById(this.mapId + '-search-country') as HTMLInputElement;
       if(searchBox != null){
         const keyup$ = fromEvent(searchBox, 'keyup');
         keyup$.pipe(
@@ -72,11 +92,15 @@ export class SearchPlace implements OnInit {
       }
     }
 
-    show() {
+    ngOnDestroy(): void {
+      this.mapSubscription.unsubscribe();
+    }
+
+    showResults() {
       this.isVisible = true;
     }
   
-    close() {
+    closeResults() {
       this.isVisible = false;
     }
 
@@ -85,112 +109,63 @@ export class SearchPlace implements OnInit {
       this.selectedPlace$.emit(this.selectedTown);
       console.log(town.marker);
       if(town.marker){
-        this.locationZoom(town.marker);
+        const marker = new L.Marker(town.marker.getLatLng(), {
+          icon: L.icon({
+            iconUrl: 'assets/markers/default_bourgad.svg',
+            iconSize: [50, 82],
+            iconAnchor: [25, 82],
+          })
+        });
+        this.locationZoom(marker);
       }
-      else if(town.boundingbox){
+      
+      if(town.boundingbox){
         this.locationZoom(town.boundingbox);
       }
 
       if(town.name != null){
-        this.filterPlace = town.name!;
+        this.filterPlace = town?.name;
       }
-      this.close();
+      this.closeResults();
     }
 
     clear(){
       this.filterPlace = "";
       this.townList = [];
+      this.searchPlaceLayer.clearLayers();
     }
 
     @HostListener('focusout')
     focusOut(){
       setTimeout(() => {
-        this.close();
+        this.closeResults();
       },100);
     }
 
-    searchFromProvider(){
+    async searchFromProvider(searchedPlace: string){
+      console.log(this.providerType)
+      this.loading = true;
       switch(this.providerType) {
         case 'geoApi':
-          this.searchWithGeoApi();
+          this.townList = await this.searchPlaceService.searchWithGeoApi(searchedPlace);
           break;
         case 'openStreetMap':
-          this.searchWithOpenStreetMap();
+          this.townList = await this.searchPlaceService.searchWithOpenStreetMap(searchedPlace);
           break;
         case 'bourgad':
-          this.searchWithBourgad();
+          this.townList = await this.searchPlaceService.searchWithBourgad(searchedPlace);
           break;
         default:
-          this.searchWithGeoApi();
+          this.townList = await this.searchPlaceService.searchWithGeoApi(searchedPlace);
       }
-    }
-
-    searchWithGeoApi(){
-      const provider = new GeoApiFrProvider({
-        searchUrl: 'https://api-adresse.data.gouv.fr/search',
-        reverseUrl: 'https://api-adresse.data.gouv.fr/reverse',
-      });
-      provider.search({ query: this.filterPlace }).then((res) => {
-        console.log(res);
-          this.townList = [];
-          this.show();
-          res.forEach(cursor => {
-            const thisPlace = new PlaceDto();
-            thisPlace.copyFromGeoApiProvider(cursor);
-            this.townList.push(thisPlace);
-          })
-          this.loading = false;
-      });
-    }
-
-    searchWithOpenStreetMap(){
-      const provider = new OpenStreetMapProvider({
-        params: {
-          'accept-language': 'fr',
-          addressdetails: 1,
-          format: "json",
-          countrycodes: "fr",
-          limit: 100,
-          extratags: 1
-        }
-      });
-      provider.search({ query: this.filterPlace }).then((res) => {
-        console.log(res);
-          this.townList = [];
-          this.show();
-          res.forEach(cursor => {
-            const thisPlace = new PlaceDto();
-            thisPlace.copyFromGeoApiProvider(cursor);
-            this.townList.push(thisPlace);
-          })
-          this.loading = false;
-      });
-    }
-
-    searchWithBourgad(){
-      this.geoApiService.searchCityByName(this.filterPlace).subscribe({
-        next: (res) => {
-          this.townList = [];
-          this.show();
-          res.forEach((thisPlace:City) => {
-            const placeDto = new PlaceDto();
-            placeDto.copyFromBourgad(thisPlace);
-            this.townList.push(placeDto);
-          })
-          this.loading = false;
-        },
-        error: (err) => {
-          console.error(err);
-          this.loading = false;
-        }
-      });
+      this.loading = false;
+      this.showResults();
     }
 
     searchPlace(){
       this.loading = true;
       this.townList = [];
-      this.searchFromProvider();
-  
+      this.searchFromProvider(this.filterPlace);
     }
 
     locationZoom(location: L.LatLngBounds | L.Marker){
@@ -199,7 +174,9 @@ export class SearchPlace implements OnInit {
             this.areaMap.flyToBounds(location);
           }
           else{
-            this.areaMap.addLayer(location);
+            this.searchPlaceLayer.clearLayers();
+            this.searchPlaceLayer.addLayer(location);
+            this.areaMap.addLayer(this.searchPlaceLayer);
             this.areaMap.flyTo(location.getLatLng(),this.zoomLevel);
           }
       }

@@ -2,18 +2,17 @@ import { CommonModule } from "@angular/common";
 import { Component, inject, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Category, Media, Post, Subcategory } from "@bourgad-monorepo/model";
-// import { Picture } from "src/app/core/Model/Picture";
-import { DropdownComponent, DropdownItem, ToastrService, SpinnerComponent, LoadPictureComponent, TextEditorComponent, Preview } from "@bourgad-monorepo/ui";
+import { DropdownComponent, DropdownItem, ToastrService, SpinnerComponent, LoadPictureComponent, TextEditorComponent, Preview, LocalizePostComponent } from "@bourgad-monorepo/ui";
 import { CategoryApiService, PostApiService, selectUser, TitlecaseString } from "@bourgad-monorepo/core";
 import { Store } from "@ngrx/store";
 import { map, Observable } from "rxjs";
-
+import { PlaceDto } from "@bourgad-monorepo/external";
 
 @Component({
     selector: 'bgd-makepost',
     templateUrl: './makepost.modal.html',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, DropdownComponent, SpinnerComponent, LoadPictureComponent, TextEditorComponent],
+    imports: [CommonModule, ReactiveFormsModule, DropdownComponent, SpinnerComponent, LoadPictureComponent, TextEditorComponent, LocalizePostComponent],
     providers: [CategoryApiService]
 })
 export class MakePostModal {
@@ -35,6 +34,7 @@ export class MakePostModal {
     @ViewChild('category') category?: DropdownComponent;
     @ViewChild('subcategory') subcategory?: DropdownComponent;
     @ViewChild('loadPicture') loadPicture?: LoadPictureComponent;
+    @ViewChild('localizePost') localizePost?: LocalizePostComponent;
 
     readonly store = inject(Store);
     readonly categoryApiService = inject(CategoryApiService);
@@ -50,7 +50,8 @@ export class MakePostModal {
         this.makePostForm = this.fb.group({
             title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
             content: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(1000)]],
-            pictures: []
+            pictures: [],
+            location: [],
         });
 
         this.categoryApiService.getCategories().subscribe(cats => {
@@ -141,6 +142,18 @@ export class MakePostModal {
 
     close(){
         this.visible = false;
+    }
+
+    saveLocation(location: PlaceDto) {
+        if(location != null){
+            console.log('Location saved:', location);
+            this.post.location = {
+                type: 'Point',
+                coordinates: [location.longitude, location.latitude],
+                label: location.label
+            };
+        }
+        this.formVisible = 'form'; // Hide the location form after saving
     }
 
     sendPost(userId: number){
@@ -255,6 +268,11 @@ export class MakePostModal {
 
     openPicture(){
         this.formVisible = 'files';
+    }
+
+    openLocalisation(){
+        this.formVisible = 'location';
+        this.localizePost?.open();
     }
 
     hideForm(){

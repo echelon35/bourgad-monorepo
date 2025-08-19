@@ -1,14 +1,14 @@
-import { Component, effect, inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MakePostModal } from '../makepost-modal/makepost.modal';
 import * as L from 'leaflet';
 import { CommonModule } from '@angular/common';
 import { FeedModal } from "../feed-modal/feed.modal";
-import { MapComponent, SearchPlace, SenseOfResults, ToastrService } from '@bourgad-monorepo/ui';
+import { MapComponent, MapService, SearchPlace, SenseOfResults, ToastrService } from '@bourgad-monorepo/ui';
 import { AuthenticationApiService, GeoApiService, selectIsAuthenticated, selectUser, UserApiService, UserStore } from '@bourgad-monorepo/core';
 import { City } from '@bourgad-monorepo/model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { map, Observable } from 'rxjs';
+import { map, Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'bgd-feed',
@@ -17,8 +17,9 @@ import { map, Observable } from 'rxjs';
   providers: [GeoApiService],
   standalone: true
 })
-export class FeedView {
+export class FeedView implements AfterViewInit {
     @ViewChild('makePostModal') makePostModal?: MakePostModal;
+    @ViewChild('feedMap') feedMapComponent?: MapComponent;
     readonly geoApiService = inject(GeoApiService);
     readonly authenticationApiService = inject(AuthenticationApiService);
     readonly route = inject(ActivatedRoute);
@@ -29,10 +30,14 @@ export class FeedView {
     isAuthenticated$: Observable<boolean>;
     avatarUrl$: Observable<string>;
     city$: Observable<City | undefined>;
+    mapId = 'map-feed';
 
     feedMap?: L.Map;
     feedLayer?: L.LayerGroup = new L.LayerGroup();
     public senseOfResults: SenseOfResults = SenseOfResults.TOP;
+
+    private readonly mapService = inject(MapService);
+    private mapSubscription!: Subscription;
 
     constructor() {
 
@@ -65,39 +70,30 @@ export class FeedView {
       );
     }
 
-    /**
-     * Receive map from the map component
-     * @param map 
-     */
-    receiveMap(map: L.Map) {
-      this.feedMap = map;
-      if (this.city$ != null) {
-        this.city$.subscribe(city => {
-          if (city) {
-            this.updateMap(city);
-          }
-        });
-      }
-    }
-
-    updateMap(city: City) {
-      if(this.feedMap) {
-        console.log("City received in feed view: ", city);
-        if (!city || !city.surface) {
-          return;
-        }
-        this.feedLayer?.clearLayers();
-        const cityLayer = L.geoJSON(city.surface, {
-              style: {
-                  color: '#50A3C5',
-                  weight: 3,
-                  opacity: 0.5
+    ngAfterViewInit(): void {
+      this.mapSubscription = this.mapService.getMap(this.mapId).subscribe(map => {
+        if (map) {
+          this.feedMap = map;
+          if (this.city$ != null) {
+            this.city$.subscribe(city => {
+              if (!city || !city.surface) {
+                return;
               }
-        });
-        this.feedMap!.flyToBounds(cityLayer.getBounds());
-        cityLayer.addTo(this.feedLayer!);
-        this.feedLayer.addTo(this.feedMap!);
-      }
+              this.feedLayer?.clearLayers();
+              const cityLayer = L.geoJSON(city.surface, {
+                    style: {
+                        color: '#50A3C5',
+                        weight: 3,
+                        opacity: 0.5
+                    }
+              });
+              this.feedMap!.flyToBounds(cityLayer.getBounds());
+              cityLayer.addTo(this.feedLayer!);
+              this.feedLayer.addTo(this.feedMap!);
+            });
+          }
+        }
+      });
     }
 
     openFeed() {

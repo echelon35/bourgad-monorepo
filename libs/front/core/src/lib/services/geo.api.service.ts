@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { firstValueFrom, Observable } from "rxjs";
 import { City } from "@bourgad-monorepo/model";
 import { CoreConfigService } from "./core.config.service";
 import { AuthenticationApiService } from "./authentication.api.service";
@@ -30,7 +30,8 @@ export class GeoApiService {
         return this.http.get<City>(this.API_URL + `/geo/city/${cityId}`, this.httpOptions);
     }
 
-    searchCityByName(name: string): Observable<City[]> {
-        return this.http.get<City[]>(this.API_URL + `/geo/cities?name=${name}`, this.httpOptions);
+    searchCityByName(name: string): Promise<City[]> {
+        return firstValueFrom(this.http.get<City[]>(this.API_URL + `/geo/cities?name=${name}`, this.httpOptions));
     }
+
 }
