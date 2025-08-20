@@ -1,4 +1,4 @@
-  <div class="my-auto mx-auto w-full max-w-md rounded-md p-10 bg-gray-900/80">
+  <div class="my-auto mx-auto w-full max-w-md rounded-md py-5 px-10 bg-gray-900/80">
     <div>
       <!-- @if(success) {
         <div class="mt-4 mx-auto flex size-12 items-center justify-center rounded-full bg-green-100">
@@ -23,13 +23,8 @@
               <bgd-map [isVisible]="isVisible" [mapId]="this.mapId" [defaultZoom]="2" [displayScale]="false" [displayZoom]="false" [displayLayers]="false"></bgd-map>
           </div>
         <div class="mt-5 sm:mt-6">
-              @if(this.isLoading){
-                <button type="button" class="cursor-pointer inline-flex w-full justify-center rounded-md bg-primary-bourgad px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-primary-bourgad-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                  <bgd-spinner [width]="'w-auto'"></bgd-spinner>
-                </button>
-              }
-              @else{
-                <button type="button" (click)="saveUserPost()" class="cursor-pointer inline-flex w-full justify-center rounded-md bg-primary-bourgad px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-primary-bourgad-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Enregistrer cette localisation</button>
+              @if(this.location !== undefined && this.location !== this.saved_location){
+                <button type="button" (click)="savePostLocation()" class="cursor-pointer inline-flex w-full justify-center rounded-md bg-primary-bourgad px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-primary-bourgad-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Enregistrer cette localisation</button>
               }
             </div>
             @if(this.saved_location !== undefined){
@@ -41,7 +36,6 @@
               <button type="button" (click)="cancel()" class="cursor-pointer inline-flex w-full justify-center rounded-md bg-gray-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-gray-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Retour</button>
             </div>
         </div>
-      <!-- } -->
     </div>
 
   </div>

@@ -4,8 +4,6 @@ import L from "leaflet";
 import { map, Observable, Subscription } from "rxjs";
 import { SearchPlace } from "../search-place/search-place.modal";
 import { MapComponent } from "../map/map.component";
-import { Point } from "geojson";
-import { SpinnerComponent } from "../spinner/spinner.component";
 import { Store } from "@ngrx/store";
 import { selectUser } from "@bourgad-monorepo/core";
 import { MapService } from "../../services/map.service";
@@ -14,7 +12,7 @@ import { PlaceDto } from "@bourgad-monorepo/external";
 @Component({
   selector: "bgd-localize-post",
   templateUrl: "./localize-post.component.html",
-  imports: [SearchPlace, MapComponent, SpinnerComponent],
+  imports: [SearchPlace, MapComponent],
   standalone: true
 })
 export class LocalizePostComponent implements OnInit {
@@ -64,7 +62,9 @@ export class LocalizePostComponent implements OnInit {
                       opacity: 0.5
                   }
             });
-            this.localizeMap!.flyToBounds(cityLayer.getBounds());
+            this.localizeMap!.flyToBounds(cityLayer.getBounds(),{
+              duration: 1,
+            });
             cityLayer.addTo(this.localizeLayer!);
             this.localizeLayer.addTo(this.localizeMap!);
           });
@@ -78,7 +78,7 @@ export class LocalizePostComponent implements OnInit {
     this.location = event;
   }
 
-  saveUserPost(){
+  savePostLocation(){
     // Logic to save user post goes here
     console.log('Location saved:', this.location);
     this.saved_location = this.location;

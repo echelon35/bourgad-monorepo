@@ -4,7 +4,7 @@ import { UserEntity } from './user.entity';
 import { RoleEntity } from './role/role.entity';
 import { Repository } from 'typeorm';
 import { EmailerService } from '@bourgad-monorepo/api/mail';
-import { User } from '@bourgad-monorepo/model';
+import { City, User } from '@bourgad-monorepo/model';
 import { ConfigService } from '@nestjs/config';
 import { GetProfileDto, SignUpDto } from '@bourgad-monorepo/internal';
 import { CityService } from '@bourgad-monorepo/api/territory';
@@ -26,9 +26,17 @@ export class UserService {
   async getSummaryInfos(userId: number): Promise<UserEntity> {
     const user = await this.userRepository.findOne({
       where: { userId: userId },
-      select: { avatar: true, firstname: true, lastname: true },
+      select: { avatar: true, firstname: true, lastname: true, cityId: true },
     });
     return user;
+  }
+
+  async getUserCity(userId: number): Promise<City> {
+    const user = await this.userRepository.findOne({
+      where: { userId: userId },
+      relations: ['city'],
+    });
+    return user?.city;
   }
 
   async updatePassword(userId: number, hashedPassword: string) {

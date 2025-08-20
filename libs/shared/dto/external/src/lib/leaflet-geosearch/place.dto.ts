@@ -64,6 +64,7 @@ export class PlaceDto {
             this.name = this.label?.split(',')[0];
             this.longitude = (obj.x) || null;
             this.latitude = (obj.y) || null;
+            this.marker = new L.Marker([this.latitude,this.longitude]);
 
             if(obj.raw){
                 this.providerId = (obj.raw.place_id) || null;
@@ -132,5 +133,25 @@ export class PlaceDto {
 
     coverPicturePath(){
         return `data:image/png;base64,${this.cover}`;
+    }
+
+    getIcon(){
+        switch(this.providerTypeId){
+            case 'ocean':
+                return '/assets/icons/ocean.svg';
+            case 'sea':
+                return '/assets/icons/sea.svg';
+            case 'volcano':
+                return '/assets/icons/volcano.svg';
+            case 'river':
+                return '/assets/icons/river.svg';
+            case 'house':
+                return '/assets/icons/house.svg';
+            case 'mountain_range':
+            case 'peak':
+                return '/assets/icons/mountains.svg';
+            default:
+                return `https://flagcdn.com/${this.countryCode?.toLowerCase()}.svg`;
+        }
     }
 }

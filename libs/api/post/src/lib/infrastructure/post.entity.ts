@@ -1,6 +1,6 @@
-import { Post } from '@bourgad-monorepo/model';
+import { Post, PostPlace } from '@bourgad-monorepo/model';
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Geometry } from 'geojson';
+import { GeoJsonObject, Geometry } from 'geojson';
 import { UserEntity } from '@bourgad-monorepo/api/user';
 import { SubCategoryEntity } from '@bourgad-monorepo/api/category';
 import { MediaEntity } from '@bourgad-monorepo/api/media';
@@ -20,7 +20,7 @@ export class PostEntity implements Post {
     @Column({ name: 'subcategory_id' })
     subcategoryId: number;
     @Column({ name: 'location', type: 'geometry', nullable: true })
-    location?: Geometry | undefined;
+    location?: PostPlace | undefined;
     @Column({ name: 'is_valid', default: false })
     isValid: boolean;
     @Column({ name: 'created_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

@@ -1,16 +1,32 @@
-import { Body, Controller, Post, Request } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, Request } from "@nestjs/common";
 import { PostService } from "../application/post.service";
 import { CreatePostDto } from "@bourgad-monorepo/internal";
 import { Post as PostModel } from "@bourgad-monorepo/model";
 import 'multer';
 import { MediaService, StorageService } from "@bourgad-monorepo/api/media";
+import { UserService } from "@bourgad-monorepo/api/user";
 
 @Controller('post')
 export class PostController {
   constructor(private readonly postService: PostService,
     private readonly storageService: StorageService,
-    private readonly mediaService: MediaService
+    private readonly mediaService: MediaService,
+    private readonly userService: UserService
   ) {}
+
+  @Get('/')
+  async getPostsAround(@Request() req: Express.Request, @Query('onlyWithLocation') onlyWithLocation: boolean): Promise<PostModel[]> {
+    const userId = req.user?.user?.userId;
+    if (userId == null) {
+      throw new Error('Une erreur est survenue lors de la récupération des posts');
+    }
+    const city = await this.userService.getUserCity(userId);
+    console.log(city);
+    if(city == null || city.surface == null){
+      throw new Error('L\'utilisateur n\'a pas défini sa bourgade.');
+    }
+    return this.postService.getPostsByLocation(city.surface, 50, onlyWithLocation);
+  }
 
   @Post('/')
   async createPost(@Request() req: Express.Request, 

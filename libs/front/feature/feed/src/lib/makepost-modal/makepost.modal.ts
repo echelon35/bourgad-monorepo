@@ -207,6 +207,7 @@ export class MakePostModal {
         this.category?.resetDropdown();
         this.subcategory?.resetDropdown();
         this.makePostForm.reset();
+        this.localizePost.resetPlace();
         this.savedPreviews = [];
     }
 

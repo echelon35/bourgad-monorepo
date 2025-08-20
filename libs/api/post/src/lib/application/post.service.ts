@@ -3,6 +3,7 @@ import { PostEntity } from "../infrastructure/post.entity";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Post } from "@bourgad-monorepo/model";
+import { Geometry } from "geojson";
 
 @Injectable()
 export class PostService {
@@ -19,8 +20,19 @@ export class PostService {
         medias: postData.medias,
         subcategoryId: postData.subcategoryId,
         userId: postData.userId,
+        location: postData.location,
       });
       return manager.save(post);
     });
+  }
+
+  async getPostsByLocation(geometry: Geometry, perimeter = 50000, onlyWithLocation = false): Promise<Post[]> {
+
+    const withLocation = onlyWithLocation ? 'AND location IS NOT NULL' : 'OR location IS NULL';
+    return this.postRepository.query(`
+      SELECT *, ST_AsGeoJSON(location)::json as "point" FROM posts
+      WHERE ST_DWithin(location, ST_GeomFromGeoJSON('${JSON.stringify(geometry)}'), ${perimeter})
+      ${withLocation}
+    `);
   }
 }
