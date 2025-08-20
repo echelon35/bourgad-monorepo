@@ -78,7 +78,7 @@
           </div>
 
           <bgd-loadpicture [ngClass]="{'visible': formVisible === 'files', 'hidden': formVisible !== 'files'}" formControlName="pictures" [multiple]="true" [maxMo]="5" #loadPicture (closed)="savedFiles($event)"></bgd-loadpicture>
-          <bgd-localize-post #localizePost (closed)="saveLocation($event)" [ngClass]="{'visible': formVisible === 'location', 'hidden': formVisible !== 'location'}" ></bgd-localize-post>
+          <bgd-localize-post #localizePost (resetPlace$)="resetLocation()" (closed$)="saveLocation($event)" [ngClass]="{'visible': formVisible === 'location', 'hidden': formVisible !== 'location'}" ></bgd-localize-post>
         </form>
   </div>
 

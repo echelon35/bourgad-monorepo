@@ -287,4 +287,8 @@ export class MakePostModal {
         this.savedPreviews = previews;
         this.formVisible = 'form';
     }
+
+    resetLocation(){
+        this.post.location = undefined;
+    }
 }

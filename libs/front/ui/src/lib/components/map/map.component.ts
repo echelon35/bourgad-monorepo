@@ -109,6 +109,8 @@ export class MapComponent implements AfterViewInit, OnInit, OnChanges, OnDestroy
         this.movedMap.emit(this.mapDetail);
       },this)
 
+      this.selectMapZone("METROPOLE");
+
       this.mapService.setMap(this.mapId, this.mapDetail);
 
       if(this.cursorEvent != null){

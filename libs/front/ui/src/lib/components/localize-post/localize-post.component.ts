@@ -24,7 +24,9 @@ export class LocalizePostComponent implements OnInit {
   isVisible = false;
   userCity$: Observable<City | undefined>;
   location: PlaceDto;
-  @Output() closed = new EventEmitter<PlaceDto | undefined>();
+  saved_location: PlaceDto | undefined;
+  @Output() closed$ = new EventEmitter<PlaceDto | undefined>();
+  @Output() resetPlace$ = new EventEmitter<void>();
 
   private readonly mapService = inject(MapService);
   private mapSubscription!: Subscription;
@@ -33,6 +35,7 @@ export class LocalizePostComponent implements OnInit {
   localizeMap: L.Map | null = null;
   localizeLayer: L.LayerGroup | null = new L.LayerGroup();
   @ViewChild(MapComponent) mapComponent!: MapComponent;
+  @ViewChild(SearchPlace) searchComponent!: SearchPlace;
 
   constructor(){
     this.userCity$ = this.store.select(selectUser).pipe(map(user => user?.city));
@@ -78,11 +81,18 @@ export class LocalizePostComponent implements OnInit {
   saveUserPost(){
     // Logic to save user post goes here
     console.log('Location saved:', this.location);
-    this.closed.emit(this.location);
+    this.saved_location = this.location;
+    this.closed$.emit(this.saved_location);
   }
 
   cancel(){
-    this.closed.emit(undefined);
+    this.closed$.emit(undefined);
+  }
+
+  resetPlace(){
+    this.searchComponent.clear();
+    this.saved_location = undefined;
+    this.resetPlace$.emit();
   }
 
 }
