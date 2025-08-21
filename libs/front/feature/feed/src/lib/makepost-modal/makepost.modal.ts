@@ -7,6 +7,7 @@ import { CategoryApiService, PostApiService, selectUser, TitlecaseString } from 
 import { Store } from "@ngrx/store";
 import { map, Observable } from "rxjs";
 import { PlaceDto } from "@bourgad-monorepo/external";
+import { CreateLocationDto } from "@bourgad-monorepo/internal";
 
 @Component({
     selector: 'bgd-makepost',
@@ -27,6 +28,7 @@ export class MakePostModal {
     makePostForm: FormGroup;
     isLoading = false;
     savedPreviews: Preview[] = [];
+    location: PlaceDto | null = null;
 
     selectedCategory: Category | null = null;
     selectedSubCategory: Subcategory | null = null;
@@ -147,56 +149,51 @@ export class MakePostModal {
     saveLocation(location: PlaceDto) {
         if(location != null){
             console.log('Location saved:', location);
-            this.post.location = {
-                type: 'Point',
-                coordinates: [location.longitude, location.latitude],
-                label: location.label
-            };
+            this.location = location;
         }
         this.formVisible = 'form'; // Hide the location form after saving
     }
 
-    sendPost(userId: number){
+    async sendPost(userId: number){
         this.post.userId = userId;
         this.post.content = this.content.value;
         this.post.title = this.title.value;
         this.post.subcategoryId = this.selectedSubCategory.subcategoryId!;
+
+        // 1 Save Location
+        if(this.location != null){
+            console.log('Location exists:', this.location);
+            this.post.location = await this.postApiService.postLocation({
+                name: this.location.name,
+                label: this.location.label,
+                providerId: this.location.providerId,
+                state: this.location.state,
+                department: this.location.department,
+                country: this.location.country,
+                countryCode: this.location.countryCode,
+                point: {
+                    type: 'Point',
+                    coordinates: [this.location.longitude, this.location.latitude]
+                }
+            } as CreateLocationDto);
+        }
+        // 2 Save medias
         if(this.savedPreviews.length > 0) {
-            this.postApiService.postMedia(this.pictures.value).subscribe({
-                next: (medias: Media[]) => {
-                        this.post.medias = medias;
-                        this.postApiService.postPost(this.post).subscribe({
-                            next: () => {
-                                this.toastrService.success('Post créé avec succès ! Celui-ci sera visible après modération.');
-                                this.close();
-                                this.resetFormAfterPost();
-                                this.isLoading = false;
-                            },
-                            error: (error) => {
-                                this.toastrService.error('Erreur lors de la création du post.');
-                                this.isLoading = false;
-                            },
-                        });
-                },
-                error: (error) => {
-                    this.toastrService.error('Erreur lors du téléchargement des médias.');
-                },
-            });
+            this.post.medias = await this.postApiService.postMedia(this.pictures.value);
         }
-        else{
-            this.postApiService.postPost(this.post).subscribe({
-                next: () => {
-                    this.toastrService.success('Post créé avec succès ! Celui-ci sera visible après modération.');
-                    this.close();
-                    this.resetFormAfterPost();
-                    this.isLoading = false;
-                },
-                error: (error) => {
-                    this.toastrService.error('Erreur lors de la création du post.');
-                    this.isLoading = false;
-                },
-            });
-        }
+        // 3 Save post
+        this.postApiService.postPost(this.post).subscribe({
+            next: () => {
+                this.toastrService.success('Post créé avec succès ! Celui-ci sera visible après modération.');
+                this.close();
+                this.resetFormAfterPost();
+                this.isLoading = false;
+            },
+            error: (error) => {
+                this.toastrService.error('Erreur lors de la création du post.');
+                this.isLoading = false;
+            },
+        });
 
     }
 
@@ -209,6 +206,7 @@ export class MakePostModal {
         this.makePostForm.reset();
         this.localizePost.resetPlace();
         this.savedPreviews = [];
+        this.location = null;
     }
 
     get title() {

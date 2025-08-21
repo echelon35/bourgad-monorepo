@@ -6,3 +6,4 @@ export * from './lib/core.module';
 export * from './lib/guards/role.guard';
 export * from './lib/guards/jwt-auth.guard';
 export * from './lib/utils/csvToJson';
+export * from './lib/base_entities/auditable.schema';

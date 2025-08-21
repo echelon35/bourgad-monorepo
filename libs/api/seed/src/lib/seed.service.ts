@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { CategoryEntity, SubCategoryEntity } from '@bourgad-monorepo/api/category';
 import { CityEntity, DepartmentEntity } from '@bourgad-monorepo/api/territory';
-import { Category } from '@bourgad-monorepo/model';
+import { Category, City, Department } from '@bourgad-monorepo/model';
 import { CityDto, DepartmentDto } from '@bourgad-monorepo/external';
 import { AddSubcategoryDto } from '@bourgad-monorepo/internal';
 import { readFileSync } from 'fs';
@@ -13,19 +12,12 @@ import { csvJSONArray } from '@bourgad-monorepo/api/core';
 @Injectable()
 export class SeedService {
   constructor(
-    @InjectRepository(CategoryEntity)
-    private readonly categoryRepository: Repository<CategoryEntity>,
-    @InjectRepository(SubCategoryEntity)
-    private readonly subcategoryRepository: Repository<SubCategoryEntity>,
-    @InjectRepository(DepartmentEntity)
-    private readonly departmentRepository: Repository<DepartmentEntity>,
-    @InjectRepository(CityEntity)
-    private readonly cityRepository: Repository<CityEntity>,
+    private readonly dataSource: DataSource,
   ) {}
 
   /** Seed categories from JSON */
   async seedCategories(){
-    await this.categoryRepository.query("TRUNCATE TABLE categories CASCADE");
+    await this.dataSource.query("TRUNCATE TABLE categories CASCADE");
     const csvFilePath = path.resolve(__dirname, './data/categories.csv');
     const csv = readFileSync(csvFilePath, { encoding: 'utf-8' });
     const rawCategories = csvJSONArray(csv);
@@ -37,12 +29,12 @@ export class SeedService {
       description: item['description'],
     }));
     console.log(categories);
-    await this.categoryRepository.save(categories);
+    await this.dataSource.getRepository(CategoryEntity).save(categories);
   }
 
   /** Seed subcategories from JSON */
   async seedSubcategories(){
-    await this.subcategoryRepository.query("TRUNCATE TABLE subcategories CASCADE");
+    await this.dataSource.getRepository(SubCategoryEntity).query("TRUNCATE TABLE subcategories CASCADE");
     const csvFilePath = path.resolve(__dirname, './data/subcategories.csv');
     const csv = readFileSync(csvFilePath, { encoding: 'utf-8' });
     const rawSubcategories = csvJSONArray(csv);
@@ -53,7 +45,7 @@ export class SeedService {
       iconUrl: item['iconUrl'],
     }));
     console.log(subcategories);
-    await this.subcategoryRepository.save(subcategories);
+    await this.dataSource.getRepository(SubCategoryEntity).save(subcategories);
   }
 
   /**
@@ -61,7 +53,7 @@ export class SeedService {
    */
   async seedDepartments(): Promise<void> {
 
-    await this.departmentRepository.query("TRUNCATE TABLE departments CASCADE");
+    await this.dataSource.getRepository(DepartmentEntity).query("TRUNCATE TABLE departments CASCADE");
 
     try {
       const response = await fetch('https://geo.api.gouv.fr/departements');
@@ -70,11 +62,11 @@ export class SeedService {
       await Promise.all(
         data.map((department) => {
           console.log(`Department: ${department.nom} (${department.code})`);
-          return this.departmentRepository.save({
+          return this.dataSource.getRepository(DepartmentEntity).save({
             departmentId: department.code,
             name: department.nom,
             regionId: +department.codeRegion as number,
-          } as DepartmentEntity);
+          } as Department);
         }),
       );
     } catch (error) {
@@ -93,7 +85,7 @@ export class SeedService {
     }
 
     if(truncate){
-      await this.cityRepository.query("TRUNCATE TABLE cities CASCADE");
+      await this.dataSource.getRepository(CityEntity).query("TRUNCATE TABLE cities CASCADE");
     }
 
     try {
@@ -103,7 +95,7 @@ export class SeedService {
       const data = await response.json();
       const features: CityDto[] = data.features;
 
-      const dept = await this.departmentRepository.findOneBy({ departmentId: deptId });
+      const dept = await this.dataSource.getRepository(DepartmentEntity).findOneBy({ departmentId: deptId });
 
       if(dept == null){
         throw new Error('');
@@ -114,14 +106,14 @@ export class SeedService {
           console.log(
             `Feature: ${feature.properties.nom} (${feature.properties.code})`,
           );
-          await this.cityRepository.save({
+          await this.dataSource.getRepository(CityEntity).save({
             department: dept,
             cityId: feature.properties.code,
             name: feature.properties.nom,
             population: feature.properties.population,
             surface: feature.geometry,
             postalCodes: feature.properties.codesPostaux || [], // Handle postal codes
-          } as CityEntity);
+          } as City);
         }),
       );
     } catch (error) {
@@ -136,7 +128,7 @@ export class SeedService {
     }
 
     if(truncate){
-      await this.cityRepository.query("TRUNCATE TABLE cities CASCADE");
+      await this.dataSource.getRepository(CityEntity).query("TRUNCATE TABLE cities CASCADE");
     }
 
     try {
@@ -146,7 +138,7 @@ export class SeedService {
       const data = await response.json();
       const features: CityDto[] = data.features;
 
-      const dept = await this.departmentRepository.findOneBy({ departmentId: deptId });
+      const dept = await this.dataSource.getRepository(DepartmentEntity).findOneBy({ departmentId: deptId });
 
       if(dept == null){
         throw new Error('');
@@ -157,14 +149,14 @@ export class SeedService {
           console.log(
             `Feature: ${feature.properties.nom} (${feature.properties.code})`,
           );
-          await this.cityRepository.save({
+          await this.dataSource.getRepository(CityEntity).save({
             department: dept,
             cityId: feature.properties.code,
             name: feature.properties.nom,
             population: feature.properties.population,
             surface: feature.geometry,
             postalCodes: feature.properties.codesPostaux || [], // Handle postal codes
-          } as CityEntity);
+          } as City);
         }),
       );
     } catch (error) {

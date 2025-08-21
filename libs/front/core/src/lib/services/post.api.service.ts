@@ -1,9 +1,10 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { firstValueFrom, Observable } from "rxjs";
 import { Media, Post } from "@bourgad-monorepo/model";
 import { CoreConfigService } from "./core.config.service";
 import { AuthenticationApiService } from "./authentication.api.service";
+import { CreateLocationDto } from "@bourgad-monorepo/internal";
 
 
 @Injectable({
@@ -31,17 +32,26 @@ export class PostApiService {
         return this.http.post<void>(this.API_URL + `/post`, post, this.httpOptions);
     }
 
-    postMedia(medias: File[]): Observable<Media[]> {
+    postLocation(location: CreateLocationDto): Promise<Location> {
+        console.log('postLocation called with:', location);
+        return firstValueFrom(this.http.post<Location>(this.API_URL + `/location`, location, this.httpOptions));
+    }
+
+    postMedia(medias: File[]): Promise<Media[]> {
         const formData = new FormData();
         medias.forEach(media => {
             formData.append('medias', media);
         });
 
-        return this.http.post<Media[]>(this.API_URL + `/media/upload`, formData, {
+        return firstValueFrom(this.http.post<Media[]>(this.API_URL + `/media/upload`, formData, {
             headers: {
                 'Authorization': `Bearer ${this.auth_service.getToken()}`
             }
-        });
+        }));
+    }
+
+    getFeed(): Promise<Post[]> {
+        return firstValueFrom(this.http.get<Post[]>(this.API_URL + `/post/feed`, this.httpOptions));
     }
 
 }

@@ -1,20 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { CategoryEntity } from '../infrastructure/category.entity';
 import { SubCategoryEntity } from '../infrastructure/subcategory.entity';
+import { Category, Subcategory } from '@bourgad-monorepo/model';
 
 @Injectable()
 export class CategoryService {
-  constructor(
-    @InjectRepository(CategoryEntity)
-    private readonly categoryRepository: Repository<CategoryEntity>,
-    @InjectRepository(SubCategoryEntity)
-    private readonly subcategoryRepository: Repository<SubCategoryEntity>,
+  constructor(private dataSource: DataSource
   ) {}
 
-  async getCategories(): Promise<CategoryEntity[]> {
-    return await this.categoryRepository.query(
+  async getCategories(): Promise<Category[]> {
+    return await this.dataSource.getRepository(CategoryEntity).query(
       `SELECT 
       "category_id" as "categoryId", 
       "name","description", 
@@ -27,8 +23,8 @@ export class CategoryService {
 
   async getSubCategoriesOfCategory(
     categoryId: number,
-  ): Promise<SubCategoryEntity[]> {
-    return await this.categoryRepository.query(
+  ): Promise<Subcategory[]> {
+    return await this.dataSource.getRepository(SubCategoryEntity).query(
       `SELECT 
       subcategories."category_id" as "categoryId", subcategories."subcategory_id" as "subcategoryId",
       subcategories."name",subcategories."description",

@@ -1,4 +1,5 @@
 import { Audited } from "./audited.model";
+import { Post } from "./post.model";
 
 export interface Media extends Audited {
   mediaId: number;
@@ -10,4 +11,5 @@ export interface Media extends Audited {
   thumbnailUrl?: string;
   title?: string;
   description?: string;
+  posts: Post[];
 }

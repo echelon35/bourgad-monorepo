@@ -1,12 +1,12 @@
-import { Role } from "@bourgad-monorepo/model";
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Role } from '@bourgad-monorepo/model';
+import { EntitySchema } from 'typeorm';
 
-@Entity('roles')
-export class RoleEntity implements Role {
-    @PrimaryColumn({ name: 'role_id' })
-    roleId: number;
-    @Column({ name: 'name' })
-    name: string;
-    @Column({ name: 'description' })
-    description: string;
-}
+export const RoleEntity = new EntitySchema<Role>({
+    name: 'RoleEntity',
+    tableName: 'roles',
+    columns: {
+        roleId: { type: Number, primary: true, name: 'role_id' },
+        name: { type: String, name: 'name' },
+        description: { type: String, name: 'description' },
+    },
+});

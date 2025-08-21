@@ -45,10 +45,10 @@
                 <img src="assets/add_location.svg" alt="" class="w-6 h-6 pointer-events-none" />
               </button>
             </div>
-            @if(post.location){
+            @if(location){
               <div (click)="openLocalisation()" class="cursor-pointer text-gray-400 hover:text-gray-300 flex items-center mt-2 mb-2 px-2 gap-x-3">
                 <img src="assets/add_location.svg" alt="" class="size-10 inline-block mr-1" />
-                <p class="text-sm">Post localisé à {{post.location.label}}</p>
+                <p class="text-sm">Post localisé à {{location.label}}</p>
               </div>
             }
             @if(savedPreviews?.length > 0){

@@ -1,47 +1,51 @@
-import { Post, PostPlace } from '@bourgad-monorepo/model';
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { GeoJsonObject, Geometry } from 'geojson';
-import { UserEntity } from '@bourgad-monorepo/api/user';
-import { SubCategoryEntity } from '@bourgad-monorepo/api/category';
-import { MediaEntity } from '@bourgad-monorepo/api/media';
-import { CommentEntity } from './comment.entity';
-import { LikeEntity } from './like.entity';
+import { Post } from '@bourgad-monorepo/model';
+import { EntitySchema } from 'typeorm';
+import { AuditableSchema } from '@bourgad-monorepo/api/core';
 
-@Entity('posts')
-export class PostEntity implements Post {
-    @PrimaryGeneratedColumn({ name: 'post_id' })
-    postId: number;
-    @Column({ name: 'title' })
-    title: string;
-    @Column({ name: 'content' })
-    content: string;
-    @Column({ name: 'user_id' })
-    userId: number;
-    @Column({ name: 'subcategory_id' })
-    subcategoryId: number;
-    @Column({ name: 'location', type: 'geometry', nullable: true })
-    location?: PostPlace | undefined;
-    @Column({ name: 'is_valid', default: false })
-    isValid: boolean;
-    @Column({ name: 'created_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-    createdAt: Date;
-    @Column({ name: 'updated_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
-    updatedAt: Date;
-    @Column({ name: 'deleted_at', type: 'timestamp', nullable: true })
-    deletedAt: Date | null;
-
-    /** Associations */
-    @ManyToOne(() => SubCategoryEntity, (subcategory) => subcategory.subcategoryId)
-    @JoinColumn({ name: 'subcategory_id' })
-    subcategory: SubCategoryEntity;
-    @ManyToMany(() => MediaEntity)
-    @JoinTable({ name: 'post_medias' })
-    medias: MediaEntity[];
-    @OneToMany(() => LikeEntity, (like) => like.postId)
-    likes: LikeEntity[];
-    @OneToMany(() => CommentEntity, (comment) => comment.postId)
-    comments: CommentEntity[];
-    @ManyToOne(() => UserEntity, (user) => user.userId)
-    @JoinColumn({ name: 'user_id' })
-    user: UserEntity;
-}
+export const PostEntity = new EntitySchema<Post>({
+    name: 'PostEntity',
+    tableName: 'posts',
+    columns: {
+        ...AuditableSchema,
+        postId: {
+            type: Number,
+            primary: true,
+            generated: true,
+            name: 'post_id',
+        },
+        title: {
+            type: String,
+            name: 'title',
+        },
+        content: {
+            type: String,
+            name: 'content',
+        },
+        userId: {
+            type: Number,
+            name: 'user_id',
+        },
+        subcategoryId: {
+            type: Number,
+            name: 'subcategory_id',
+        },
+        locationId: {
+            type: Number,
+            name: 'location_id',
+            nullable: true,
+        },
+        isValid: {
+            type: Boolean,
+            name: 'is_valid',
+            default: false,
+        }
+    },
+    relations: {
+        subcategory: { type: 'many-to-one', target: 'SubCategoryEntity', inverseSide: 'posts', joinColumn: { name: 'subcategory_id' } },
+        user: { type: 'many-to-one', target: 'UserEntity', inverseSide: 'posts', joinColumn: { name: 'user_id' } },
+        location: { type: 'many-to-one', target: 'LocationEntity', inverseSide: 'posts', joinColumn: { name: 'location_id' } },
+        medias: { type: 'many-to-many', target: 'MediaEntity', inverseSide: 'posts', joinTable: { name: 'post_medias', joinColumn: { name: 'post_id' }, inverseJoinColumn: { name: 'media_id' } } },
+        likes: { type: 'one-to-many', target: 'LikeEntity', inverseSide: 'post', joinColumn: { name: 'post_id' } },
+        comments: { type: 'one-to-many', target: 'CommentEntity', inverseSide: 'post', joinColumn: { name: 'post_id' } },
+    }
+});

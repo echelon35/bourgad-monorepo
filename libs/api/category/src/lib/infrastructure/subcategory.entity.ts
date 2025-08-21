@@ -1,29 +1,18 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryColumn
-} from 'typeorm';
-import { CategoryEntity } from '../infrastructure/category.entity';
 import { Subcategory } from '@bourgad-monorepo/model';
+import { EntitySchema } from 'typeorm';
 
-@Entity('subcategories')
-export class SubCategoryEntity implements Subcategory {
-  @PrimaryColumn({ name: 'subcategory_id' })
-  subcategoryId: number;
-  @Column({ name: 'category_id' })
-  categoryId: number;
-  @Column({ name: 'name', nullable: false })
-  name: string;
-  @Column({ name: 'description', nullable: true })
-  description: string;
-  @Column({ name: 'tag_class', nullable: true })
-  tagClass: string;
-  @Column({ name: 'icon_url', nullable: true })
-  iconUrl: string;
-
-  @ManyToOne(() => CategoryEntity, (category: CategoryEntity) => category.categoryId)
-  @JoinColumn({ name: 'category_id' })
-  category: CategoryEntity;
-}
+export const SubCategoryEntity = new EntitySchema<Subcategory>({
+  name: 'SubCategoryEntity',
+  tableName: 'subcategories',
+  columns: {
+    subcategoryId: { type: Number, primary: true, name: 'subcategory_id' },
+    categoryId: { type: Number, name: 'category_id' },
+    name: { type: String, name: 'name' },
+    description: { type: String, name: 'description', nullable: true },
+    tagClass: { type: String, name: 'tag_class', nullable: true },
+    iconUrl: { type: String, name: 'icon_url', nullable: true },
+  },
+  relations: {
+    category: { type: 'many-to-one', target: 'CategoryEntity', joinColumn: { name: 'category_id' }, inverseSide: 'subcategories' },
+  },
+});

@@ -1,30 +1,23 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Media } from '@bourgad-monorepo/model';
+import { EntitySchema } from 'typeorm';
+import { AuditableSchema } from '@bourgad-monorepo/api/core';
 
-@Entity('medias')
-export class MediaEntity implements Media {
-  @PrimaryGeneratedColumn({ name: 'media_id' })
-  mediaId: number;
-  @Column({ name: 'url' })
-  url: string;
-  @Column({ name: 'type' })
-  type: string;
-  @Column({ name: 'size', nullable: true })
-  size?: number;
-  @Column({ name: 'format', nullable: true })
-  format?: string;
-  @Column({ name: 'duration', nullable: true })
-  duration?: number;
-  @Column({ name: 'thumbnail_url', nullable: true })
-  thumbnailUrl?: string;
-  @Column({ name: 'title', nullable: true })
-  title?: string;
-  @Column({ name: 'description', nullable: true })
-  description?: string;
-  @Column({ name: 'created_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  createdAt: Date;
-  @Column({ name: 'updated_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
-  updatedAt: Date;
-  @Column({ name: 'deleted_at', type: 'timestamp', nullable: true })
-  deletedAt: Date | null;
-}
+export const MediaEntity = new EntitySchema<Media>({
+  name: 'MediaEntity',
+  tableName: 'medias',
+  columns: {
+    ...AuditableSchema,
+    mediaId: { type: Number, primary: true, generated: true, name: 'media_id' },
+    url: { type: String, name: 'url' },
+    type: { type: String, name: 'type' },
+    size: { type: Number, name: 'size', nullable: true },
+    format: { type: String, name: 'format', nullable: true },
+    duration: { type: Number, name: 'duration', nullable: true },
+    thumbnailUrl: { type: String, name: 'thumbnail_url', nullable: true },
+    title: { type: String, name: 'title', nullable: true },
+    description: { type: String, name: 'description', nullable: true }
+  },
+  relations: {
+      posts: { type: 'many-to-many', target: 'PostEntity', inverseSide: 'medias' },
+  }
+});

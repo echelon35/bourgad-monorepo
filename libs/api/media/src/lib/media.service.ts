@@ -1,38 +1,39 @@
-import { InjectRepository } from '@nestjs/typeorm';
-import { MediaEntity } from './media.entity';
-import { Repository } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { MediaDto } from '@bourgad-monorepo/internal';
 import { Injectable } from '@nestjs/common';
+import { Media } from '@bourgad-monorepo/model';
+import { MediaEntity } from './media.entity';
 
 @Injectable()
 export class MediaService {
   constructor(
-    @InjectRepository(MediaEntity) private mediaRepository: Repository<MediaEntity>
+    private dataSource: DataSource
   ) {}
 
-  async findAll(): Promise<MediaEntity[]> {
-    return await this.mediaRepository.find();
+  async findAll(): Promise<Media[]> {
+    return await this.dataSource.getRepository(MediaEntity).find();
   }
 
-  async findOne(id: number): Promise<MediaEntity> {
-    const media = await this.mediaRepository.findOne({ where: { mediaId: id } });
+  async findOne(id: number): Promise<Media> {
+    const media = await this.dataSource.getRepository(MediaEntity).findOne({ where: { mediaId: id } });
     if (!media) {
       throw new Error(`Media with id ${id} not found`);
     }
     return media;
   }
 
-  async create(mediaDto: MediaDto): Promise<MediaEntity> {
-    const media = this.mediaRepository.create(mediaDto);
-    return await this.mediaRepository.save(media);
+  async create(mediaDto: MediaDto): Promise<Media> {
+    return this.dataSource.getRepository(MediaEntity).manager.transaction(async (manager) => {
+      return manager.save(MediaEntity, mediaDto);
+    });
   }
 
-  async update(id: number, mediaDto: MediaDto): Promise<MediaEntity> {
-    await this.mediaRepository.update(id, mediaDto);
+  async update(id: number, mediaDto: MediaDto): Promise<Media> {
+    await this.dataSource.getRepository(MediaEntity).update(id, mediaDto);
     return this.findOne(id);
   }
 
   async delete(id: number): Promise<void> {
-    await this.mediaRepository.delete(id);
+    await this.dataSource.getRepository(MediaEntity).delete(id);
   }
 }

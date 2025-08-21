@@ -21,7 +21,7 @@ import { OrganisationEntity, OrganisationTypeEntity } from '@bourgad-monorepo/ap
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard, RolesGuard } from '@bourgad-monorepo/api/core';
 import { SeedModule } from '@bourgad-monorepo/api/seed';
-import { CommentEntity, LikeEntity, PostEntity, PostModule } from '@bourgad-monorepo/api/post';
+import { CommentEntity, LikeEntity, PostEntity, LocationEntity, PostModule } from '@bourgad-monorepo/api/post';
 
 @Module({
   imports: [
@@ -57,6 +57,7 @@ import { CommentEntity, LikeEntity, PostEntity, PostModule } from '@bourgad-mono
         PostEntity,
         CommentEntity,
         LikeEntity,
+        LocationEntity
       ],
       synchronize: true,
       logging: true,

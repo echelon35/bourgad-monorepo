@@ -1,61 +1,33 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from '@bourgad-monorepo/model';
-import { RoleEntity } from './role/role.entity';
-import { CityEntity } from '@bourgad-monorepo/api/territory';
-import { MediaEntity } from '@bourgad-monorepo/api/media';
-import { OrganisationEntity } from '@bourgad-monorepo/api/organisation';
+import { EntitySchema } from 'typeorm';
 
-@Entity('users')
-export class UserEntity implements User {
-  @PrimaryGeneratedColumn({ name: 'user_id' })
-  userId: number;
-  @Column({ name: 'firstname' })
-  firstname: string;
-  @Column({ name: 'lastname' })
-  lastname: string;
-  @Column({ name: 'mail' })
-  mail: string;
-  @Column({ name: 'password' })
-  password: string;
-  @Column({ name: 'phone', nullable: true })
-  phone?: string;
-  @Column({ name: 'type_utilisateur' })
-  typeUtilisateur: string;
-  @Column({ name: 'presscard_number', nullable: true })
-  presscardNumber?: string;
-  @Column({ name: 'title', nullable: true })
-  title?: string;
-  @Column({ name: 'verified_mail', default: false })
-  verifiedMail: boolean;
-  @Column({ name: 'cgu_accepted', default: false })
-  cguAccepted: boolean;
-  @Column({ name: 'newsletter_accepted', default: false })
-  newsletterAccepted: boolean;
-  @Column({ name: 'provider', default: 'LOCAL' })
-  provider: string;
-  @Column({ name: 'provider_id', nullable: true })
-  providerId: string;
-  @Column({ name: 'created_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  createdAt: Date;
-  @Column({ name: 'updated_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
-  updatedAt: Date;
-  @Column({ name: 'deleted_at', type: 'timestamp', nullable: true })
-  deletedAt: Date | null;
-
-  /** ASSOCIATIONS */
-  @ManyToOne(() => CityEntity, (city) => city.cityId)
-  @JoinColumn({ name: 'city_id' })
-  city: CityEntity;
-  @Column({ name: 'city_id', nullable: true })
-  cityId: string;
-  @OneToOne(() => MediaEntity, (media) => media.mediaId)
-  @JoinColumn({ name: 'avatar_id' })
-  avatar: MediaEntity;
-  @ManyToOne(() => OrganisationEntity, (organisation) => organisation.organisationId, { nullable: true })
-  @JoinColumn({ name: 'organisation_id' })
-  organisation?: OrganisationEntity;
-  @ManyToMany(() => RoleEntity)
-  @JoinTable({ name: 'roles_users' })
-  roles: RoleEntity[];
-
-}
+export const UserEntity = new EntitySchema<User>({
+  name: 'UserEntity',
+  tableName: 'users',
+  columns: {
+    userId: { type: Number, primary: true, generated: true, name: 'user_id' },
+    firstname: { type: String, name: 'firstname' },
+    lastname: { type: String, name: 'lastname' },
+    mail: { type: String, name: 'mail' },
+    password: { type: String, name: 'password' },
+    phone: { type: String, name: 'phone', nullable: true },
+    typeUtilisateur: { type: String, name: 'type_utilisateur' },
+    presscardNumber: { type: String, name: 'presscard_number', nullable: true },
+    title: { type: String, name: 'title', nullable: true },
+    verifiedMail: { type: Boolean, name: 'verified_mail', default: false },
+    cguAccepted: { type: Boolean, name: 'cgu_accepted', default: false },
+    newsletterAccepted: { type: Boolean, name: 'newsletter_accepted', default: false },
+    provider: { type: String, name: 'provider', default: 'LOCAL' },
+    providerId: { type: String, name: 'provider_id', nullable: true },
+    createdAt: { type: Date, name: 'created_at', default: () => 'CURRENT_TIMESTAMP' },
+    updatedAt: { type: Date, name: 'updated_at', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' },
+    deletedAt: { type: Date, name: 'deleted_at', nullable: true },
+    cityId: { type: String, name: 'city_id', nullable: true },
+  },
+  relations: {
+    city: { type: 'many-to-one', target: 'CityEntity', joinColumn: { name: 'city_id' }, inverseSide: 'users' },
+    avatar: { type: 'one-to-one', target: 'MediaEntity', joinColumn: { name: 'avatar_id' }, inverseSide: 'user' },
+    organisation: { type: 'many-to-one', target: 'OrganisationEntity', joinColumn: { name: 'organisation_id' }, inverseSide: 'users' },
+    roles: { type: 'many-to-many', target: 'RoleEntity', joinTable: { name: 'roles_users' }, inverseSide: 'users' },
+  },
+});

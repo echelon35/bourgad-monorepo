@@ -1,4 +1,3 @@
-import { Geometry } from "geojson";
 import { Audited } from "./audited.model";
 import { Subcategory } from "./subcategory.model";
 import { Media } from './media.model';
@@ -12,7 +11,7 @@ export interface Post extends Audited {
   content: string;
   userId: number;
   subcategoryId: number;
-  location?: Geometry;
+  locationId?: number | null;
   isValid: boolean;
 
   subcategory: Subcategory;
@@ -20,4 +19,5 @@ export interface Post extends Audited {
   likes: Like[];
   comments: Comment[];
   user: User;
+  location?: Location | null;
 }

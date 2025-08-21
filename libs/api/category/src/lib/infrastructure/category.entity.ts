@@ -1,18 +1,15 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
 import { Category } from '@bourgad-monorepo/model';
+import { EntitySchema } from 'typeorm';
 
-@Entity('categories')
-export class CategoryEntity implements Category {
-  @PrimaryColumn({ name: 'category_id' })
-  categoryId!: number;
-  @Column({ name: 'name', nullable: false })
-  name: string;
-  @Column({ name: 'description', nullable: true })
-  description: string;
-  @Column({ name: 'tag_class', nullable: true })
-  tagClass: string;
-  @Column({ name: 'icon_url', nullable: true })
-  iconUrl: string;
-  @Column({ name: 'background_url', nullable: true })
-  backgroundUrl: string;
-}
+export const CategoryEntity = new EntitySchema<Category>({
+  name: 'CategoryEntity',
+  tableName: 'categories',
+  columns: {
+    categoryId: { type: Number, primary: true, name: 'category_id' },
+    name: { type: String, name: 'name' },
+    description: { type: String, name: 'description', nullable: true },
+    tagClass: { type: String, name: 'tag_class', nullable: true },
+    iconUrl: { type: String, name: 'icon_url', nullable: true },
+    backgroundUrl: { type: String, name: 'background_url', nullable: true },
+  },
+});

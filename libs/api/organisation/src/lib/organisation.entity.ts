@@ -1,29 +1,20 @@
 import { Organisation } from '@bourgad-monorepo/model';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { OrganisationTypeEntity } from './organisation_type/organisation_type.entity';
+import { EntitySchema } from 'typeorm';
 
-@Entity('organisations')
-export class OrganisationEntity implements Organisation {
-    @PrimaryGeneratedColumn({ name: 'organisation_id' })
-    organisationId: number;
-    @Column({ name: 'name' })
-    name: string;
-    @Column({ name: 'siret_siren' })
-    siret_siren: string;
-    @Column({ name: 'adress' })
-    adress: string;
-    @Column({ name: 'phone', nullable: true })
-    phone?: string;
-    @Column({ name: 'mail' })
-    mail: string;
-    @Column({ name: 'website', nullable: true })
-    website?: string;
-    @Column({ name: 'hours', type: 'json', nullable: true })
-    hours?: JSON;
-
-    /** ASSOCIATIONS */
-    @ManyToOne(() => OrganisationTypeEntity, (organisationType) => organisationType.organisationtypeId)
-    @JoinColumn({ name: 'organisationtype_id' })
-    organisationType: OrganisationTypeEntity;
-
-}
+export const OrganisationEntity = new EntitySchema<Organisation>({
+    name: 'OrganisationEntity',
+    tableName: 'organisations',
+    columns: {
+        organisationId: { type: Number, primary: true, generated: true, name: 'organisation_id' },
+        name: { type: String, name: 'name' },
+        siret_siren: { type: String, name: 'siret_siren' },
+        adress: { type: String, name: 'adress' },
+        phone: { type: String, name: 'phone', nullable: true },
+        mail: { type: String, name: 'mail' },
+        website: { type: String, name: 'website', nullable: true },
+        hours: { type: 'json', name: 'hours', nullable: true },
+    },
+    relations: {
+        organisationType: { type: 'many-to-one', target: 'OrganisationTypeEntity', joinColumn: { name: 'organisationtype_id' }, inverseSide: 'organisations' },
+    },
+});

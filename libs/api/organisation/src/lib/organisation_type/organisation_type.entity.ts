@@ -1,17 +1,15 @@
-import { OrganisationType } from "@bourgad-monorepo/model";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { OrganisationEntity } from "../organisation.entity";
+import { OrganisationType } from '@bourgad-monorepo/model';
+import { EntitySchema } from 'typeorm';
 
-@Entity('organisation_types')
-export class OrganisationTypeEntity implements OrganisationType {
-  @PrimaryGeneratedColumn({ name: 'organisationtype_id' })
-  organisationtypeId: number;
-  @Column({ name: 'name' })
-  name: string;
-  @Column({ name: 'description' })
-  description: string;
-
-  /** ASSOCIATIONS */
-  @OneToMany(() => OrganisationEntity, (organisation) => organisation.organisationType)
-  organisations: OrganisationEntity[];
-}
+export const OrganisationTypeEntity = new EntitySchema<OrganisationType>({
+  name: 'OrganisationTypeEntity',
+  tableName: 'organisation_types',
+  columns: {
+    organisationtypeId: { type: Number, primary: true, generated: true, name: 'organisationtype_id' },
+    name: { type: String, name: 'name' },
+    description: { type: String, name: 'description' },
+  },
+  relations: {
+    organisations: { type: 'one-to-many', target: 'OrganisationEntity', inverseSide: 'organisationType' },
+  },
+});
