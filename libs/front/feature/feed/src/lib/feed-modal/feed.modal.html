@@ -33,8 +33,8 @@
         </div>
         <div [ngClass]="{'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4': expanded, 
         'flex flex-wrap justify-center': !expanded}" >
-            @for(item of [0,1,2,3,4]; track item) {
-                <bgd-post></bgd-post>
+            @for(item of feed$ | async; track item) {
+                <bgd-post [post]="item"></bgd-post>
             }
         </div>
     </div>

@@ -4,6 +4,7 @@ import { Media } from './media.model';
 import { Like } from "./likepost.model";
 import { Comment } from "./comment.model";
 import { User } from "./user.model";
+import { Location } from "./location.model";
 
 export interface Post extends Audited {
   postId: number;

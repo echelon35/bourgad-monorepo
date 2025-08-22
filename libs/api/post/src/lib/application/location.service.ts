@@ -14,4 +14,8 @@ export class LocationService {
       return manager.save(LocationEntity, locationData);
     });
   }
+
+  findByLabel(label: string): Promise<Location | null> {
+    return this.dataSource.getRepository(LocationEntity).findOneBy({ label });
+  }
 }

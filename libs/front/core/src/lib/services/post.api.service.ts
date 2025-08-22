@@ -4,7 +4,8 @@ import { firstValueFrom, Observable } from "rxjs";
 import { Media, Post } from "@bourgad-monorepo/model";
 import { CoreConfigService } from "./core.config.service";
 import { AuthenticationApiService } from "./authentication.api.service";
-import { CreateLocationDto } from "@bourgad-monorepo/internal";
+import { CreateLocationDto, FeedPostDto } from "@bourgad-monorepo/internal";
+import { Location } from "@bourgad-monorepo/model";
 
 
 @Injectable({
@@ -50,8 +51,8 @@ export class PostApiService {
         }));
     }
 
-    getFeed(): Promise<Post[]> {
-        return firstValueFrom(this.http.get<Post[]>(this.API_URL + `/post/feed`, this.httpOptions));
+    getFeed(): Observable<FeedPostDto[]> {
+        return this.http.get<FeedPostDto[]>(this.API_URL + `/post?onlyWithLocation=true`, this.httpOptions);
     }
 
 }

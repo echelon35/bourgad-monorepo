@@ -8,8 +8,10 @@ export class LocationController {
     constructor(private locationService: LocationService) {}
 
     @Post('/')
-    createLocation(@Body() locationData: CreateLocationDto): Promise<Location> {
+    async createLocation(@Body() locationData: CreateLocationDto): Promise<Location> {
         console.log('createLocation called with:', locationData);
-        return this.locationService.create(locationData);
+        const location = await this.locationService.findByLabel(locationData.label);
+        return (location ? location : this.locationService.create(locationData));
     }
+
 }

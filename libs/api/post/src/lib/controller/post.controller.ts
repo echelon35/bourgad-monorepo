@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Post, Query, Request } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, Request, ValidationPipe } from "@nestjs/common";
 import { PostService } from "../application/post.service";
-import { CreatePostDto, GetPostsAroundDto } from "@bourgad-monorepo/internal";
+import { CreatePostDto, FeedPostDto, GetPostsAroundDto } from "@bourgad-monorepo/internal";
 import { Post as PostModel } from "@bourgad-monorepo/model";
 import 'multer';
 import { MediaService, StorageService } from "@bourgad-monorepo/api/media";
@@ -16,7 +16,7 @@ export class PostController {
 
   @Get('/')
   async getPostsAround(@Request() req: Express.Request, 
-  @Query() params: GetPostsAroundDto): Promise<PostModel[]> {
+  @Query(ValidationPipe) params: GetPostsAroundDto): Promise<FeedPostDto[]> {
     const userId = req.user?.user?.userId;
     if (userId == null) {
       throw new Error('Une erreur est survenue lors de la récupération des posts');
@@ -25,7 +25,27 @@ export class PostController {
     if(city == null || city.surface == null){
       throw new Error('L\'utilisateur n\'a pas défini sa bourgade.');
     }
-    return this.postService.getPostsByLocation(city.surface, 50, params.onlyWithLocation);
+    console.log(params.onlyWithLocation, typeof params.onlyWithLocation);
+    const posts = await this.postService.getPostsByLocation(city.surface, 50, params.onlyWithLocation);
+    const feedPosts = posts.map(post => {
+      return {
+        userAvatarUrl: post.user?.avatar?.url,
+        userFirstname: post.user?.firstname,
+        userLastname: post.user?.lastname,
+        mediasUrls: post.medias.map(media => media.url),
+        title: post.title,
+        content: post.content,
+        createdAt: post.createdAt,
+        point: post.location?.point,
+        addressLabel: post.location?.label,
+        subcategory: {
+          id: post.subcategory?.subcategoryId,
+          name: post.subcategory?.name,
+          tagClass: post.subcategory?.tagClass,
+        },
+      } as FeedPostDto;
+    });
+    return feedPosts;
   }
 
   @Post('/')

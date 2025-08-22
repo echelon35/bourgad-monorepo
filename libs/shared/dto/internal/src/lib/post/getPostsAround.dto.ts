@@ -3,8 +3,6 @@ import { Transform } from 'class-transformer';
 
 export class GetPostsAroundDto {
   @IsBoolean()
-  @Transform(({obj, key}) => {
-    return obj[key] === 'true' ? true : obj[key] === 'false' ? false : obj[key];
-  })
+  @Transform(({ value }) => value === 'true' || value === true ? true : false)
   onlyWithLocation: boolean;
 }
