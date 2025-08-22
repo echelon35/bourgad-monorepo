@@ -2,21 +2,26 @@ import { CommonModule } from "@angular/common";
 import { Component, inject, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Category, Media, Post, Subcategory } from "@bourgad-monorepo/model";
-import { DropdownComponent, DropdownItem, ToastrService, SpinnerComponent, LoadPictureComponent, TextEditorComponent, Preview, LocalizePostComponent } from "@bourgad-monorepo/ui";
 import { CategoryApiService, PostApiService, selectUser, TitlecaseString } from "@bourgad-monorepo/core";
 import { Store } from "@ngrx/store";
 import { map, Observable } from "rxjs";
 import { PlaceDto } from "@bourgad-monorepo/external";
 import { CreateLocationDto } from "@bourgad-monorepo/internal";
+import { DropdownComponent, DropdownItem } from "../dropdown/dropdown.component";
+import { SpinnerComponent } from "../spinner/spinner.component";
+import { LoadPictureComponent, Preview } from "../load-picture/load-picture.component";
+import { TextEditorComponent } from "../text-editor/text-editor.component";
+import { LocalizePostComponent } from "../localize-post/localize-post.component";
+import { ToastrService } from "../../services/toastr.service";
 
 @Component({
     selector: 'bgd-makepost',
-    templateUrl: './makepost.modal.html',
+    templateUrl: './make-post.component.html',
     standalone: true,
     imports: [CommonModule, ReactiveFormsModule, DropdownComponent, SpinnerComponent, LoadPictureComponent, TextEditorComponent, LocalizePostComponent],
     providers: [CategoryApiService]
 })
-export class MakePostModal {
+export class MakePost {
     visible = false;
     formVisible: 'files' | 'form' | 'location' = 'form';
     visibleCategories = false;

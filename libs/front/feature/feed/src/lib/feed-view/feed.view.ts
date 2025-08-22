@@ -1,10 +1,9 @@
-import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
-import { MakePostModal } from '../makepost-modal/makepost.modal';
+import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
 import * as L from 'leaflet';
 import { CommonModule } from '@angular/common';
 import { FeedModal } from "../feed-modal/feed.modal";
-import { MapComponent, MapService, SearchPlace, SenseOfResults, ToastrService } from '@bourgad-monorepo/ui';
-import { AuthenticationApiService, GeoApiService, selectIsAuthenticated, selectUser, UserApiService, UserStore } from '@bourgad-monorepo/core';
+import { MakePost, MapComponent, MapService, SearchPlace, SenseOfResults, ToastrService } from '@bourgad-monorepo/ui';
+import { AuthenticationApiService, GeoApiService, selectIsAuthenticated, selectUser, UserApiService } from '@bourgad-monorepo/core';
 import { City } from '@bourgad-monorepo/model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -13,12 +12,11 @@ import { map, Observable, Subscription } from 'rxjs';
 @Component({
   selector: 'bgd-feed',
   templateUrl: './feed.view.html',
-  imports: [MapComponent, MakePostModal, CommonModule, FeedModal, SearchPlace],
+  imports: [MapComponent, MakePost, CommonModule, FeedModal, SearchPlace],
   providers: [GeoApiService],
   standalone: true
 })
 export class FeedView implements AfterViewInit {
-    @ViewChild('makePostModal') makePostModal?: MakePostModal;
     @ViewChild('feedMap') feedMapComponent?: MapComponent;
     readonly geoApiService = inject(GeoApiService);
     readonly authenticationApiService = inject(AuthenticationApiService);
@@ -27,6 +25,7 @@ export class FeedView implements AfterViewInit {
     public readonly router = inject(Router);
     private readonly userApiService = inject(UserApiService);
     private readonly toastrService = inject(ToastrService);
+
     isAuthenticated$: Observable<boolean>;
     avatarUrl$: Observable<string>;
     city$: Observable<City | undefined>;

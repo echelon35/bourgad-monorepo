@@ -12,3 +12,4 @@ export * from './lib/components/text-editor/text-editor.component';
 export * from './lib/components/localize-post/localize-post.component';
 export * from './lib/services/toastr.service';
 export * from './lib/services/map.service';
+export * from './lib/components/make-post/make-post.component';
