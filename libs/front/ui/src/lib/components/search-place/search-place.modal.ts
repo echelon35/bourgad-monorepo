@@ -6,7 +6,7 @@ import * as L from "leaflet";
 import { debounceTime, fromEvent, map, Observable, Subscription } from 'rxjs';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { PlaceDto } from '@bourgad-monorepo/external';
-import { SearchPlaceService, selectUser } from '@bourgad-monorepo/core';
+import { SearchPlaceService, UserStore } from '@bourgad-monorepo/core';
 import { MapService } from '../../services/map.service';
 import { City } from '@bourgad-monorepo/model';
 import { Store } from '@ngrx/store';
@@ -22,7 +22,7 @@ export enum SenseOfResults {
     templateUrl: './Search-place.modal.html',
     imports: [CommonModule, FormsModule, SpinnerComponent],
 })
-export class SearchPlace implements OnInit, OnDestroy, AfterViewInit {
+export class SearchPlace implements OnInit, AfterViewInit {
 
     loading = false;
     //Results visibility
@@ -33,7 +33,6 @@ export class SearchPlace implements OnInit, OnDestroy, AfterViewInit {
     areaMap?: L.Map;
     searchPlaceLayer = new L.LayerGroup();
     SenseOfResults: typeof SenseOfResults = SenseOfResults;
-    userCity$: Observable<City | undefined>;
 
     //Level of zoom when clicking on result
     @Input() zoomLevel = 15;
@@ -52,11 +51,7 @@ export class SearchPlace implements OnInit, OnDestroy, AfterViewInit {
     private readonly searchPlaceService = inject(SearchPlaceService);
     private readonly mapService = inject(MapService);
     private mapSubscription!: Subscription;
-    private readonly store = inject(Store);
-
-    constructor(){
-      this.userCity$ = this.store.select(selectUser).pipe(map(user => user?.city));
-    }
+    private readonly userStore = inject(UserStore);
 
     ngOnInit(): void {
       //Wait map initialization before using map from service
@@ -64,16 +59,11 @@ export class SearchPlace implements OnInit, OnDestroy, AfterViewInit {
         if (map) {
           this.areaMap = map;
         }
+        if (this.userStore.user().cityId != null && this.useGeographicContext) {
+            const cityLayer = L.geoJSON(this.userStore.user().city.surface);
+            this.searchPlaceService.geographicContext = cityLayer.getBounds();
+        }
       });
-      if (this.userCity$ != null && this.useGeographicContext) {
-        this.userCity$.subscribe(city => {
-          if (!city || !city.surface) {
-            return;
-          }
-          const cityLayer = L.geoJSON(city.surface);
-          this.searchPlaceService.geographicContext = cityLayer.getBounds();
-        });
-      }
     }
 
     ngAfterViewInit(): void {
@@ -92,9 +82,9 @@ export class SearchPlace implements OnInit, OnDestroy, AfterViewInit {
       }
     }
 
-    ngOnDestroy(): void {
-      this.mapSubscription.unsubscribe();
-    }
+    // ngOnDestroy(): void {
+    //   this.mapSubscription.unsubscribe();
+    // }
 
     showResults() {
       this.isVisible = true;

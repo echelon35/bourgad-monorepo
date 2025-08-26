@@ -2,6 +2,7 @@ import { Body, Controller, Get, HttpException, HttpStatus, NotFoundException, Po
 import { UserService } from "./user.service";
 import * as Express from 'express';
 import { GetCityByIdParamDto, GetProfileDto } from "@bourgad-monorepo/internal";
+import { City } from "@bourgad-monorepo/model";
 
 @Controller('user')
 export class UserController {
@@ -11,7 +12,7 @@ export class UserController {
     }
 
     @Post('change-town')
-    async changeTown(@Request() req: Express.Request, @Body() GetCityByIdParamDto: GetCityByIdParamDto): Promise<any> {
+    async changeTown(@Request() req: Express.Request, @Body() GetCityByIdParamDto: GetCityByIdParamDto): Promise<City> {
         try {
             const userId = req.user?.user?.userId;
             const cityId = GetCityByIdParamDto.cityId;

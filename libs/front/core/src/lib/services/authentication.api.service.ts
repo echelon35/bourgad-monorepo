@@ -1,11 +1,9 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { Store } from "@ngrx/store";
 import { CoreConfigService } from "./core.config.service";
 import { User } from "@bourgad-monorepo/model";
-import { ChangePasswordDto, LoginDto, SignUpDto, TokenDto } from "@bourgad-monorepo/internal"
-import { loginUser, logoutUser } from "../store/user/user.action";
+import { ChangePasswordDto, LoginDto, SignUpDto, TokenDto } from "@bourgad-monorepo/internal";
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +12,6 @@ export class AuthenticationApiService {
     private httpOptions = {};
 
     private readonly http = inject(HttpClient);
-    private readonly store = inject(Store);
     private readonly coreConfigService = inject(CoreConfigService);
     API_URL: string = this.coreConfigService.apiUrl;
     TOKEN_KEY = 'auth-token';
@@ -39,26 +36,10 @@ export class AuthenticationApiService {
         window.localStorage.removeItem(this.TOKEN_KEY);
         window.localStorage.setItem(this.TOKEN_KEY, token);
     }
-
-    public storeUser(user: User): void {
-        this.store.dispatch(loginUser({ user }))
-    }
     
     public getToken(): string | null {
         const token = localStorage.getItem(this.TOKEN_KEY);
         return token;
-    }
-
-    public logOut() {
-        window.localStorage.removeItem(this.TOKEN_KEY);
-        this.store.dispatch(logoutUser())
-        window.location.href = '/';
-    }
-
-    public logOutExpires() {
-        this.store.dispatch(logoutUser())
-        const error = 'Votre session a expiré, veuillez-vous reconnecter.';
-        window.location.href = `/login?error=${encodeURI(error)}`;
     }
 
     public login(userDto: LoginDto): Observable<TokenDto>{

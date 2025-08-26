@@ -5,7 +5,7 @@
         <div class="bg-primary-bourgad z-on-map-1 absolute top-0 left-0 w-full flex justify-between items-center p-4">
             <img class="h-10" src="/assets/bourgad_dark.svg" alt="Logo de Bourgad" />
             <div class="flex items-center gap-x-2">
-                @if(isAuthenticated$ | async) {
+                @if(this.userStore.isAuthenticated()) {
                     <button (click)="this.router.navigate(['/localize'])" class="btn rounded-md py-1 px-2.5 bg-primary-bourgad text-sm/6 font-semibold text-white bg">
                         <img class="size-8 hover:scale-110 transition-transform cursor-pointer" src="/assets/demenagement.svg" alt="Déménagement" title="Changer ma bourgade" />
                     </button>
@@ -24,8 +24,8 @@
                             </g>
                         </svg>
                     </button>
-                    <a tabindex="1" (click)="this.authenticationApiService.logOut()" (keypress)="this.authenticationApiService.logOut()" class="ml-2 text-sm/6 font-semibold text-white">
-                        <img class="inline-block size-10 rounded-full mr-2 cursor-pointer" src="{{avatarUrl$ | async}}" alt="Avatar">
+                    <a tabindex="1" (click)="this.authStore.logout()" (keypress)="this.authStore.logout()" class="ml-2 text-sm/6 font-semibold text-white">
+                        <img class="inline-block size-10 rounded-full mr-2 cursor-pointer" src="{{avatarUrl}}" alt="Avatar">
                     </a>
                 }
                 @else{

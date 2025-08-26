@@ -1,13 +1,12 @@
 import { Component, EventEmitter, inject, OnInit, Output, ViewChild } from "@angular/core";
 import { City } from "@bourgad-monorepo/model";
 import L from "leaflet";
-import { map, Observable, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 import { SearchPlace } from "../search-place/search-place.modal";
 import { MapComponent } from "../map/map.component";
-import { Store } from "@ngrx/store";
-import { selectUser } from "@bourgad-monorepo/core";
 import { MapService } from "../../services/map.service";
 import { PlaceDto } from "@bourgad-monorepo/external";
+import { UserStore } from "@bourgad-monorepo/core";
 
 @Component({
   selector: "bgd-localize-post",
@@ -20,7 +19,6 @@ export class LocalizePostComponent implements OnInit {
   mapId = 'map-localize-post';
   isLoading = false;
   isVisible = false;
-  userCity$: Observable<City | undefined>;
   location: PlaceDto;
   saved_location: PlaceDto | undefined;
   @Output() closed$ = new EventEmitter<PlaceDto | undefined>();
@@ -28,16 +26,12 @@ export class LocalizePostComponent implements OnInit {
 
   private readonly mapService = inject(MapService);
   private mapSubscription!: Subscription;
-  private readonly store = inject(Store);
+  private readonly userStore = inject(UserStore);
 
   localizeMap: L.Map | null = null;
   localizeLayer: L.LayerGroup | null = new L.LayerGroup();
   @ViewChild(MapComponent) mapComponent!: MapComponent;
   @ViewChild(SearchPlace) searchComponent!: SearchPlace;
-
-  constructor(){
-    this.userCity$ = this.store.select(selectUser).pipe(map(user => user?.city));
-  }
 
   open(){
     console.log('Map opened');
@@ -49,8 +43,8 @@ export class LocalizePostComponent implements OnInit {
     this.mapSubscription = this.mapService.getMap(this.mapId).subscribe(map => {
       if (map) {
         this.localizeMap = map;
-        if (this.userCity$ != null) {
-          this.userCity$.subscribe(city => {
+        if (this.userStore.user().city != null) {
+            const city = this.userStore.user().city;
             if (!city || !city.surface) {
               return;
             }
@@ -67,7 +61,6 @@ export class LocalizePostComponent implements OnInit {
             });
             cityLayer.addTo(this.localizeLayer!);
             this.localizeLayer.addTo(this.localizeMap!);
-          });
         }
       }
     });

@@ -1,9 +1,11 @@
 <div class="absolute h-full w-full bg-[url(/assets/village.webp)] bg-cover z-0">
 </div>
 <div class="relative flex h-screen z-10 bg-primary-bourgad/80">
-  <div class="absolute ml-10 mt-6">
-    <a href="/" class="text-sm/6 font-semibold text-white hover:text-indigo-400"><span class="pr-2" aria-hidden="true">&larr;</span> Retour au fil d'actualité</a>
-  </div>
+  @if(this.userStore.user().cityId !== null) {
+    <div class="absolute ml-10 mt-6">
+      <a href="/" class="text-sm/6 font-semibold text-white hover:text-indigo-400"><span class="pr-2" aria-hidden="true">&larr;</span> Retour au fil d'actualité</a>
+    </div>
+  }
   <div class="my-auto border-2 border-gray-300 mx-auto w-full max-w-md rounded-md p-10 bg-gray-900/80">
     <div>
       <img class="h-10 w-auto mx-auto" src="/assets/bourgad_dark.svg" alt="Bourgad">
@@ -20,7 +22,7 @@
         </div>
       }
       @else {
-        @if(userCity$ | async) {
+        @if(this.userStore.user().cityId !== null) {
           <h2 class="mt-8 text-2xl/9 font-bold tracking-tight text-white">Changez de Bourgade</h2>
           <p class="mt-2 text-sm/6 text-gray-500">
               Changez la ville pour laquelle vous souhaitez recevoir des posts et des notifications.
@@ -33,9 +35,9 @@
           </p>
         }
         <div class="mt-6">
-          <bgd-search-place-modal (selectedPlace$)="updateLocation($event)" [id]="'localize'" [providerType]="'bourgad'" [zoomLevel]="8" [placeholder]="'Recherchez votre Bourgade'" [inputClasses]="'block rounded-md pl-10 pr-10 py-1.5 text-base placeholder:text-gray-400 sm:text-sm/6 w-80 truncate'"></bgd-search-place-modal>
-          <div id="map-localize-post" class="z-map w-full h-40 rounded-md">
-              <bgd-map [mapId]="'map-localize-post'" [defaultZoom]="2" [displayScale]="false" [displayZoom]="false" [displayLayers]="false"></bgd-map>
+          <bgd-search-place-modal (selectedPlace$)="updateLocation($event)" [mapId]="this.mapId" [id]="'localize'" [providerType]="'bourgad'" [zoomLevel]="8" [placeholder]="'Recherchez votre Bourgade'" [inputClasses]="'block rounded-md pl-10 pr-10 py-1.5 text-base placeholder:text-gray-400 sm:text-sm/6 w-80 truncate'"></bgd-search-place-modal>
+          <div id="map-localize" class="z-map w-full h-40 rounded-md">
+              <bgd-map [mapId]="this.mapId" [defaultZoom]="2" [displayScale]="false" [displayZoom]="false" [displayLayers]="false"></bgd-map>
           </div>
           <div class="mt-6">
             <button (click)="saveUserLocation()" type="submit" class="flex w-full justify-center rounded-md bg-indigo-400 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-400 disabled:bg-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Enregistrer ma bourgade</button>

@@ -1,10 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Store, StoreModule } from '@ngrx/store';
-import { Observable } from 'rxjs';
 import { AuthenticationApiService, CoreConfigService } from '@bourgad-monorepo/core';
-import { selectIsAuthenticated } from '@bourgad-monorepo/core';
 import { StrongPasswordRegx } from '@bourgad-monorepo/core';
 import { User } from '@bourgad-monorepo/model';
 import { CommonModule } from '@angular/common';
@@ -20,10 +17,8 @@ export class SignUpView {
   showLogin = true;
   registerForm: FormGroup;
   errorMessage = '';
-  isAuthenticated$: Observable<boolean>;
 
   private readonly route = inject(Router);
-  private readonly store = inject(Store);
   private readonly authentificationApi = inject(AuthenticationApiService);
   private readonly fb = inject(FormBuilder);
   private readonly coreConfigService = inject(CoreConfigService);
@@ -31,15 +26,6 @@ export class SignUpView {
   appName: string = this.coreConfigService.appName;
 
   constructor() { 
-
-    //Redirect if already connected
-    this.isAuthenticated$ = this.store.select(selectIsAuthenticated);
-    this.isAuthenticated$.subscribe((isAuth) => {
-      if(isAuth){
-        //User already auth => Redirection
-      }
-    })
-
     this.registerForm = this.fb.group({
       lastname: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       firstname: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],

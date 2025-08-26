@@ -122,14 +122,14 @@ export class UserService {
     return userCreated;
   }
 
-  async changeTown(cityId: string, userId: number): Promise<boolean>{
+  async changeTown(cityId: string, userId: number): Promise<City>{
     const city = await this.cityService.getCityById(cityId);
     if(city == null){
       throw new Error(`Ville id ${cityId} non trouvée`)
     }
 
-    const result = await this.dataSource.getRepository(UserEntity).update(userId, { city: city});
-    return result.affected > 0;
+    await this.dataSource.getRepository(UserEntity).update(userId, { city: city});
+    return city;
 
   }
 

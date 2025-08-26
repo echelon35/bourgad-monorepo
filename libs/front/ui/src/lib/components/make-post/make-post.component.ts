@@ -1,9 +1,8 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, ViewChild } from "@angular/core";
+import { Component, computed, inject, Signal, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Category, Media, Post, Subcategory } from "@bourgad-monorepo/model";
-import { CategoryApiService, PostApiService, selectUser, TitlecaseString } from "@bourgad-monorepo/core";
-import { Store } from "@ngrx/store";
+import { CategoryApiService, PostApiService, TitlecaseString, UserStore } from "@bourgad-monorepo/core";
 import { map, Observable } from "rxjs";
 import { PlaceDto } from "@bourgad-monorepo/external";
 import { CreateLocationDto } from "@bourgad-monorepo/internal";
@@ -43,14 +42,14 @@ export class MakePost {
     @ViewChild('loadPicture') loadPicture?: LoadPictureComponent;
     @ViewChild('localizePost') localizePost?: LocalizePostComponent;
 
-    readonly store = inject(Store);
+    readonly userStore = inject(UserStore);
     readonly categoryApiService = inject(CategoryApiService);
     readonly postApiService = inject(PostApiService);
     private readonly toastrService = inject(ToastrService);
     private readonly fb = inject(FormBuilder);
 
-    placeholder$: Observable<string>;
-    avatarUrl$: Observable<string>;
+    placeholder: Signal<string>;
+    avatarUrl: Signal<string>;
 
     constructor() {
 
@@ -67,25 +66,25 @@ export class MakePost {
             this.feedDropdownCategories();
         });
 
-        this.placeholder$ = this.store.select(selectUser).pipe(
-            map(user => {
-                if(user?.firstname){
-                    const firstname = TitlecaseString(user?.firstname);
-                    const cityName = user?.city?.name;
-                    return cityName
+        this.placeholder = computed(() => {
+            const user = this.userStore.user();
+            if (user?.firstname) {
+                const firstname = TitlecaseString(user?.firstname);
+                const cityName = user?.city?.name;
+                return cityName
                     ? `${firstname}, que souhaitez-vous partager à ${cityName} ?`
                     : `${firstname}, que souhaitez-vous partager dans votre Bourgade ?`;
-                }
-                else{
-                    return 'Que souhaitez-vous partager dans votre Bourgade ?';
-                }
+            }
+            else {
+                return 'Que souhaitez-vous partager dans votre Bourgade ?';
+            }
+        });
 
-            })
-        );
+        this.avatarUrl = computed(() => {
+            const user = this.userStore.user();
+            return user?.avatar ? user?.avatar?.url : '/assets/village.svg';
+        });
 
-        this.avatarUrl$ = this.store.select(selectUser).pipe(
-            map(user => user?.avatar ? user?.avatar?.url : '/assets/village.svg'))
-        
     }
 
     feedDropdownCategories(){
@@ -262,9 +261,7 @@ export class MakePost {
         this.isLoading = true;
         setTimeout(() => {
             if(!this.handleErrors()) {
-                this.store.select(selectUser).subscribe(user => {
-                    this.sendPost(user?.userId);
-                });
+                this.sendPost(this.userStore.user().userId!);
             }
         }, 500);
 

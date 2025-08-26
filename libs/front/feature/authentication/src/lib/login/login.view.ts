@@ -3,11 +3,9 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthenticationApiService, CoreConfigService, selectIsAuthenticated } from '@bourgad-monorepo/core';
-import { TokenDto } from '@bourgad-monorepo/internal';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { AuthenticationApiService, CoreConfigService } from '@bourgad-monorepo/core';
 import { ToastrService } from '@bourgad-monorepo/ui';
+import { AuthStore } from '@bourgad-monorepo/core';
 
 @Component({
   templateUrl: './Login.view.html',
@@ -20,10 +18,8 @@ export class LoginView {
   loginForm: FormGroup;
   errorMessage = '';
 
-  isAuthenticated$: Observable<boolean>;
-
   private activatedRoute = inject(ActivatedRoute);
-  private readonly store = inject(Store);
+  private readonly authStore = inject(AuthStore);
   private readonly authentificationApi = inject(AuthenticationApiService);
   private readonly fb = inject(FormBuilder);
   private readonly coreConfigService = inject(CoreConfigService);
@@ -36,17 +32,15 @@ export class LoginView {
         this.toastrService.error(error);
       }
 
-    //Redirect if already connected
-    this.isAuthenticated$ = this.store.select(selectIsAuthenticated);
-    this.isAuthenticated$.subscribe(isAuth => {
-      if(isAuth){
+      if(this.authStore.isAuthenticated()) {
+        //Redirect if already connected
         this.router.navigateByUrl('/dashboard');
       }
-    })
-    this.loginForm = this.fb.group({
-      password: ['', Validators.required],
-      mail: ['', [Validators.required, Validators.email]],
-    });
+
+      this.loginForm = this.fb.group({
+        password: ['', Validators.required],
+        mail: ['', [Validators.required, Validators.email]],
+      });
   }
 
   showLoginDiv(show:boolean){
@@ -78,16 +72,18 @@ export class LoginView {
     this.handleErrors();
     if(this.loginForm.invalid){ return; }
 
-    this.authentificationApi.login(this.loginForm.value).subscribe({
-      next: (token: TokenDto) => {
-        this.router.navigateByUrl('?access_token=' + token.access_token);
-      },
-      error: (e: any) => {
-        // console.log(e);
-        this.errorMessage = e.error.message;
-        this.toastrService.error('Une erreur est survenue', e.error.message);
-      }
-    });
+    this.authStore.login(this.loginForm.value);
+
+    // this.authentificationApi.login(this.loginForm.value).subscribe({
+    //   next: (token: TokenDto) => {
+    //     this.router.navigateByUrl('?access_token=' + token.access_token);
+    //   },
+    //   error: (e: any) => {
+    //     // console.log(e);
+    //     this.errorMessage = e.error.message;
+    //     this.toastrService.error('Une erreur est survenue', e.error.message);
+    //   }
+    // });
   }
 
   googleConnect(): void {
