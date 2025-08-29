@@ -27,6 +27,7 @@
           <p class="mt-2 text-sm/6 text-gray-500">
               Changez la ville pour laquelle vous souhaitez recevoir des posts et des notifications.
           </p>
+          <p class="mt-2 text-sm/6 text-gray-500">Votre bourgade actuelle est <b>{{this.userStore.user().city?.name}}</b>.</p>
         }
         @else {
           <h2 class="mt-8 text-2xl/9 font-bold tracking-tight text-white">Définissez votre Bourgade</h2>
@@ -36,11 +37,16 @@
         }
         <div class="mt-6">
           <bgd-search-place-modal (selectedPlace$)="updateLocation($event)" [mapId]="this.mapId" [id]="'localize'" [providerType]="'bourgad'" [zoomLevel]="8" [placeholder]="'Recherchez votre Bourgade'" [inputClasses]="'block rounded-md pl-10 pr-10 py-1.5 text-base placeholder:text-gray-400 sm:text-sm/6 w-80 truncate'"></bgd-search-place-modal>
-          <div id="map-localize" class="z-map w-full h-40 rounded-md">
+          <div id="map-localize" class="z-map w-full h-96 rounded-md">
               <bgd-map [mapId]="this.mapId" [defaultZoom]="2" [displayScale]="false" [displayZoom]="false" [displayLayers]="false"></bgd-map>
           </div>
           <div class="mt-6">
-            <button (click)="saveUserLocation()" type="submit" class="flex w-full justify-center rounded-md bg-indigo-400 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-400 disabled:bg-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Enregistrer ma bourgade</button>
+            @if(this.userStore.loading()){
+              <button class="flex w-full justify-center rounded-md bg-indigo-400 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-400 disabled:bg-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"><bgd-spinner></bgd-spinner></button>
+            }
+            @else {
+              <button (click)="saveUserLocation()" type="submit" class="flex w-full justify-center rounded-md bg-indigo-400 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-400 disabled:bg-gray-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Enregistrer ma bourgade</button>
+            }
           </div>
         </div>
       }

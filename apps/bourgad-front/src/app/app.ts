@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { AuthStore, UserStore } from '@bourgad-monorepo/core';
 import { ToastrComponent } from '@bourgad-monorepo/ui';
 
 @Component({
@@ -11,6 +12,9 @@ import { ToastrComponent } from '@bourgad-monorepo/ui';
 export class App {
   title = 'bourgad';
   isSidebarOpen = false;
+
+  public readonly userStore = inject(UserStore);
+  public readonly authStore = inject(AuthStore);
 
   toggleSidebar(): void {
     this.isSidebarOpen = !this.isSidebarOpen;

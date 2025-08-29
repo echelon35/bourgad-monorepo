@@ -1,21 +1,18 @@
-import { AfterViewInit, Component, effect, inject, OnInit } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MapComponent, MapService, SearchPlace, ToastrService } from '@bourgad-monorepo/ui';
-// import { Store } from '@ngrx/store';
-import { GeoApiService, UserApiService, UserStore } from '@bourgad-monorepo/core';
+import { MapComponent, MapService, SearchPlace, ToastrService, SpinnerComponent } from '@bourgad-monorepo/ui';
+import { UserStore } from '@bourgad-monorepo/core';
 import { Subscription } from 'rxjs';
 import { PlaceDto } from '@bourgad-monorepo/external';
 import * as L from 'leaflet';
 
 @Component({
-  imports: [CommonModule, MapComponent, SearchPlace],
+  imports: [CommonModule, MapComponent, SearchPlace, SpinnerComponent],
   templateUrl: './localize.view.html',
   standalone: true
 })
 export class LocalizeView {
   private readonly toastrService = inject(ToastrService);
-  private readonly userApiService = inject(UserApiService);
-  private readonly geoApiService = inject(GeoApiService);
 
   localizeMap?: L.Map;
   localizeLayer?: L.LayerGroup = new L.LayerGroup();
@@ -26,11 +23,14 @@ export class LocalizeView {
   private readonly mapService = inject(MapService);
   private mapSubscription!: Subscription;
   public readonly userStore = inject(UserStore);
+  public readonly authStore = inject(UserStore);
 
   constructor() {
       effect(() => {
-        if(this.userStore.userCityLoaded() && this.userStore.user().cityId != null) {
+        if(this.userStore.userCityLoaded()) {
+          console.log('User city loaded, initializing map...');
             this.mapSubscription = this.mapService.getMap(this.mapId).subscribe(map => {
+              console.log(map);
               if (map) {
                 this.localizeMap = map;
                 if (this.userStore.user().city != null) {
@@ -42,7 +42,7 @@ export class LocalizeView {
                               opacity: 0.5
                           }
                     });
-                    this.localizeMap!.flyToBounds(cityLayer.getBounds());
+                    this.localizeMap!.fitBounds(cityLayer.getBounds(), { maxZoom: 12 });
                     cityLayer.addTo(this.localizeLayer!);
                     this.localizeLayer!.addTo(this.localizeMap!);
                 }
@@ -74,6 +74,7 @@ export class LocalizeView {
     if(this.place){
       console.log('Saving place:', this.place);
       this.userStore.updateCity(this.place.id);
+      this.toastrService.success('Votre bourgade a bien été sauvegardée.');
     }
     else{
       this.toastrService.error('Veuillez sélectionner un lieu afin de sauvegarder votre bourgade.');

@@ -1,24 +1,17 @@
-import { AfterViewInit, Component, effect, inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, effect, inject } from '@angular/core';
 import * as L from 'leaflet';
 import { CommonModule } from '@angular/common';
 import { FeedModal } from "../feed-modal/feed.modal";
 import { MakePost, MapComponent, MapService, SearchPlace, SenseOfResults, ToastrService } from '@bourgad-monorepo/ui';
-import { AuthenticationApiService, GeoApiService, UserStore } from '@bourgad-monorepo/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { AuthStore } from '@bourgad-monorepo/core';
+import { AuthStore, UserStore } from '@bourgad-monorepo/core';
 
 @Component({
-  selector: 'bgd-feed',
   templateUrl: './feed.view.html',
   imports: [MapComponent, MakePost, CommonModule, FeedModal, SearchPlace],
-  providers: [GeoApiService],
   standalone: true
 })
-export class FeedView implements AfterViewInit {
-    @ViewChild('feedMap') feedMapComponent?: MapComponent;
-    readonly geoApiService = inject(GeoApiService);
-    readonly authenticationApiService = inject(AuthenticationApiService);
+export class FeedView {
     readonly route = inject(ActivatedRoute);
     public readonly userStore = inject(UserStore);
     public readonly authStore = inject(AuthStore);
@@ -33,7 +26,6 @@ export class FeedView implements AfterViewInit {
     public senseOfResults: SenseOfResults = SenseOfResults.TOP;
 
     private readonly mapService = inject(MapService);
-    private mapSubscription!: Subscription;
 
     constructor() {
 
@@ -44,15 +36,16 @@ export class FeedView implements AfterViewInit {
 
       effect(() => {
         if(this.userStore.userCityLoaded()) {
+          console.log('User city loaded, initializing map...');
           if(this.userStore.user().cityId == null){
             this.router.navigate(['/localize']);
           }
           else{
-            this.mapSubscription = this.mapService.getMap(this.mapId).subscribe(map => {
-              if (map) {
+            this.mapService.getMap(this.mapId).subscribe(map => {
+              if (map !== null) {
                 this.feedMap = map;
-                if (this.userStore.user().city != null) {
-                    this.feedLayer?.clearLayers();
+                if (this.userStore.user().city != null && this.feedLayer != null) {
+                    this.feedLayer.clearLayers();
                     const cityLayer = L.geoJSON(this.userStore.user().city.surface, {
                           style: {
                               color: '#50A3C5',
@@ -60,21 +53,16 @@ export class FeedView implements AfterViewInit {
                               opacity: 0.5
                           }
                     });
-                    this.feedMap!.flyToBounds(cityLayer.getBounds());
-                    cityLayer.addTo(this.feedLayer!);
-                    this.feedLayer.addTo(this.feedMap!);
-                  // });
+                    console.log(`fitBounds called for map: ${this.mapId}:`, map);
+                    this.feedMap.fitBounds(cityLayer.getBounds(), { maxZoom: 13 });
+                    cityLayer.addTo(this.feedLayer);
+                    this.feedLayer.addTo(this.feedMap);
                 }
               }
             });
           }
         }
       });
-
-    }
-
-    ngAfterViewInit(): void {
-            console.log(this.userStore.user());
 
     }
 

@@ -46,7 +46,7 @@ export const UserStore = signalStore(
                             console.log('City updated from UserStore:', city);
                             const updatedUser = { ...store.user(), cityId: city.cityId, city };
                             updateUser(updatedUser);
-                            patchState(store, { user: updatedUser });
+                            patchState(store, { user: updatedUser, loading: false });
                         })
                     ))
             )
