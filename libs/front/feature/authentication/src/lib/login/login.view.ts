@@ -4,12 +4,12 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationApiService, CoreConfigService } from '@bourgad-monorepo/core';
-import { ToastrService } from '@bourgad-monorepo/ui';
+import { SpinnerComponent, ToastrService } from '@bourgad-monorepo/ui';
 import { AuthStore } from '@bourgad-monorepo/core';
 
 @Component({
   templateUrl: './Login.view.html',
-    imports: [CommonModule, ReactiveFormsModule],
+    imports: [CommonModule, ReactiveFormsModule, SpinnerComponent],
     standalone: true
 })
 export class LoginView {
@@ -19,7 +19,7 @@ export class LoginView {
   errorMessage = '';
 
   private activatedRoute = inject(ActivatedRoute);
-  private readonly authStore = inject(AuthStore);
+  public readonly authStore = inject(AuthStore);
   private readonly authentificationApi = inject(AuthenticationApiService);
   private readonly fb = inject(FormBuilder);
   private readonly coreConfigService = inject(CoreConfigService);

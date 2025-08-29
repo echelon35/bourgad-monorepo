@@ -2,24 +2,27 @@
 import { signalStore, withState, withMethods, patchState, withHooks } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe, switchMap, tap, catchError, of, map } from 'rxjs';
-import { inject } from '@angular/core';
+import { effect, inject } from '@angular/core';
 import { AuthState, initialState } from './auth.state';
 import { LoginDto, TokenDto } from '@bourgad-monorepo/internal';
 import { Router } from '@angular/router';
 import { AuthenticationApiService } from '../../services/authentication.api.service';
+import { UserStore } from '../user/user.store';
 
 export const AuthStore = signalStore(
   { providedIn: 'root' },
   withState<AuthState>(initialState),
   withMethods((store, 
     authService = inject(AuthenticationApiService),
-    router = inject(Router)) => ({
+    router = inject(Router)) => {
     // Méthode pour vérifier le token
-    checkTokenValidity: rxMethod<void>(
+    const checkTokenValidity = rxMethod<string>(
       pipe(
-        tap(() => patchState(store, { loading: true, error: null })),
-        switchMap(() => {
-          const token = localStorage.getItem('token'); // Récupère le token depuis localStorage
+        tap(() => {
+          console.log('Checking token validity...');
+          patchState(store, { loading: true, error: null });
+        }),
+        switchMap((token) => {
           if (!token) {
             return of(null).pipe(
               tap(() => patchState(store, { isTokenValid: false, loading: false }))
@@ -28,7 +31,8 @@ export const AuthStore = signalStore(
           return authService.checkExpiration().pipe(
             tap({
               next: (isValid) => {
-                patchState(store, { isTokenValid: isValid, loading: false });
+                console.log('Token is valid:', isValid);
+                patchState(store, { isTokenValid: isValid, loading: false, isAuthenticated: true });
               },
               error: (error) => {
                 patchState(store, { error: error.message, isTokenValid: false, loading: false });
@@ -43,18 +47,18 @@ export const AuthStore = signalStore(
           );
         })
       )
-    ),
-    // Méthode pour se connecter (optionnel)
-    login: rxMethod<{ mail: string; password: string }>(
+    );
+
+    const login = rxMethod<LoginDto> (
       pipe(
         tap(() => patchState(store, { loading: true, error: null })),
-        switchMap((credentials: LoginDto) =>
-          authService.login(credentials).pipe(
+        switchMap((login) =>
+          authService.login(login).pipe(
             tap({
               next: (response: TokenDto) => {
+                console.log('Login successful, token received:', response);
                 localStorage.setItem('auth-token', response.access_token);
                 patchState(store, { token: response.access_token, isAuthenticated: true, isTokenValid: true, loading: false });
-                //Enregistrer le user avec le userStore
                 router.navigate(['/'])
                 .then(() => {
                   window.location.reload();
@@ -64,31 +68,45 @@ export const AuthStore = signalStore(
             })
           )
         )
-      )
-    ),
-    logout: rxMethod<void>(
-      pipe(
-        tap(() => patchState(store, { loading: true, error: null })),
-        map(() => {
-          window.localStorage.removeItem('auth-token');
-          patchState(store, { token: null, isTokenValid: false, loading: false });
+      ));
+
+    const logout = rxMethod<void>(pipe(
+      tap(() => patchState(store, { loading: true, error: null })),
+      map(() => {
+        window.localStorage.removeItem('auth-token');
+        patchState(store, { token: null, isTokenValid: false, loading: false });
           router.navigate(['/'])
           .then(() => {
             window.location.reload();
           });
         })
       )
-    )
-  })),
-  // Effet déclenché à l'initialisation du store
+    );
+
+    return {
+      checkTokenValidity,
+      login,
+      logout
+    };
+  }),
   withHooks({
     onInit(store) {
-        // Vérifie le token au démarrage
         const token = localStorage.getItem('auth-token');
+        const userStore = inject(UserStore);
+        console.log('AuthStore initialized with token:', token);
         if (token) {
-            patchState(store, { token, isAuthenticated: true });
-            store.checkTokenValidity();
+            store.checkTokenValidity(token);
+            
         }
+
+        effect(() => {
+          const isAuthenticated = store.isAuthenticated();
+          console.log('isAuthenticated changed:', isAuthenticated);
+          if (isAuthenticated) {
+            console.log('User is authenticated, loading user data...');
+            userStore.getUser();
+          }
+        });
     },
   })
 );

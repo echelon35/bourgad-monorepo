@@ -1,5 +1,3 @@
-import { User } from "@bourgad-monorepo/model";
-
 export interface AuthState {
   loading: boolean;
   error: string | null;
