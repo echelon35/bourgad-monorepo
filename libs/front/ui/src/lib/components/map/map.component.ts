@@ -22,6 +22,7 @@ export class MapComponent implements AfterViewInit, OnInit, OnChanges, OnDestroy
   @Input() zoomDelta = 1;
   @Input() defaultZoom = 3;
   @Input() isVisible = true;
+  @Input() maxBoundsViscosity = 1.0;
 
   public isLoading = false;
   
@@ -37,8 +38,8 @@ export class MapComponent implements AfterViewInit, OnInit, OnChanges, OnDestroy
 
   markerPost!: L.Marker;
 
-  public mapDetail!: L.Map;
-  public mapLayer!: L.LayerGroup;
+  private mapDetail!: L.Map;
+  private mapLayer!: L.LayerGroup;
 
   private readonly mapService = inject(MapService);
 
@@ -67,22 +68,23 @@ export class MapComponent implements AfterViewInit, OnInit, OnChanges, OnDestroy
   }
 
   initMap(){
-    console.log(this.mapId);
       // Déclaration de la carte avec les coordonnées du centre et le niveau de zoom.
       this.mapDetail = L.map(this.mapId,{
         center: [0, 0],
         boxZoom: true,
         zoom: this.defaultZoom,
         zoomControl: this.displayZoom,
-        maxBoundsViscosity: 1.0,
+        maxBoundsViscosity: this.maxBoundsViscosity,
         worldCopyJump: false,
         zoomDelta: this.zoomDelta,
-        zoomSnap: 0
+        // zoomSnap: 0
       });
 
       //Map limited to world
-      this.limitMap(-90,-360,90,360);
-      this.setZoom(6,6,18);
+      this.mapDetail.setMaxBounds(L.latLngBounds(
+        L.latLng(-90, -360),
+        L.latLng(90, 360)
+      ));
 
       if(this.dragMarker){
         this.draggableMarker();
@@ -109,9 +111,7 @@ export class MapComponent implements AfterViewInit, OnInit, OnChanges, OnDestroy
         this.movedMap.emit(this.mapDetail);
       },this)
 
-      this.selectMapZone("METROPOLE");
-
-      this.mapService.setMap(this.mapId, this.mapDetail);
+      this.mapService.setMap(this.mapId, this.mapDetail, this.isVisible);
 
       if(this.cursorEvent != null){
         this.markerSubscription = this.cursorEvent.subscribe(point => {
@@ -178,29 +178,6 @@ export class MapComponent implements AfterViewInit, OnInit, OnChanges, OnDestroy
     }
   }
 
-  limitMap(xMin: number,yMin: number,xMax: number,yMax: number){
-		//South-West
-		const southWest = L.latLng(xMin,yMin);
-		//North-East
-		const northEast = L.latLng(xMax,yMax);
-		//All map size
-		const bounds = L.latLngBounds(southWest, northEast);
-		this.mapDetail.setMaxBounds(bounds);
-		return this.mapDetail;
-  }
-
-	setZoom(zoom: number,minZoom: number,maxZoom: number){
-		//Set the zoom of map
-		this.mapDetail.setZoom(zoom);
-		if(typeof(minZoom) != 'undefined'){
-			this.mapDetail.options.minZoom = minZoom;
-		}
-		if(typeof(maxZoom) != 'undefined'){
-			this.mapDetail.options.maxZoom = maxZoom;
-		}
-		return this.mapDetail;
-  }
-
   draggableMarker(){
     this.markerPost = new L.Marker([0,0],{
       icon: new L.Icon({
@@ -233,27 +210,21 @@ export class MapComponent implements AfterViewInit, OnInit, OnChanges, OnDestroy
     return this.mapDetail;
   }
 
-  // updateMap(){
-  //   this.map$.emit(this.mapDetail);
-  //   this.layer$.emit(this.mapLayer);
-  // }
-
   selectMapZone(zone: string){
 
-    let bound;
-    let box;
-
     switch(zone){
-      case "METROPOLE":
+      case "METROPOLE": {
         //FRANCE METROPOLITAINE
-        box = [-6.113481,41.934978,10.307773,51.727030];
-        bound = L.latLngBounds(L.latLng(box[3], box[2]),L.latLng(box[1], box[0]))
-        this.mapDetail.setMaxBounds(bound);
+        const box = [-6.113481,41.934978,10.307773,51.727030];
+        const bound = L.latLngBounds(L.latLng(box[3], box[2]),L.latLng(box[1], box[0]))
+        this.mapDetail.fitBounds(bound);
         break;
-      default:
-        box = [-90,41.934978,10.307773,51.727030];
-        bound = L.latLngBounds(L.latLng(box[3], box[2]),L.latLng(box[1], box[0]))
-        this.mapDetail.setMaxBounds(bound);
+      }
+      default: {
+        const box = [-90,41.934978,10.307773,51.727030];
+        const bound = L.latLngBounds(L.latLng(box[3], box[2]),L.latLng(box[1], box[0]))
+        this.mapDetail.fitBounds(bound);
+      }
     }
   }
 
