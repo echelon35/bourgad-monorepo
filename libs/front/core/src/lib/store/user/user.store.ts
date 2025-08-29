@@ -1,6 +1,6 @@
 import { computed, inject } from "@angular/core";
 import { User, Media, City } from "@bourgad-monorepo/model";
-import { patchState, signalStore, withComputed, withMethods, withState } from "@ngrx/signals";
+import { patchState, signalStore, withComputed, withMethods, withProps, withState } from "@ngrx/signals";
 import { initialState } from "./user.state";
 import { UserApiService } from "../../services/user.api.service";
 import { pipe, switchMap, tap } from "rxjs";
@@ -68,6 +68,13 @@ export const UserStore = signalStore(
             resetUser
         };
     }),
+    withProps((store) => ({
+        userAvatar$: (store.user().avatar != null) ? store.user().avatar.url : '/assets/village.svg'
+    })),
+    // withProps((store) => ({
+    //     userCityLoaded: computed(() => store.userCityLoaded()),
+    //     userAvatar: computed(() => store.user().avatar.url || '/assets/village.svg'),
+    // })),
     withComputed(({ user }) => ({
         username: computed(() => `${user.firstname?.() ?? ''} ${user.lastname?.() ?? ''}`),
     })));

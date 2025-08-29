@@ -25,7 +25,7 @@
                         </svg>
                     </button>
                     <a tabindex="1" (click)="this.authStore.logout()" (keypress)="this.authStore.logout()" class="ml-2 text-sm/6 font-semibold text-white">
-                        <img class="inline-block size-10 rounded-full mr-2 cursor-pointer" src="{{avatarUrl}}" alt="Avatar">
+                        <img class="inline-block size-10 rounded-full mr-2 cursor-pointer" src="{{this.userStore.userAvatar$}}" alt="Avatar">
                     </a>
                 }
                 @else{
@@ -38,7 +38,7 @@
             <bgd-map #feedMap [mapId]="this.mapId" [defaultZoom]="2" [displayScale]="false" [displayZoom]="false" [displayLayers]="false"></bgd-map>
         </div>
     </div>
-    <bgd-feed-modal class="z-modal-2"></bgd-feed-modal>
+    <bgd-feed-modal [map]="this.feedMap" class="z-modal-2"></bgd-feed-modal>
     <bgd-makepost class="z-modal" #makePost></bgd-makepost>
     <bgd-search-place-modal class="z-on-map-2 absolute bottom-0 left-0 w-80" [mapId]="this.mapId" [senseOfResults]="this.senseOfResults" [providerType]="'openStreetMap'"></bgd-search-place-modal>
 </div>

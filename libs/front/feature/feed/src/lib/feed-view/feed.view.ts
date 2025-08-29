@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, effect, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import * as L from 'leaflet';
 import { CommonModule } from '@angular/common';
 import { FeedModal } from "../feed-modal/feed.modal";
@@ -18,7 +18,7 @@ export class FeedView {
     public readonly router = inject(Router);
     private readonly toastrService = inject(ToastrService);
 
-    avatarUrl: string = this.userStore.user().avatar ? this.userStore.user().avatar.url : '/assets/village.svg';
+    // avatarUrl: string = this.userStore.user().avatar ? this.userStore.user().avatar.url : '/assets/village.svg';
     mapId = 'map-feed';
 
     feedMap?: L.Map;
