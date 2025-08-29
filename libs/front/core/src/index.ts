@@ -7,5 +7,6 @@ export * from './lib/services/user.api.service';
 export * from './lib/services/post.api.service';
 export * from './lib/store/user/user.store';
 export * from './lib/store/auth/auth.store';
+export * from './lib/store/category/category.store';
 export * from './lib/utils/const/StrongPasswordRegex';
 export * from './lib/utils/TitlecaseString';

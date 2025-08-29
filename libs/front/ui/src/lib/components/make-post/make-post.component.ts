@@ -1,9 +1,8 @@
 import { CommonModule } from "@angular/common";
-import { Component, computed, inject, Signal, ViewChild } from "@angular/core";
+import { Component, computed, effect, inject, Signal, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { Category, Media, Post, Subcategory } from "@bourgad-monorepo/model";
-import { CategoryApiService, PostApiService, TitlecaseString, UserStore } from "@bourgad-monorepo/core";
-import { map, Observable } from "rxjs";
+import { Category, Post, Subcategory } from "@bourgad-monorepo/model";
+import { CategoryApiService, CategoryStore, PostApiService, TitlecaseString, UserStore } from "@bourgad-monorepo/core";
 import { PlaceDto } from "@bourgad-monorepo/external";
 import { CreateLocationDto } from "@bourgad-monorepo/internal";
 import { DropdownComponent, DropdownItem } from "../dropdown/dropdown.component";
@@ -27,7 +26,6 @@ export class MakePost {
     post: Post = {} as Post;
     dropdownCategories: DropdownItem[] = [];
     dropdownSubCategories: DropdownItem[] = [];
-    categories: Category[] = [];
     subcategories: Subcategory[] = [];
     makePostForm: FormGroup;
     isLoading = false;
@@ -43,6 +41,7 @@ export class MakePost {
     @ViewChild('localizePost') localizePost?: LocalizePostComponent;
 
     readonly userStore = inject(UserStore);
+    readonly categoryStore = inject(CategoryStore);
     readonly categoryApiService = inject(CategoryApiService);
     readonly postApiService = inject(PostApiService);
     private readonly toastrService = inject(ToastrService);
@@ -58,12 +57,6 @@ export class MakePost {
             content: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(1000)]],
             pictures: [],
             location: [],
-        });
-
-        this.categoryApiService.getCategories().subscribe(cats => {
-            this.categories = cats;
-            console.log(cats);
-            this.feedDropdownCategories();
         });
 
         this.placeholder = computed(() => {
@@ -85,10 +78,14 @@ export class MakePost {
             return user?.avatar ? user?.avatar?.url : '/assets/village.svg';
         });
 
+        effect(() => {
+            this.feedDropdownCategories();
+        });
+
     }
 
     feedDropdownCategories(){
-        this.dropdownCategories = this.categories.map(category => {
+        this.dropdownCategories = this.categoryStore.categories$().map(category => {
             return {
                 label: category.name,
                 value: category,

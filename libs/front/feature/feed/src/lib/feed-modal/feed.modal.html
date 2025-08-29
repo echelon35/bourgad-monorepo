@@ -9,7 +9,7 @@
     </div> 
     <div [ngClass]="{'pt-24':selectedCategory&&!expanded,'pt-44':selectedCategory&&expanded}" class="z-10 pt-24 overflow-auto">
         <div class="flex flex-wrap gap-2 justify-center mb-4 p-4">
-            @for(item of categories; track item; let idx = $index) {
+            @for(item of categoryStore.categories$(); track item; let idx = $index) {
                 <span tabindex="{{idx}}" title="{{ item.description }}" (click)="selectedCategory = item" (keypress)="selectedCategory = item" [ngClass]="{
                     'border border-indigo-400 bg-indigo-400 text-gray-100 ring-indigo-400': selectedCategory === item, 
                     'bg-gray-400/10 text-gray-400 ring-1 ring-gray-400/20': selectedCategory !== item

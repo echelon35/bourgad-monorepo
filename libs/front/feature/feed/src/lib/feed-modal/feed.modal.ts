@@ -1,18 +1,20 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
-import { CategoryApiService, PostApiService } from "@bourgad-monorepo/core";
-import { FeedPostDto } from "@bourgad-monorepo/internal";
-import { Category, Post } from "@bourgad-monorepo/model";
+import { CategoryApiService, CategoryStore, PostApiService } from "@bourgad-monorepo/core";
+import { Category } from "@bourgad-monorepo/model";
 import { PostComponent } from "@bourgad-monorepo/ui";
-import { Observable, tap } from "rxjs";
+import { FeedStore } from "../stores/feed.store";
 
 @Component({
     selector: 'bgd-feed-modal',
     templateUrl: './feed.modal.html',
     standalone: true,
     imports: [CommonModule, PostComponent],
+    providers: [FeedStore]
 })
 export class FeedModal {
+
+    categoryStore = inject(CategoryStore);
     categories: Category[] = [];
     selectedCategory: Category | null = null;
     expanded = false;
@@ -20,18 +22,7 @@ export class FeedModal {
     private readonly postService = inject(PostApiService);
     private readonly categoryApiService = inject(CategoryApiService);
 
-    feed$: Observable<FeedPostDto[]>;
-    posts: FeedPostDto[] = [];
-
-    constructor(){
-        this.categoryApiService.getCategories().subscribe(cats => {
-            this.categories = cats;
-        });
-
-        this.feed$ = this.postService.getFeed().pipe(
-            tap(posts => this.posts = posts)
-        );
-    }
+    public readonly feedStore = inject(FeedStore);
 
     expand() {
         this.expanded = !this.expanded;
