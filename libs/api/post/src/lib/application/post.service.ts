@@ -28,4 +28,14 @@ export class PostService {
       .where(`ST_DWithin(locations.point, ST_GeomFromGeoJSON('${JSON.stringify(geometry)}'), ${perimeter})${withLocation}`);
     return posts.getMany();
   }
+
+  async getPostById(postId: number): Promise<Post | null> {
+    const post = this.dataSource.getRepository(PostEntity).createQueryBuilder('posts')
+      .leftJoinAndSelect('posts.location', 'locations')
+      .leftJoinAndSelect('posts.medias', 'medias')
+      .leftJoinAndSelect('posts.user', 'users')
+      .select(['posts', 'locations', 'medias', 'users'])
+      .where(`"posts"."post_id" = ${postId}`);
+    return post.getOne();
+  }
 }

@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Post, Query, Request, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Get, NotFoundException, Param, Post, Query, Request, ValidationPipe } from "@nestjs/common";
 import { PostService } from "../application/post.service";
-import { CreatePostDto, FeedPostDto, GetPostsAroundDto } from "@bourgad-monorepo/internal";
+import { CreatePostDto, FeedPostDto, FullPostDto, GetPostDto, GetPostsAroundDto } from "@bourgad-monorepo/internal";
 import { Post as PostModel } from "@bourgad-monorepo/model";
 import 'multer';
 import { MediaService, StorageService } from "@bourgad-monorepo/api/media";
 import { UserService } from "@bourgad-monorepo/api/user";
+import { Public } from "@bourgad-monorepo/api/core";
 
 @Controller('post')
 export class PostController {
@@ -19,7 +20,7 @@ export class PostController {
   @Query(ValidationPipe) params: GetPostsAroundDto): Promise<FeedPostDto[]> {
     const userId = req.user?.user?.userId;
     if (userId == null) {
-      throw new Error('Une erreur est survenue lors de la récupération des posts');
+      throw new Error('Une erreur est survenue lors de la récupération du post ');
     }
     const city = await this.userService.getUserCity(userId);
     if(city == null || city.surface == null){
@@ -46,6 +47,35 @@ export class PostController {
       } as FeedPostDto;
     });
     return feedPosts;
+  }
+
+  @Get('/{:postId}')
+  @Public()
+  async getPost(@Request() req: Express.Request, 
+  @Param(ValidationPipe) params: GetPostDto): Promise<FullPostDto> {
+    const post = await this.postService.getPostById(params.postId);
+
+    if(post === null){
+      throw new NotFoundException(`Post ${params.postId} non trouvé.`);
+    }
+
+    return {
+        userAvatarUrl: post.user?.avatar?.url,
+        userFirstname: post.user?.firstname,
+        userLastname: post.user?.lastname,
+        mediasUrls: post.medias.map(media => media.url),
+        title: post.title,
+        content: post.content,
+        createdAt: post.createdAt,
+        point: post.location?.point,
+        addressLabel: post.location?.label,
+        subcategory: {
+          id: post.subcategory?.subcategoryId,
+          name: post.subcategory?.name,
+          tagClass: post.subcategory?.tagClass,
+        },
+      } as FullPostDto;
+
   }
 
   @Post('/')

@@ -21,7 +21,9 @@ export * from './lib/media/media.dto';
 //POST
 export * from './lib/post/createPost.dto';
 export * from './lib/post/getPostsAround.dto';
+export * from './lib/post/getPost.dto';
 export * from './lib/post/feedPost.dto';
+export * from './lib/post/fullPost.dto';
 
 //TERRITORY
 export * from './lib/territory/city/getCityByIdParam.dto';
