@@ -7,6 +7,7 @@ export interface Subcategory {
     categoryId: number;
     tagClass?: string;
     iconUrl: string;
+    markerIconUrl: string;
 
     category: Category;
 }

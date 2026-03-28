@@ -7,16 +7,16 @@ import { City } from "@bourgad-monorepo/model";
 @Controller('user')
 export class UserController {
 
-    constructor(private userService: UserService){
+    constructor(private userService: UserService) {
 
     }
 
     @Post('change-town')
-    async changeTown(@Request() req: Express.Request, @Body() GetCityByIdParamDto: GetCityByIdParamDto): Promise<City> {
+    async changeTown(@Request() req: any, @Body() GetCityByIdParamDto: GetCityByIdParamDto): Promise<City> {
         try {
             const userId = req.user?.user?.userId;
             const cityId = GetCityByIdParamDto.cityId;
-            if(userId == null || cityId == null){
+            if (userId == null || cityId == null) {
                 throw new Error('Une erreur est survenue lors du changement de ville de l\'utilisateur');
             }
             return await this.userService.changeTown(cityId, userId);
@@ -29,30 +29,30 @@ export class UserController {
     async getInfos(@Request() req, @Response() res): Promise<string> {
         const userId = req.user?.user?.userId;
         if (userId === undefined) {
-        throw new UnauthorizedException(
-            'Un erreur est survenue : token incorrect',
-        );
+            throw new UnauthorizedException(
+                'Un erreur est survenue : token incorrect',
+            );
         }
         try {
-        const path = await this.userService.getSummaryInfos(userId);
-        return res.status(HttpStatus.OK).json(path);
+            const path = await this.userService.getSummaryInfos(userId);
+            return res.status(HttpStatus.OK).json(path);
         } catch (e) {
-        return res
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .json(
-            'Une erreur est survenue lors de la récupération des informations : ' +
-                e,
-            );
+            return res
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .json(
+                    'Une erreur est survenue lors de la récupération des informations : ' +
+                    e,
+                );
         }
     }
 
     @Get('profile')
     async findMe(@Request() req): Promise<GetProfileDto> {
         if (req.user != null) {
-        const me = await this.userService.findMe(req?.user?.user?.userId);
-        return me;
+            const me = await this.userService.findMe(req?.user?.user?.userId);
+            return me;
         } else {
-        throw new NotFoundException();
+            throw new NotFoundException();
         }
     }
 }

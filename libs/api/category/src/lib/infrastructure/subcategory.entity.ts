@@ -11,6 +11,7 @@ export const SubCategoryEntity = new EntitySchema<Subcategory>({
     description: { type: String, name: 'description', nullable: true },
     tagClass: { type: String, name: 'tag_class', nullable: true },
     iconUrl: { type: String, name: 'icon_url', nullable: true },
+    markerIconUrl: { type: String, name: 'marker_icon_url', nullable: true },
   },
   relations: {
     category: { type: 'many-to-one', target: 'CategoryEntity', joinColumn: { name: 'category_id' }, inverseSide: 'subcategories' },

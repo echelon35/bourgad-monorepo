@@ -43,6 +43,7 @@ export class SeedService {
       name: item['name'],
       categoryId: +item['categoryId'],
       iconUrl: item['iconUrl'],
+      markerIconUrl: item['markerIconUrl']
     }));
     console.log(subcategories);
     await this.dataSource.getRepository(SubCategoryEntity).save(subcategories);

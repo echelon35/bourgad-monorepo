@@ -17,19 +17,19 @@ import { LoginService } from '../application/login.service';
 
 @Controller()
 export class LoginController {
-  constructor(private loginService: LoginService) {}
+  constructor(private loginService: LoginService) { }
 
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   @Public()
   @Post('login')
-  async login(@Request() req: express.Request) {
+  async login(@Request() req: any) {
     return this.loginService.login(req.user);
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('logout')
-  async logout(@Request() req: express.Request) {
+  async logout(@Request() req: any) {
     if (req?.user != null) {
       return this.loginService.logout(req?.user?.id);
     } else {

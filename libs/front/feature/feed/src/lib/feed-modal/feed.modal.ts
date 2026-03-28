@@ -5,6 +5,7 @@ import { Category } from "@bourgad-monorepo/model";
 import { PostComponent } from "@bourgad-monorepo/ui";
 import { FeedStore } from "../stores/feed.store";
 import * as L from 'leaflet';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'bgd-feed-modal',
@@ -24,6 +25,7 @@ export class FeedModal implements OnInit {
 
     private readonly postService = inject(PostApiService);
     private readonly categoryApiService = inject(CategoryApiService);
+    private readonly router = inject(Router);
 
     public readonly feedStore = inject(FeedStore);
 
@@ -33,10 +35,13 @@ export class FeedModal implements OnInit {
             const longitude = post.point.coordinates[0];
             const marker = new L.Marker([latitude,longitude], {
                 icon: L.icon({
-                    iconUrl: 'assets/markers/default_bourgad.svg',
-                    iconSize: [50, 82],
-                    iconAnchor: [25, 82],
+                    iconUrl: post.subcategory.markerIconUrl,
+                    iconSize: [25, 41], 
+                    iconAnchor: [0, 41]
                 })
+            });
+            marker.addEventListener("click",() => {
+                this.router.navigate(['/post', post.id]);
             });
             marker.addTo(this.layer);
             this.layer.addTo(this.map);

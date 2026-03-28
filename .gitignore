@@ -46,3 +46,6 @@ Thumbs.db
 .angular
 
 .env
+.agents/rules/bourgad.md
+
+bourgad-monorepo.code-workspace

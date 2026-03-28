@@ -17,7 +17,7 @@ import { SignUpService } from '../application/signup.service';
 
 @Controller()
 export class SignUpController {
-  constructor(private signUpService: SignUpService) {}
+  constructor(private signUpService: SignUpService) { }
 
   @Post('resend-confirmation-mail')
   @Public()
@@ -46,7 +46,7 @@ export class SignUpController {
   @Public()
   @UseGuards(GoogleSigninGuard)
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  async googleSignin() {}
+  async googleSignin() { }
 
   @Get('confirm-email')
   @Public()
@@ -65,7 +65,7 @@ export class SignUpController {
   @Get('google/signin/callback')
   @Public()
   @UseGuards(GoogleSigninGuard)
-  async googleSignInRedirect(@Request() req: Express.Request, @Response() res: Express.Response) {
+  async googleSignInRedirect(@Request() req: any, @Response() res: Express.Response) {
     try {
       const user = await this.signUpService.googleSignup(req.user);
       const mail = user?.mail;

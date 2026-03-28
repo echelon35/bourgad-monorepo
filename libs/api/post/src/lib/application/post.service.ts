@@ -24,7 +24,8 @@ export class PostService {
       .leftJoinAndSelect('posts.location', 'locations')
       .leftJoinAndSelect('posts.medias', 'medias')
       .leftJoinAndSelect('posts.user', 'users')
-      .select(['posts', 'locations', 'medias', 'users'])
+      .leftJoinAndSelect('posts.subcategory', 'subcategories')
+      .select(['posts', 'locations', 'medias', 'users', 'subcategories'])
       .where(`ST_DWithin(locations.point, ST_GeomFromGeoJSON('${JSON.stringify(geometry)}'), ${perimeter})${withLocation}`);
     return posts.getMany();
   }
@@ -34,7 +35,8 @@ export class PostService {
       .leftJoinAndSelect('posts.location', 'locations')
       .leftJoinAndSelect('posts.medias', 'medias')
       .leftJoinAndSelect('posts.user', 'users')
-      .select(['posts', 'locations', 'medias', 'users'])
+      .leftJoinAndSelect('posts.subcategory', 'subcategories')
+      .select(['posts', 'locations', 'medias', 'users', 'subcategories'])
       .where(`"posts"."post_id" = ${postId}`);
     return post.getOne();
   }

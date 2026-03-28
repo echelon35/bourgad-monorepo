@@ -13,23 +13,24 @@ export class PostController {
     private readonly storageService: StorageService,
     private readonly mediaService: MediaService,
     private readonly userService: UserService
-  ) {}
+  ) { }
 
   @Get('/')
-  async getPostsAround(@Request() req: Express.Request, 
-  @Query(ValidationPipe) params: GetPostsAroundDto): Promise<FeedPostDto[]> {
+  async getPostsAround(@Request() req: any,
+    @Query(ValidationPipe) params: GetPostsAroundDto): Promise<FeedPostDto[]> {
     const userId = req.user?.user?.userId;
     if (userId == null) {
       throw new Error('Une erreur est survenue lors de la récupération du post ');
     }
     const city = await this.userService.getUserCity(userId);
-    if(city == null || city.surface == null){
+    if (city == null || city.surface == null) {
       throw new Error('L\'utilisateur n\'a pas défini sa bourgade.');
     }
     console.log(params.onlyWithLocation, typeof params.onlyWithLocation);
     const posts = await this.postService.getPostsByLocation(city.surface, 50, params.onlyWithLocation);
     const feedPosts = posts.map(post => {
       return {
+        id: post.postId,
         userAvatarUrl: post.user?.avatar?.url,
         userFirstname: post.user?.firstname,
         userLastname: post.user?.lastname,
@@ -43,6 +44,7 @@ export class PostController {
           id: post.subcategory?.subcategoryId,
           name: post.subcategory?.name,
           tagClass: post.subcategory?.tagClass,
+          markerIconUrl: post.subcategory?.markerIconUrl
         },
       } as FeedPostDto;
     });
@@ -51,41 +53,43 @@ export class PostController {
 
   @Get('/{:postId}')
   @Public()
-  async getPost(@Request() req: Express.Request, 
-  @Param(ValidationPipe) params: GetPostDto): Promise<FullPostDto> {
+  async getPost(@Request() req: Express.Request,
+    @Param(ValidationPipe) params: GetPostDto): Promise<FullPostDto> {
     const post = await this.postService.getPostById(params.postId);
 
-    if(post === null){
+    if (post === null) {
       throw new NotFoundException(`Post ${params.postId} non trouvé.`);
     }
 
     return {
-        userAvatarUrl: post.user?.avatar?.url,
-        userFirstname: post.user?.firstname,
-        userLastname: post.user?.lastname,
-        mediasUrls: post.medias.map(media => media.url),
-        title: post.title,
-        content: post.content,
-        createdAt: post.createdAt,
-        point: post.location?.point,
-        addressLabel: post.location?.label,
-        subcategory: {
-          id: post.subcategory?.subcategoryId,
-          name: post.subcategory?.name,
-          tagClass: post.subcategory?.tagClass,
-        },
-      } as FullPostDto;
+      id: post.postId,
+      userAvatarUrl: post.user?.avatar?.url,
+      userFirstname: post.user?.firstname,
+      userLastname: post.user?.lastname,
+      mediasUrls: post.medias.map(media => media.url),
+      title: post.title,
+      content: post.content,
+      createdAt: post.createdAt,
+      point: post.location?.point,
+      addressLabel: post.location?.label,
+      subcategory: {
+        id: post.subcategory?.subcategoryId,
+        name: post.subcategory?.name,
+        tagClass: post.subcategory?.tagClass,
+        markerIconUrl: post.subcategory?.markerIconUrl,
+      },
+    } as FullPostDto;
 
   }
 
   @Post('/')
-  async createPost(@Request() req: Express.Request, 
-  @Body() createPostDto: CreatePostDto): Promise<PostModel> {
+  async createPost(@Request() req: any,
+    @Body() createPostDto: CreatePostDto): Promise<PostModel> {
     console.log('createPost called with:', createPostDto);
     console.log('user:', req.user?.user);
     const userId = req.user?.user?.userId;
-    if(userId == null){
-        throw new Error('Une erreur est survenue lors de la sauvegarde du post');
+    if (userId == null) {
+      throw new Error('Une erreur est survenue lors de la sauvegarde du post');
     }
 
     const post: Partial<PostModel> = {

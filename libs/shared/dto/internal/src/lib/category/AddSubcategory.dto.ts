@@ -13,4 +13,6 @@ export class AddSubcategoryDto {
     iconUrl: string;
     @IsString()
     description?: string;
+    @IsString()
+    markerIconUrl: string;
 }

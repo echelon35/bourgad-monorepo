@@ -29,7 +29,8 @@ export class CategoryService {
       subcategories."category_id" as "categoryId", subcategories."subcategory_id" as "subcategoryId",
       subcategories."name",subcategories."description",
       subcategories."icon_url" as "iconUrl", 
-      subcategories."tag_class" as "tagClass" 
+      subcategories."tag_class" as "tagClass",
+      subcategories."marker_icon_url" as "markerIconUrl" 
       FROM subcategories 
       LEFT JOIN categories ON categories.category_id = subcategories.category_id 
       WHERE categories.category_id = ${categoryId}

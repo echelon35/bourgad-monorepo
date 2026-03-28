@@ -1,6 +1,7 @@
 import { Point } from "geojson";
 
 export class FullPostDto {
+    id: number;
     userAvatarUrl: string;
     userFirstname: string;
     userLastname: string;
@@ -14,5 +15,6 @@ export class FullPostDto {
         id: number;
         name: string;
         tagClass: string;
+        markerIconUrl: string;
     };
 }
