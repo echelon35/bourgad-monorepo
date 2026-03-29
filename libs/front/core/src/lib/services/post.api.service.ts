@@ -4,7 +4,7 @@ import { firstValueFrom, Observable } from "rxjs";
 import { Media, Post } from "@bourgad-monorepo/model";
 import { CoreConfigService } from "./core.config.service";
 import { AuthenticationApiService } from "./authentication.api.service";
-import { CreateLocationDto, FeedPostDto, FullPostDto } from "@bourgad-monorepo/internal";
+import { CommentDto, CreateLocationDto, FeedPostDto, FullPostDto } from "@bourgad-monorepo/internal";
 import { Location } from "@bourgad-monorepo/model";
 
 
@@ -57,6 +57,14 @@ export class PostApiService {
 
     getFeed(): Observable<FeedPostDto[]> {
         return this.http.get<FeedPostDto[]>(this.API_URL + `/post?onlyWithLocation=true`, this.httpOptions);
+    }
+
+    getComments(postId: number): Observable<CommentDto[]> {
+        return this.http.get<CommentDto[]>(this.API_URL + `/post/${postId}/comments`, this.httpOptions);
+    }
+
+    postComment(postId: number, content: string): Observable<CommentDto> {
+        return this.http.post<CommentDto>(this.API_URL + `/post/${postId}/comments`, { content }, this.httpOptions);
     }
 
 }

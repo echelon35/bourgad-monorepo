@@ -1,6 +1,6 @@
-import { Body, Controller, Get, NotFoundException, Param, Post, Query, Request, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Get, NotFoundException, Param, Post, Query, Request, UnauthorizedException, ValidationPipe } from "@nestjs/common";
 import { PostService } from "../application/post.service";
-import { CreatePostDto, FeedPostDto, FullPostDto, GetPostDto, GetPostsAroundDto } from "@bourgad-monorepo/internal";
+import { CommentDto, CreateCommentDto, CreatePostDto, FeedPostDto, FullPostDto, GetPostDto, GetPostsAroundDto } from "@bourgad-monorepo/internal";
 import { Post as PostModel } from "@bourgad-monorepo/model";
 import 'multer';
 import { MediaService, StorageService } from "@bourgad-monorepo/api/media";
@@ -80,6 +80,42 @@ export class PostController {
       },
     } as FullPostDto;
 
+  }
+
+  @Get('/:postId/comments')
+  @Public()
+  async getComments(@Param('postId') postId: string): Promise<CommentDto[]> {
+    const comments = await this.postService.getCommentsByPostId(Number(postId));
+    return comments.map(c => ({
+      commentId: c.commentId,
+      content: c.content,
+      userId: c.userId,
+      postId: c.postId,
+      createdAt: c.createdAt,
+      userFirstname: c.user?.firstname ?? '',
+      userLastname: c.user?.lastname ?? '',
+      userAvatarUrl: (c.user as any)?.avatar?.url ?? null,
+    }));
+  }
+
+  @Post('/:postId/comments')
+  async createComment(@Request() req: any,
+    @Param('postId') postId: string,
+    @Body() body: CreateCommentDto): Promise<CommentDto> {
+    const userId = req.user?.user?.userId;
+    if (!userId) throw new UnauthorizedException();
+    const comment = await this.postService.createComment(Number(postId), userId, body.content);
+    const user = req.user?.user;
+    return {
+      commentId: comment.commentId,
+      content: comment.content,
+      userId: comment.userId,
+      postId: comment.postId,
+      createdAt: comment.createdAt,
+      userFirstname: user?.firstname ?? '',
+      userLastname: user?.lastname ?? '',
+      userAvatarUrl: user?.avatar?.url ?? null,
+    };
   }
 
   @Post('/')

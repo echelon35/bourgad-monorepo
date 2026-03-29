@@ -36,6 +36,9 @@
       "@bourgad-monorepo/feature-photo-batch": [
         "libs/front/feature/photo-batch/src/index.ts"
       ],
+      "@bourgad-monorepo/feature-profile": [
+        "libs/front/feature/profile/src/index.ts"
+      ],
       "@bourgad-monorepo/internal": ["libs/shared/dto/internal/src/index"],
       "@bourgad-monorepo/localize": [
         "libs/front/feature/localize/src/index.ts"

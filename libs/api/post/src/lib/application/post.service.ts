@@ -1,8 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
-import { Post } from "@bourgad-monorepo/model";
+import { Comment, Post } from "@bourgad-monorepo/model";
 import { Geometry } from "geojson";
 import { PostEntity } from "../infrastructure/post.entity";
+import { CommentEntity } from "../infrastructure/comment.entity";
 
 @Injectable()
 export class PostService {
@@ -39,5 +40,19 @@ export class PostService {
       .select(['posts', 'locations', 'medias', 'users', 'subcategories'])
       .where(`"posts"."post_id" = ${postId}`);
     return post.getOne();
+  }
+
+  async getCommentsByPostId(postId: number): Promise<Comment[]> {
+    return this.dataSource.getRepository(CommentEntity)
+      .createQueryBuilder('comments')
+      .leftJoinAndSelect('comments.user', 'users')
+      .leftJoinAndSelect('users.avatar', 'avatars')
+      .where('comments.post_id = :postId', { postId })
+      .orderBy('comments.created_at', 'ASC')
+      .getMany();
+  }
+
+  async createComment(postId: number, userId: number, content: string): Promise<Comment> {
+    return this.dataSource.getRepository(CommentEntity).save({ postId, userId, content });
   }
 }

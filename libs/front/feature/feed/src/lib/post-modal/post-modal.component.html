@@ -55,14 +55,116 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
             <span class="text-sm font-medium">10</span>
           </div>
-          <div class="flex items-center gap-x-1.5 cursor-pointer hover:text-primary-bourgad-2 transition-colors">
+          <div class="flex items-center gap-x-1.5 text-white/40">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
-            <span class="text-sm font-medium">5</span>
+            <span class="text-sm font-medium">{{ postStore.comments().length }}</span>
           </div>
+        </div>
+
+      </div>
+    </article>
+
+    <!-- Commentaires -->
+    <div class="border-t border-white/[0.08] px-6 py-4 flex flex-col gap-4">
+
+      <!-- Liste -->
+      @if (postStore.commentsLoading()) {
+        <div class="flex justify-center py-2">
+          <svg class="animate-spin size-5 text-white/30" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+          </svg>
+        </div>
+      } @else if (postStore.comments().length === 0) {
+        <p class="text-xs text-white/30 text-center py-1">Aucun commentaire pour l'instant</p>
+      } @else {
+        <div class="flex flex-col gap-3 max-h-48 overflow-y-auto pr-1">
+          @for (comment of postStore.comments(); track comment.commentId) {
+            <div class="flex gap-3">
+              <img [src]="comment.userAvatarUrl || '/assets/village.svg'" alt=""
+                class="size-7 rounded-full object-cover shrink-0 bg-white/10 mt-0.5" />
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-semibold text-white/80">{{ comment.userFirstname }} {{ comment.userLastname }}</span>
+                  <span class="text-[0.7rem] text-white/30 flex-1">{{ comment.createdAt | date:"d MMM 'à' H:mm" }}</span>
+                  <!-- Bouton trois points -->
+                  <button type="button" (click)="toggleMenu(comment.commentId, $event)"
+                    class="shrink-0 text-white/20 hover:text-white/60 transition-colors p-0.5 rounded cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                      <circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/>
+                    </svg>
+                  </button>
+                </div>
+                <p class="text-sm text-white/70 mt-0.5 break-words whitespace-pre-wrap" [innerHTML]="comment.content | commentContent"></p>
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Saisie -->
+      <div class="flex gap-2 items-start">
+        <img [src]="userStore.userAvatar$" alt=""
+          class="size-8 rounded-full object-cover shrink-0 bg-white/10" />
+        <div class="flex-1 flex items-center gap-2 bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 focus-within:border-primary-bourgad-2/50 transition-colors">
+          <textarea
+            [(ngModel)]="commentText"
+            (keydown.enter)="$event.preventDefault(); submitComment()"
+            placeholder="Écrire un commentaire…"
+            rows="1"
+            class="flex-1 bg-transparent text-sm text-white placeholder:text-white/25 resize-none focus:outline-none leading-snug border-none"></textarea>
+          <button type="button" (click)="submitComment()"
+            [disabled]="!commentText.trim() || postStore.commentPosting()"
+            class="text-primary-bourgad-2 disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed transition-opacity shrink-0">
+            @if (postStore.commentPosting()) {
+              <svg class="animate-spin size-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+              </svg>
+            } @else {
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+            }
+          </button>
         </div>
       </div>
 
-    </article>
+    </div>
+
   </div>
+  }
+
+  <!-- Dropdown commentaire (rendu en fixed pour passer au-dessus de tout) -->
+  @if (openMenuCommentId !== null) {
+    <div class="fixed inset-0 z-[1100]" role="button" tabindex="0" (click)="closeMenu()" (keydown.escape)="closeMenu()"></div>
+    <div class="fixed z-[1101] bg-gray-900 border border-white/10 rounded-lg shadow-xl py-1 min-w-[160px]"
+      [style.top.px]="menuPosition.top" [style.right.px]="menuPosition.right">
+      @for (comment of postStore.comments(); track comment.commentId) {
+        @if (comment.commentId === openMenuCommentId) {
+          @if (comment.userId === userStore.user().userId) {
+            <button type="button" (click)="closeMenu()"
+              class="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-white/70 hover:bg-white/[0.06] hover:text-white transition-colors cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+              Modifier
+            </button>
+            <button type="button" (click)="closeMenu()"
+              class="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-white/70 hover:bg-white/[0.06] hover:text-white transition-colors cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-icon lucide-trash"><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              Supprimer
+            </button>
+          } @else {
+            <button type="button" (click)="closeMenu()"
+              class="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-white/70 hover:bg-white/[0.06] hover:text-white transition-colors cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>
+              Signaler
+            </button>
+            <button type="button" (click)="closeMenu()"
+              class="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-red-400/80 hover:bg-red-500/[0.08] hover:text-red-400 transition-colors cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>
+              Bloquer l'utilisateur
+            </button>
+          }
+        }
+      }
+    </div>
   }
 </div>

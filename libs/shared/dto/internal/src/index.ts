@@ -24,11 +24,12 @@ export * from './lib/post/getPostsAround.dto';
 export * from './lib/post/getPost.dto';
 export * from './lib/post/feedPost.dto';
 export * from './lib/post/fullPost.dto';
+export * from './lib/post/comment.dto';
 
 //TERRITORY
 export * from './lib/territory/city/getCityByIdParam.dto';
 export * from './lib/territory/city/updateCityByDeptQuery.dto';
 
 //USER
-export * from './lib/user/getProfile.dto'; 
+export * from './lib/user/getProfile.dto';
 export * from './lib/user/updateProfile.dto';
