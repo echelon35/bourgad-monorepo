@@ -18,9 +18,9 @@
             Définissez où vous souhaitez que les autres utilisateurs voient votre post.
         </p>
         <div class="mt-6">
-          <bgd-search-place-modal (selectedPlace$)="chooseLocation($event)" [providerType]="'openStreetMap'" [useGeographicContext]="true" [placeholder]="'Une adresse, un lieu...'" [zoomLevel]="15" [mapId]="this.mapId" class="w-full"></bgd-search-place-modal>
+          <bgd-search-place-modal (selectedPlace$)="chooseLocation($event)" [providerType]="'openStreetMap'" [placeholder]="'Une adresse, un lieu...'" [zoomLevel]="15" [mapId]="this.mapId" class="w-full"></bgd-search-place-modal>
           <div id="map-localize-post" class="z-map w-full h-64 rounded-md">
-              <bgd-map [isVisible]="isVisible" [mapId]="this.mapId" [defaultZoom]="2" [displayScale]="false" [displayZoom]="false" [displayLayers]="false"></bgd-map>
+              <bgd-map [isVisible]="isVisible" [mapId]="this.mapId" [defaultZoom]="9" [displayScale]="false" [displayZoom]="false" [displayLayers]="false" [maxBounds]="mancheBounds" [minZoom]="8"></bgd-map>
           </div>
         <div class="mt-5 sm:mt-6">
               @if(this.location !== undefined && this.location !== this.saved_location){

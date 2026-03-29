@@ -1,13 +1,13 @@
 @if (visible) {
 <div class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[1000] flex items-center justify-center p-4 animate-[fadeIn_0.2s_ease]"
     (click)="onOverlayClick($event)" id="photo-post-modal-overlay">
-    <div class="bg-[#1a1a2e] border border-white/10 rounded-2xl w-full max-w-[600px] max-h-[90vh] flex flex-col overflow-hidden animate-[slideUp_0.25s_cubic-bezier(0.16,1,0.3,1)]"
+    <div class="bg-primary-bourgad border border-white/10 rounded-2xl w-full max-w-[600px] max-h-[90vh] flex flex-col overflow-hidden animate-[slideUp_0.25s_cubic-bezier(0.16,1,0.3,1)]"
         id="photo-post-modal">
 
         <!-- Header -->
         <div class="flex items-center justify-between px-6 py-5 border-b border-white/[0.08] gap-4">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-lg overflow-hidden border-2 border-violet-500/40 shrink-0">
+                <div class="w-12 h-12 rounded-lg overflow-hidden border-2 border-primary-bourgad-2/50 shrink-0">
                     <img [src]="media?.url" [alt]="media?.title || 'Photo ancienne'"
                         class="w-full h-full object-cover [filter:sepia(0.3)]" />
                 </div>
@@ -33,11 +33,11 @@
             <form [formGroup]="postForm" class="flex flex-col gap-5">
 
                 <!-- Photo preview -->
-                <div class="relative rounded-xl overflow-hidden h-40 bg-[#0d0d1a]">
+                <div class="relative rounded-xl overflow-hidden h-40 bg-primary-bourgad/60">
                     <img [src]="media?.url" [alt]="media?.title || 'Photo ancienne'"
                         class="w-full h-full object-cover [filter:sepia(0.25)_contrast(1.05)]" />
                     <div
-                        class="absolute bottom-2 left-2 flex items-center gap-1.5 bg-violet-500/80 backdrop-blur-md text-white text-[0.7rem] font-semibold px-2.5 py-1 rounded-full">
+                        class="absolute bottom-2 left-2 flex items-center gap-1.5 bg-primary-bourgad-2/90 backdrop-blur-md text-white text-[0.7rem] font-semibold px-2.5 py-1 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path
@@ -50,7 +50,7 @@
                 <!-- Title -->
                 <div class="flex flex-col gap-1.5">
                     <label class="text-[0.8rem] font-semibold text-white/70 tracking-wide" for="photo-post-title">
-                        Titre <span class="text-violet-500">*</span>
+                        Titre <span class="text-primary-bourgad-2">*</span>
                     </label>
                     <input id="photo-post-title" type="text" formControlName="title"
                         placeholder="Ex: La place du village en 1920..."
@@ -60,7 +60,7 @@
                 <!-- Content -->
                 <div class="flex flex-col gap-1.5">
                     <label class="text-[0.8rem] font-semibold text-white/70 tracking-wide" for="photo-post-content">
-                        Description <span class="text-violet-500">*</span>
+                        Description <span class="text-primary-bourgad-2">*</span>
                     </label>
                     <textarea id="photo-post-content" formControlName="content" rows="4"
                         placeholder="Décrivez ce que vous voyez sur cette photo, son histoire..."
@@ -71,14 +71,14 @@
                 <div class="flex gap-4">
                     <div class="flex flex-col gap-1.5 flex-1">
                         <label class="text-[0.8rem] font-semibold text-white/70 tracking-wide">
-                            Catégorie <span class="text-violet-500">*</span>
+                            Catégorie <span class="text-primary-bourgad-2">*</span>
                         </label>
                         <bgd-dropdown #category id="photo-post-category" [dropdownItems]="dropdownCategories"
                             placeholder="Choisir une catégorie" (selectedItem$)="selectCategory($event)"></bgd-dropdown>
                     </div>
                     <div class="flex flex-col gap-1.5 flex-1">
                         <label class="text-[0.8rem] font-semibold text-white/70 tracking-wide">
-                            Sous-catégorie <span class="text-violet-500">*</span>
+                            Sous-catégorie <span class="text-primary-bourgad-2">*</span>
                         </label>
                         <bgd-dropdown #subcategory id="photo-post-subcategory" [dropdownItems]="dropdownSubCategories"
                             placeholder="Choisir une sous-catégorie" (selectedItem$)="selectSubCategory($event)"
@@ -102,7 +102,7 @@
                     </div>
                     } @else {
                     <div
-                        class="flex items-center gap-2 px-3 py-1.5 rounded-full text-[0.8rem] flex-1 bg-white/[0.04] border border-dashed border-white/15 text-white/40">
+                        class="flex items-center gap-2 px-3 py-1.5 rounded-full text-[0.8rem] flex-1 bg-white/[0.04] border border-dashed border-white/20 text-white/40">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
@@ -112,7 +112,7 @@
                     </div>
                     }
                     <button type="button" (click)="openLocation()" id="open-location-btn"
-                        class="flex items-center gap-1.5 bg-violet-500/10 border border-violet-500/30 text-violet-400 rounded-lg px-3.5 py-1.5 text-[0.8rem] font-medium cursor-pointer whitespace-nowrap transition-all hover:bg-violet-500/20 hover:border-violet-500/50">
+                        class="flex items-center gap-1.5 bg-primary-bourgad-2/10 border border-primary-bourgad-2/30 text-primary-bourgad-2 rounded-lg px-3.5 py-1.5 text-[0.8rem] font-medium cursor-pointer whitespace-nowrap transition-all hover:bg-primary-bourgad-2/20 hover:border-primary-bourgad-2/50">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />

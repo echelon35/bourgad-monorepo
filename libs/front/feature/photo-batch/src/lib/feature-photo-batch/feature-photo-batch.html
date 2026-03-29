@@ -1,10 +1,10 @@
-<div class="min-h-screen bg-[#0a0a1a] text-white px-6 py-6 relative overflow-x-hidden font-sans">
+<div class="min-h-screen bg-primary-bourgad text-white px-6 py-6 relative overflow-x-hidden font-sans">
 
     <!-- Background ambiance -->
-    <div class="fixed w-[500px] h-[500px] rounded-full blur-[80px] pointer-events-none z-0 opacity-15 -top-36 -left-36"
-        style="background: radial-gradient(circle, #7c3aed 0%, transparent 70%)"></div>
+    <div class="fixed w-[500px] h-[500px] rounded-full blur-[80px] pointer-events-none z-0 opacity-20 -top-36 -left-36"
+        style="background: radial-gradient(circle, #5D8A9F 0%, transparent 70%)"></div>
     <div class="fixed w-[400px] h-[400px] rounded-full blur-[80px] pointer-events-none z-0 opacity-15 -bottom-24 -right-24"
-        style="background: radial-gradient(circle, #2563eb 0%, transparent 70%)"></div>
+        style="background: radial-gradient(circle, #264965 0%, transparent 70%)"></div>
 
     <!-- Page header -->
     <header class="relative z-10 flex items-center gap-4 mb-8">
@@ -19,7 +19,7 @@
         </button>
         <div class="flex flex-col">
             <h1
-                class="flex items-center gap-3 text-[1.6rem] font-extrabold m-0 bg-gradient-to-br from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+                class="flex items-center gap-3 text-[1.6rem] font-extrabold m-0 text-white">
                 <svg class="size-10" id="fi_2586709" height="512" viewBox="0 0 64 64" width="512"
                     xmlns="http://www.w3.org/2000/svg" data-name="01-camera">
                     <g fill="#afb4c8">
@@ -81,23 +81,23 @@
 
     <!-- Drop zone -->
     <section class="relative z-10 mb-10">
-        <div class="border-2 border-dashed border-violet-500/30 rounded-2xl p-10 text-center cursor-pointer transition-all duration-250 bg-violet-500/[0.03] relative hover:border-violet-500/70 hover:bg-violet-500/[0.08] hover:scale-[1.005]"
-            [class.border-violet-500]="isDragging" [class.bg-violet-500]="isDragging" (dragover)="onDragOver($event)"
+        <div class="border-2 border-dashed border-primary-bourgad-2/40 rounded-2xl p-10 text-center cursor-pointer transition-all duration-250 bg-white/[0.03] relative hover:border-primary-bourgad-2/80 hover:bg-white/[0.06] hover:scale-[1.005]"
+            [class.border-primary-bourgad-2]="isDragging" [class.bg-primary-bourgad-2]="isDragging" (dragover)="onDragOver($event)"
             (dragleave)="onDragLeave()" (drop)="onDrop($event)" (click)="triggerFileInput()" id="drop-zone"
             role="button" tabindex="0" aria-label="Zone d'import de photos" (keypress)="triggerFileInput()">
             <input #fileInput type="file" multiple accept="image/*" class="hidden" id="file-input"
                 (change)="onFileSelected($event)" />
 
             @if (photoBatchStore.uploading()) {
-            <div class="flex flex-col items-center gap-4 text-violet-400">
-                <div class="w-10 h-10 rounded-full border-[3px] border-violet-500/20 border-t-violet-700 animate-spin">
+            <div class="flex flex-col items-center gap-4 text-primary-bourgad-2">
+                <div class="w-10 h-10 rounded-full border-[3px] border-white/20 border-t-primary-bourgad-2 animate-spin">
                 </div>
                 <p class="text-[0.9rem] font-medium">Téléversement en cours...</p>
             </div>
             } @else {
             <div>
                 <div
-                    class="w-[72px] h-[72px] rounded-full bg-violet-500/10 border border-violet-500/25 flex items-center justify-center mx-auto mb-4 text-violet-400 transition-all duration-250 group-hover:bg-violet-500/20">
+                    class="w-[72px] h-[72px] rounded-full bg-primary-bourgad-2/10 border border-primary-bourgad-2/30 flex items-center justify-center mx-auto mb-4 text-primary-bourgad-2 transition-all duration-250 group-hover:bg-primary-bourgad-2/20">
                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -109,7 +109,7 @@
                     @if (isDragging) {
                     Déposez vos photos ici
                     } @else {
-                    Glissez vos photos ou <span class="text-violet-400 underline">parcourez</span>
+                    Glissez vos photos ou <span class="text-primary-bourgad-2 underline">parcourez</span>
                     }
                 </p>
                 <p class="text-[0.8rem] text-white/35 m-0">PNG, JPG, WEBP — plusieurs fichiers acceptés</p>
@@ -125,13 +125,13 @@
                 Photos à publier
                 @if (photoBatchStore.importedMedias().length > 0) {
                 <span
-                    class="bg-violet-500/20 border border-violet-500/40 text-violet-400 text-xs font-bold rounded-full px-2.5 py-0.5">{{
+                    class="bg-primary-bourgad-2/20 border border-primary-bourgad-2/40 text-primary-bourgad-2 text-xs font-bold rounded-full px-2.5 py-0.5">{{
                     photoBatchStore.importedMedias().length }}</span>
                 }
             </h2>
             @if (photoBatchStore.loading()) {
             <div class="flex items-center gap-2 text-white/40 text-[0.8rem]">
-                <div class="w-3.5 h-3.5 rounded-full border-2 border-white/15 border-t-violet-700 animate-spin"></div>
+                <div class="w-3.5 h-3.5 rounded-full border-2 border-white/15 border-t-primary-bourgad-2 animate-spin"></div>
                 <span>Chargement...</span>
             </div>
             }
@@ -157,7 +157,7 @@
         <!-- Photo grid -->
         <div class="grid gap-4" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))">
             @for (media of photoBatchStore.importedMedias(); track media.mediaId) {
-            <div class="rounded-xl overflow-hidden bg-white/[0.04] border border-white/[0.08] cursor-pointer transition-all duration-250 outline-none hover:border-violet-500/40 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.4)] focus:border-violet-500/60 focus:shadow-[0_0_0_2px_rgba(139,92,246,0.3)]"
+            <div class="rounded-xl overflow-hidden bg-white/[0.04] border border-white/[0.08] cursor-pointer transition-all duration-250 outline-none hover:border-primary-bourgad-2/50 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.4)] focus:border-primary-bourgad-2/70 focus:shadow-[0_0_0_2px_rgba(93,138,159,0.3)]"
                 (click)="openPostModal(media)" id="photo-card-{{ media.mediaId }}" role="button" tabindex="0"
                 (keypress)="openPostModal(media)" title="Créer un post depuis cette photo">
                 <div class="relative overflow-hidden" style="aspect-ratio: 4/3">
@@ -167,7 +167,7 @@
                     <div
                         class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end justify-center pb-3 opacity-0 transition-opacity duration-250 hover:opacity-100">
                         <div
-                            class="flex items-center gap-2 bg-violet-500/85 backdrop-blur-sm text-white rounded-full px-4 py-1.5 text-[0.8rem] font-semibold whitespace-nowrap">
+                            class="flex items-center gap-2 bg-primary-bourgad-2 backdrop-blur-sm text-white rounded-full px-4 py-1.5 text-[0.8rem] font-semibold whitespace-nowrap">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round">

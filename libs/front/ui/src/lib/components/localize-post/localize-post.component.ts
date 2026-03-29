@@ -1,12 +1,11 @@
 import { Component, EventEmitter, inject, OnInit, Output, ViewChild } from "@angular/core";
-import { City } from "@bourgad-monorepo/model";
-import L from "leaflet";
+import * as L from "leaflet";
 import { Subscription } from "rxjs";
 import { SearchPlace } from "../search-place/search-place.modal";
 import { MapComponent } from "../map/map.component";
 import { MapService } from "../../services/map.service";
 import { PlaceDto } from "@bourgad-monorepo/external";
-import { UserStore } from "@bourgad-monorepo/core";
+import { SearchPlaceService, UserStore } from "@bourgad-monorepo/core";
 
 @Component({
   selector: "bgd-localize-post",
@@ -27,6 +26,12 @@ export class LocalizePostComponent implements OnInit {
   private readonly mapService = inject(MapService);
   private mapSubscription!: Subscription;
   private readonly userStore = inject(UserStore);
+  private readonly searchPlaceService = inject(SearchPlaceService);
+
+  readonly mancheBounds = L.latLngBounds(
+    L.latLng(48.26, -2.15),
+    L.latLng(49.93, 1.80)
+  );
 
   localizeMap: L.Map | null = null;
   localizeLayer: L.LayerGroup | null = new L.LayerGroup();
@@ -39,6 +44,8 @@ export class LocalizePostComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.searchPlaceService.geographicContext = this.mancheBounds;
+
     //Wait map initialization before using map from service
     this.mapSubscription = this.mapService.getMap(this.mapId).subscribe(map => {
       if (map) {

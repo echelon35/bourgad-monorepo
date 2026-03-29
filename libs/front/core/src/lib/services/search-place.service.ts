@@ -1,5 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { GeoApiFrProvider, OpenStreetMapProvider } from 'leaflet-geosearch';
+import * as L from 'leaflet';
 import { PlaceDto } from '@bourgad-monorepo/external';
 import { GeoApiService } from "./geo.api.service";
 import { City } from "@bourgad-monorepo/model";
@@ -10,7 +11,11 @@ import { City } from "@bourgad-monorepo/model";
 export class SearchPlaceService {
 
     private readonly geoApiProvider = inject(GeoApiService)
-    public geographicContext: L.LatLngBounds | undefined;
+    // Par défaut, le contexte géographique est limité à la Manche (Bourgad est exclusivement dans ce département)
+    public geographicContext: L.LatLngBounds = L.latLngBounds(
+      L.latLng(48.26, -2.15),
+      L.latLng(49.93, 1.80)
+    );
 
     async searchWithGeoApi(placeToSearch: string): Promise<PlaceDto[]> {
       const provider = new GeoApiFrProvider({
@@ -28,7 +33,6 @@ export class SearchPlaceService {
     }
 
     async searchWithOpenStreetMap(placeToSearch: string): Promise<PlaceDto[]> {
-      console.log(this.geographicContext);
       const provider = new OpenStreetMapProvider({
         params: {
           'accept-language': 'fr',
@@ -37,7 +41,8 @@ export class SearchPlaceService {
           countrycodes: "fr",
           limit: 10,
           extratags: 1,
-          viewbox: (this.geographicContext) ? this.geographicContext.toBBoxString() : '-180,-90,180,90'
+          viewbox: this.geographicContext.toBBoxString(),
+          bounded: 1,
         }
       });
       const res = await provider.search({ query: placeToSearch });
@@ -45,7 +50,10 @@ export class SearchPlaceService {
       res.forEach(cursor => {
         const thisPlace = new PlaceDto();
         thisPlace.copyFromOpenStreetmapProvider(cursor);
-        townList.push(thisPlace);
+        if (thisPlace.latitude && thisPlace.longitude
+            && this.geographicContext.contains(L.latLng(thisPlace.latitude, thisPlace.longitude))) {
+          townList.push(thisPlace);
+        }
       });
       return townList;
     }
