@@ -1,7 +1,9 @@
-import {Media} from '@bourgad-monorepo/model';
-
 export class GetProfileDto {
     firstname: string;
     lastname: string;
-    avatarUrl: Media;
+    mail: string;
+    phone?: string;
+    avatarUrl?: string;
+    avatarMediaId?: number;
+    cityId?: string;
 }

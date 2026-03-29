@@ -31,3 +31,4 @@ export * from './lib/territory/city/updateCityByDeptQuery.dto';
 
 //USER
 export * from './lib/user/getProfile.dto'; 
+export * from './lib/user/updateProfile.dto';

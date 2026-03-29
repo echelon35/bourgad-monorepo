@@ -82,7 +82,7 @@
                         </g>
                     </svg>
                 </button>
-                <a tabindex="1" (click)="this.authStore.logout()" (keypress)="this.authStore.logout()"
+                <a tabindex="1" (click)="this.router.navigate(['/profile'])" (keypress)="this.router.navigate(['/profile'])"
                     class="ml-2 text-sm/6 font-semibold text-white">
                     <img class="inline-block size-10 rounded-full mr-2 cursor-pointer"
                         src="{{this.userStore.userAvatar$}}" alt="Avatar">

@@ -1,7 +1,7 @@
-import { Body, Controller, Get, HttpException, HttpStatus, NotFoundException, Post, Request, Response, UnauthorizedException } from "@nestjs/common";
+import { Body, Controller, Get, HttpException, HttpStatus, NotFoundException, Patch, Post, Request, Response, UnauthorizedException } from "@nestjs/common";
 import { UserService } from "./user.service";
 import * as Express from 'express';
-import { GetCityByIdParamDto, GetProfileDto } from "@bourgad-monorepo/internal";
+import { GetCityByIdParamDto, GetProfileDto, UpdateProfileDto } from "@bourgad-monorepo/internal";
 import { City } from "@bourgad-monorepo/model";
 
 @Controller('user')
@@ -53,6 +53,29 @@ export class UserController {
             return me;
         } else {
             throw new NotFoundException();
+        }
+    }
+
+    @Patch('profile')
+    async updateProfile(@Request() req, @Body() body: UpdateProfileDto): Promise<void> {
+        const userId = req.user?.user?.userId;
+        if (!userId) throw new UnauthorizedException();
+        try {
+            await this.userService.updateProfile(userId, body);
+        } catch (error: any) {
+            throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Post('avatar')
+    async updateAvatar(@Request() req, @Body() body: { mediaId: number }): Promise<{ url: string }> {
+        const userId = req.user?.user?.userId;
+        if (!userId) throw new UnauthorizedException();
+        try {
+            const url = await this.userService.updateAvatar(userId, body.mediaId);
+            return { url };
+        } catch (error: any) {
+            throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
         }
     }
 }

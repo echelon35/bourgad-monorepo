@@ -70,12 +70,29 @@ export class UserService {
 
   async findMe(id: number): Promise<GetProfileDto> {
     const users = await this.dataSource.query(`
-      SELECT users.mail, users.firstname, users.lastname, medias.url as avatar, users.city_id as "cityId"
+      SELECT users.mail, users.firstname, users.lastname, users.phone,
+             medias.url as "avatarUrl", medias.media_id as "avatarMediaId",
+             users.city_id as "cityId"
       FROM users
-      LEFT JOIN medias
-      ON medias.media_id = users.avatar_id 
+      LEFT JOIN medias ON medias.media_id = users.avatar_id
       WHERE users.user_id = ${id};`)
     return users[0];
+  }
+
+  async updateProfile(userId: number, data: { firstname?: string; lastname?: string; phone?: string }): Promise<void> {
+    const fieldsToUpdate: Record<string, unknown> = {};
+    if (data.firstname !== undefined) fieldsToUpdate['firstname'] = data.firstname;
+    if (data.lastname !== undefined) fieldsToUpdate['lastname'] = data.lastname;
+    if (data.phone !== undefined) fieldsToUpdate['phone'] = data.phone;
+    if (Object.keys(fieldsToUpdate).length > 0) {
+      await this.dataSource.getRepository(UserEntity).update(userId, fieldsToUpdate);
+    }
+  }
+
+  async updateAvatar(userId: number, mediaId: number): Promise<string> {
+    await this.dataSource.query(`UPDATE users SET avatar_id = $1 WHERE user_id = $2`, [mediaId, userId]);
+    const result = await this.dataSource.query(`SELECT url FROM medias WHERE media_id = $1`, [mediaId]);
+    return result[0]?.url;
   }
 
   async findOneByPk(id: number): Promise<User> {
