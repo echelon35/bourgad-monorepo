@@ -38,7 +38,7 @@ export class FeedModal implements OnInit, OnChanges {
                     icon: L.icon({
                         iconUrl: post.subcategory.markerIconUrl,
                         iconSize: [25, 41],
-                        iconAnchor: [0, 41]
+                        iconAnchor: [12, 41]
                     })
                 });
                 marker.addEventListener("click",() => {
