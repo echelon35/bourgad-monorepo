@@ -12,7 +12,7 @@ export const FeedStore = signalStore(
   withState(initialState),
   // Méthodes du store
   withMethods((store, postApiService = inject(PostApiService)) => {
-    const loadFeed = rxMethod<void> (
+    const loadFeed = rxMethod<void>(
       pipe(
         tap(() => patchState(store, { loading: true })),
         switchMap(() => postApiService.getFeed()),
@@ -22,21 +22,28 @@ export const FeedStore = signalStore(
         })
       )
     );
+    const setSelectPost = rxMethod<number | null>(
+      pipe(
+        tap((selectedPostId: number) => patchState(store, { selectedPostId }))
+      )
+    );
+
     return {
-      loadFeed
+      loadFeed,
+      setSelectPost
     };
   }),
   withHooks({
     onInit: (store, authStore = inject(AuthStore)) => {
       effect(() => {
-        if(authStore.isAuthenticated()){
+        if (authStore.isAuthenticated()) {
           store.loadFeed();
         }
       });
     }
   }),
   withProps((store) => ({
-      posts$: toObservable(store.posts)
+    posts$: toObservable(store.posts)
   }))
 );
 

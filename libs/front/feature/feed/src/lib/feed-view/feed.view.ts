@@ -4,14 +4,18 @@ import { CommonModule } from '@angular/common';
 import { FeedModal } from "../feed-modal/feed.modal";
 import { MakePost, MapComponent, MapService, SearchPlace, SenseOfResults, ToastrService } from '@bourgad-monorepo/ui';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PostModalComponent } from '../post-modal/post-modal.component';
+import { FeedStore } from '../stores/feed.store';
 import { AuthStore, UserStore } from '@bourgad-monorepo/core';
 
 @Component({
   templateUrl: './feed.view.html',
-  imports: [MapComponent, MakePost, CommonModule, FeedModal, SearchPlace],
-  standalone: true
+  imports: [MapComponent, MakePost, CommonModule, FeedModal, SearchPlace, PostModalComponent],
+  standalone: true,
+  providers: [FeedStore]
 })
 export class FeedView {
+    readonly feedStore = inject(FeedStore);
     readonly route = inject(ActivatedRoute);
     public readonly userStore = inject(UserStore);
     public readonly authStore = inject(AuthStore);

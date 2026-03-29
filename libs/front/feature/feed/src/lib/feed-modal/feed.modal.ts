@@ -11,8 +11,7 @@ import { Router } from '@angular/router';
     selector: 'bgd-feed-modal',
     templateUrl: './feed.modal.html',
     standalone: true,
-    imports: [CommonModule, PostComponent],
-    providers: [FeedStore]
+    imports: [CommonModule, PostComponent]
 })
 export class FeedModal implements OnInit {
 
@@ -41,7 +40,7 @@ export class FeedModal implements OnInit {
                 })
             });
             marker.addEventListener("click",() => {
-                this.router.navigate(['/post', post.id]);
+                this.feedStore.setSelectPost(post.id);
             });
             marker.addTo(this.layer);
             this.layer.addTo(this.map);
