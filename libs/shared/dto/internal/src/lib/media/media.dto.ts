@@ -4,6 +4,7 @@ export interface MediaDto {
     type: string;
     size: number;
     url: string;
+    userId?: number | null;
     createdAt?: Date;
     updatedAt?: Date;
 }

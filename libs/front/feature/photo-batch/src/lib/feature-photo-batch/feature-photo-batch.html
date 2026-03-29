@@ -1,0 +1,220 @@
+<div class="min-h-screen bg-[#0a0a1a] text-white px-6 py-6 relative overflow-x-hidden font-sans">
+
+    <!-- Background ambiance -->
+    <div class="fixed w-[500px] h-[500px] rounded-full blur-[80px] pointer-events-none z-0 opacity-15 -top-36 -left-36"
+        style="background: radial-gradient(circle, #7c3aed 0%, transparent 70%)"></div>
+    <div class="fixed w-[400px] h-[400px] rounded-full blur-[80px] pointer-events-none z-0 opacity-15 -bottom-24 -right-24"
+        style="background: radial-gradient(circle, #2563eb 0%, transparent 70%)"></div>
+
+    <!-- Page header -->
+    <header class="relative z-10 flex items-center gap-4 mb-8">
+        <button
+            class="flex items-center bg-white/[0.06] border border-white/10 text-white/70 rounded-lg px-3 py-2 cursor-pointer transition-all hover:bg-white/[0.12] hover:text-white hover:-translate-x-0.5"
+            (click)="goBack()" id="batch-back-btn" title="Retour">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m12 19-7-7 7-7" />
+                <path d="M19 12H5" />
+            </svg>
+        </button>
+        <div class="flex flex-col">
+            <h1
+                class="flex items-center gap-3 text-[1.6rem] font-extrabold m-0 bg-gradient-to-br from-violet-400 to-indigo-400 bg-clip-text text-transparent">
+                <svg class="size-10" id="fi_2586709" height="512" viewBox="0 0 64 64" width="512"
+                    xmlns="http://www.w3.org/2000/svg" data-name="01-camera">
+                    <g fill="#afb4c8">
+                        <path d="m54 12h5v3h-5z"></path>
+                        <path d="m14 12h5v3h-5z"></path>
+                        <path d="m5 12h5v3h-5z"></path>
+                    </g>
+                    <path d="m5 47h8v4h-8z" fill="#ffe45c"></path>
+                    <path d="m5 47h3v4h-3z" fill="#ffa426"></path>
+                    <path d="m28 12h8v4h-8z" fill="#b5efff"></path>
+                    <path d="m28 12h3v4h-3z" fill="#19cffc"></path>
+                    <path
+                        d="m16 24h.01a.97.97 0 0 0 -.01.17v10.83a16 16 0 0 0 32 0v-10.83a.97.97 0 0 0 -.01-.17h15.01v27a4 4 0 0 1 -4 4h-54a4 4 0 0 1 -4-4v-27zm-3 27v-4h-8v4z"
+                        fill="#afb4c8"></path>
+                    <path d="m21.64 15-3.47 3.69a7.948 7.948 0 0 0 -2.16 5.31h-15.01v-5a4 4 0 0 1 4-4z" fill="#dce1eb">
+                    </path>
+                    <path d="m63 19v5h-15.01a7.948 7.948 0 0 0 -2.16-5.31l-3.47-3.69h16.64a4 4 0 0 1 4 4z"
+                        fill="#dce1eb"></path>
+                    <path d="m45.36 15h-3l3.47 3.69a7.948 7.948 0 0 1 2.16 5.31h3a7.948 7.948 0 0 0 -2.16-5.31z"
+                        fill="#cdd2e1"></path>
+                    <path
+                        d="m48 35a16 16 0 0 0 -32 0v-10.83a.97.97 0 0 1 .01-.17 7.948 7.948 0 0 1 2.16-5.31l3.47-3.69 4.08-4.33a2.006 2.006 0 0 1 1.97-1.67h8.62a2.006 2.006 0 0 1 1.97 1.67l4.08 4.33 3.47 3.69a7.948 7.948 0 0 1 2.16 5.31.97.97 0 0 1 .01.17zm-20-19h8v-4h-8z"
+                        fill="#bec3d2"></path>
+                    <path
+                        d="m19 24.17a.97.97 0 0 1 .01-.17 7.948 7.948 0 0 1 2.16-5.31l3.47-3.69 4.08-4.33a2.006 2.006 0 0 1 1.97-1.67h-3a2.006 2.006 0 0 0 -1.97 1.67l-4.08 4.33-3.47 3.69a7.948 7.948 0 0 0 -2.16 5.31.97.97 0 0 0 -.01.17v10.83a15.91 15.91 0 0 1 3-9.306z"
+                        fill="#cdd2e1"></path>
+                    <path d="m32 19a16 16 0 1 1 -16 16 16 16 0 0 1 16-16zm0 28a12 12 0 1 0 -12-12 12 12 0 0 0 12 12z"
+                        fill="#7e8596"></path>
+                    <circle cx="32" cy="35" fill="#b5efff" r="12"></circle>
+                    <path d="m23 35a11.99 11.99 0 0 1 10.5-11.9 12 12 0 1 0 0 23.792 11.99 11.99 0 0 1 -10.5-11.892z"
+                        fill="#19cffc"></path>
+                    <path d="m4 51v-27h-3v27a4 4 0 0 0 4 4h3a4 4 0 0 1 -4-4z" fill="#9196aa"></path>
+                    <path
+                        d="m33.5 50.924c.494.046.994.076 1.5.076a16 16 0 0 0 16-16v-10.83a.97.97 0 0 0 -.01-.17h-3a.97.97 0 0 1 .01.17v10.83a15.992 15.992 0 0 1 -14.5 15.924z"
+                        fill="#9196aa"></path>
+                    <path d="m8 15h-3a4 4 0 0 0 -4 4v5h3v-5a4 4 0 0 1 4-4z" fill="#cdd2e1"></path>
+                    <path d="m41 35h-2a7.008 7.008 0 0 0 -7-7v-2a9.011 9.011 0 0 1 9 9z" fill="#e3fbff"></path>
+                    <path d="m32 44a9.011 9.011 0 0 1 -9-9h2a7.008 7.008 0 0 0 7 7z" fill="#e3fbff"></path>
+                    <path d="m39 37h2v2h-2z" fill="#e3fbff"></path>
+                    <path
+                        d="m60 14.1v-2.1a1 1 0 0 0 -1-1h-5a1 1 0 0 0 -1 1v2h-10.212l-3.594-3.818a2.986 2.986 0 0 0 -2.884-2.182h-8.62a2.986 2.986 0 0 0 -2.884 2.182l-3.594 3.818h-1.212v-2a1 1 0 0 0 -1-1h-5a1 1 0 0 0 -1 1v2h-2v-2a1 1 0 0 0 -1-1h-5a1 1 0 0 0 -1 1v2.1a5.009 5.009 0 0 0 -4 4.9v32a5.006 5.006 0 0 0 5 5h54a5.006 5.006 0 0 0 5-5v-32a5.009 5.009 0 0 0 -4-4.9zm-5-1.1h3v1h-3zm4 3a3 3 0 0 1 3 3v4h-13.084a8.945 8.945 0 0 0 -2.357-5l-1.888-2zm-32.552-4.645a1 1 0 0 0 .259-.521 1 1 0 0 1 .983-.834h8.62a1 1 0 0 1 .983.834 1 1 0 0 0 .259.521l7.548 8.019a6.933 6.933 0 0 1 1.889 4.641 1.142 1.142 0 0 0 .01.155v2.847a16.985 16.985 0 0 0 -30 0v-2.856a1.2 1.2 0 0 0 .013-.146 6.933 6.933 0 0 1 1.888-4.64zm20.552 23.645a15 15 0 1 1 -15-15 15.017 15.017 0 0 1 15 15zm-32-22h3v1h-3zm-6 0v1h-3v-1zm-4 3h14.329l-1.889 2.006a8.947 8.947 0 0 0 -2.356 4.994h-13.084v-4a3 3 0 0 1 3-3zm54 38h-54a3 3 0 0 1 -3-3v-26h13v10a17 17 0 0 0 34 0v-10h13v26a3 3 0 0 1 -3 3z">
+                    </path>
+                    <path
+                        d="m32 22a13 13 0 1 0 13 13 13.015 13.015 0 0 0 -13-13zm0 24a11 11 0 1 1 11-11 11.013 11.013 0 0 1 -11 11z">
+                    </path>
+                    <path d="m32 26v2a7.008 7.008 0 0 1 7 7h2a9.011 9.011 0 0 0 -9-9z"></path>
+                    <path d="m25 35h-2a9.011 9.011 0 0 0 9 9v-2a7.008 7.008 0 0 1 -7-7z"></path>
+                    <path d="m28 17h8a1 1 0 0 0 1-1v-4a1 1 0 0 0 -1-1h-8a1 1 0 0 0 -1 1v4a1 1 0 0 0 1 1zm1-4h6v2h-6z">
+                    </path>
+                    <path d="m39 37h2v2h-2z"></path>
+                    <path d="m13 46h-8a1 1 0 0 0 -1 1v4a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-4a1 1 0 0 0 -1-1zm-1 4h-6v-2h6z">
+                    </path>
+                </svg>
+                Photos
+            </h1>
+            <p class="text-sm text-white/45 mt-0.5">Importez et partagez vos photos d'archives</p>
+        </div>
+    </header>
+
+    <!-- Drop zone -->
+    <section class="relative z-10 mb-10">
+        <div class="border-2 border-dashed border-violet-500/30 rounded-2xl p-10 text-center cursor-pointer transition-all duration-250 bg-violet-500/[0.03] relative hover:border-violet-500/70 hover:bg-violet-500/[0.08] hover:scale-[1.005]"
+            [class.border-violet-500]="isDragging" [class.bg-violet-500]="isDragging" (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave()" (drop)="onDrop($event)" (click)="triggerFileInput()" id="drop-zone"
+            role="button" tabindex="0" aria-label="Zone d'import de photos" (keypress)="triggerFileInput()">
+            <input #fileInput type="file" multiple accept="image/*" class="hidden" id="file-input"
+                (change)="onFileSelected($event)" />
+
+            @if (photoBatchStore.uploading()) {
+            <div class="flex flex-col items-center gap-4 text-violet-400">
+                <div class="w-10 h-10 rounded-full border-[3px] border-violet-500/20 border-t-violet-700 animate-spin">
+                </div>
+                <p class="text-[0.9rem] font-medium">Téléversement en cours...</p>
+            </div>
+            } @else {
+            <div>
+                <div
+                    class="w-[72px] h-[72px] rounded-full bg-violet-500/10 border border-violet-500/25 flex items-center justify-center mx-auto mb-4 text-violet-400 transition-all duration-250 group-hover:bg-violet-500/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" x2="12" y1="3" y2="15" />
+                    </svg>
+                </div>
+                <p class="text-base font-semibold text-white/85 mb-1.5">
+                    @if (isDragging) {
+                    Déposez vos photos ici
+                    } @else {
+                    Glissez vos photos ou <span class="text-violet-400 underline">parcourez</span>
+                    }
+                </p>
+                <p class="text-[0.8rem] text-white/35 m-0">PNG, JPG, WEBP — plusieurs fichiers acceptés</p>
+            </div>
+            }
+        </div>
+    </section>
+
+    <!-- Imported gallery -->
+    <section class="relative z-10">
+        <div class="flex items-center justify-between mb-5">
+            <h2 class="flex items-center gap-2.5 text-lg font-bold text-white m-0">
+                Photos à publier
+                @if (photoBatchStore.importedMedias().length > 0) {
+                <span
+                    class="bg-violet-500/20 border border-violet-500/40 text-violet-400 text-xs font-bold rounded-full px-2.5 py-0.5">{{
+                    photoBatchStore.importedMedias().length }}</span>
+                }
+            </h2>
+            @if (photoBatchStore.loading()) {
+            <div class="flex items-center gap-2 text-white/40 text-[0.8rem]">
+                <div class="w-3.5 h-3.5 rounded-full border-2 border-white/15 border-t-violet-700 animate-spin"></div>
+                <span>Chargement...</span>
+            </div>
+            }
+        </div>
+
+        @if (photoBatchStore.importedMedias().length === 0 && !photoBatchStore.loading()) {
+        <!-- Empty state -->
+        <div
+            class="flex flex-col items-center justify-center py-16 px-8 text-center border border-dashed border-white/10 rounded-2xl bg-white/[0.015]">
+            <div class="text-white/15 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                    <circle cx="9" cy="9" r="2" />
+                    <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+                </svg>
+            </div>
+            <p class="text-base font-semibold text-white/50 mb-2">Aucune photo importée</p>
+            <p class="text-[0.85rem] text-white/30 m-0 max-w-[380px]">Importez vos premières photos d'archives
+                ci-dessus pour commencer à les partager.</p>
+        </div>
+        } @else {
+        <!-- Photo grid -->
+        <div class="grid gap-4" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))">
+            @for (media of photoBatchStore.importedMedias(); track media.mediaId) {
+            <div class="rounded-xl overflow-hidden bg-white/[0.04] border border-white/[0.08] cursor-pointer transition-all duration-250 outline-none hover:border-violet-500/40 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.4)] focus:border-violet-500/60 focus:shadow-[0_0_0_2px_rgba(139,92,246,0.3)]"
+                (click)="openPostModal(media)" id="photo-card-{{ media.mediaId }}" role="button" tabindex="0"
+                (keypress)="openPostModal(media)" title="Créer un post depuis cette photo">
+                <div class="relative overflow-hidden" style="aspect-ratio: 4/3">
+                    <img [src]="media.thumbnailUrl || media.url" [alt]="media.title || 'Photo ancienne'"
+                        class="w-full h-full object-cover transition-transform duration-300 [filter:sepia(0.25)_contrast(1.05)] hover:[filter:sepia(0.1)_contrast(1.1)] hover:scale-105"
+                        loading="lazy" />
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end justify-center pb-3 opacity-0 transition-opacity duration-250 hover:opacity-100">
+                        <div
+                            class="flex items-center gap-2 bg-violet-500/85 backdrop-blur-sm text-white rounded-full px-4 py-1.5 text-[0.8rem] font-semibold whitespace-nowrap">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M12 20h9" />
+                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                            </svg>
+                            <span>Créer un post</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-3 py-2.5">
+                    <div class="flex items-center justify-between gap-2">
+                        <span
+                            class="text-[0.78rem] text-white/60 overflow-hidden text-ellipsis whitespace-nowrap flex-1">{{
+                            media.title ||
+                            'Sans titre' }}</span>
+                        <span
+                            class="flex items-center gap-1 text-[0.65rem] font-semibold bg-yellow-500/10 border border-yellow-500/25 text-yellow-400 rounded-full px-2 py-0.5 whitespace-nowrap">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24"
+                                fill="currentColor">
+                                <circle cx="12" cy="12" r="10" />
+                            </svg>
+                            En attente
+                        </span>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+        }
+    </section>
+
+    <!-- Error state -->
+    @if (photoBatchStore.error()) {
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-red-500/15 border border-red-500/40 text-red-300 rounded-lg px-5 py-3 text-sm flex items-center gap-2 whitespace-nowrap z-[500]"
+        role="alert">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" x2="12" y1="8" y2="12" />
+            <line x1="12" x2="12.01" y1="16" y2="16" />
+        </svg>
+        {{ photoBatchStore.error() }}
+    </div>
+    }
+
+    <!-- Post modal -->
+    <bgd-photo-post-modal #photoPostModal [media]="selectedMedia" (posted)="onPosted()"
+        (cancelled)="selectedMedia = null"></bgd-photo-post-modal>
+</div>

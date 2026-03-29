@@ -49,3 +49,7 @@ Thumbs.db
 .agents/rules/bourgad.md
 
 bourgad-monorepo.code-workspace
+
+.nx/polygraph
+.claude/worktrees
+.claude/settings.local.json

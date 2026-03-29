@@ -1,4 +1,4 @@
-import { Controller, Post, UploadedFiles, UseInterceptors } from "@nestjs/common";
+import { Controller, Post, Get, Request, UploadedFiles, UseInterceptors } from "@nestjs/common";
 import 'multer';
 import { StorageService } from './storage.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -12,9 +12,19 @@ export class MediaController {
         private readonly mediaService: MediaService
     ) {}
 
+    @Get('/imported')
+    async getImported(@Request() req: any): Promise<Media[]> {
+        const userId = req.user?.user?.userId;
+        if (!userId) {
+            throw new Error('User not found');
+        }
+        return this.mediaService.findOrphanMediasByUser(userId);
+    }
+
     @Post('/upload')
     @UseInterceptors(FilesInterceptor('medias'))
-    async uploadFiles(@UploadedFiles() files: Array<Express.Multer.File>): Promise<Media[]> {
+    async uploadFiles(@Request() req: any, @UploadedFiles() files: Array<Express.Multer.File>): Promise<Media[]> {
+        const userId = req.user?.user?.userId;
         const medias: Media[] = [];
         for(const file of files){
             const url = await this.storageService.uploadFile(file);
@@ -23,7 +33,8 @@ export class MediaController {
                 name: file.originalname,
                 size: file.size,
                 type: file.mimetype,
-                thumbnailUrl: url.url
+                thumbnailUrl: url.url,
+                userId: userId
             } as MediaDto);
             medias.push(media);
         }

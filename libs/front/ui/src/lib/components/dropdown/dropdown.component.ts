@@ -2,10 +2,10 @@ import { CommonModule } from "@angular/common";
 import { Component, EventEmitter, HostListener, Input, Output } from "@angular/core";
 
 export class DropdownItem {
-    label = '';
-    value: any;
-    icon?: string;
-    description?: string;
+  label = '';
+  value: any;
+  icon?: string;
+  description?: string;
 }
 
 @Component({
@@ -16,16 +16,17 @@ export class DropdownItem {
 })
 export class DropdownComponent {
 
-    @Input() name = "";
-    opened = false;
-    @Input() placeholder = "Choisir une catégorie";
-    @Input() dropdownItems: DropdownItem[] = [];
-    @Output() selectedItem$ = new EventEmitter<any>();
-    selectedItem: DropdownItem | null = null;
-    wasInside = false;
+  @Input() name = "";
+  opened = false;
+  @Input() placeholder = "Choisir une catégorie";
+  @Input() dropdownItems: DropdownItem[] = [];
+  @Input() disabled = false;
+  @Output() selectedItem$ = new EventEmitter<any>();
+  selectedItem: DropdownItem | null = null;
+  wasInside = false;
 
   openDropdown() {
-    if(!this.dropdownItems || this.dropdownItems.length === 0) {
+    if (!this.dropdownItems || this.dropdownItems.length === 0) {
       console.warn('No dropdown items provided');
       return;
     }
@@ -57,11 +58,11 @@ export class DropdownComponent {
     this.placeholder = "Choisir une catégorie";
   }
 
-  @HostListener('focusout') 
+  @HostListener('focusout')
   focusout() {
     setTimeout(() => {
       this.closeDropdown();
-    },100);
+    }, 100);
   }
 
 }

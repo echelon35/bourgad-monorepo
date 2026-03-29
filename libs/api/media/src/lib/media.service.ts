@@ -14,6 +14,15 @@ export class MediaService {
     return await this.dataSource.getRepository(MediaEntity).find();
   }
 
+  async findOrphanMediasByUser(userId: number): Promise<Media[]> {
+    return await this.dataSource.getRepository(MediaEntity)
+      .createQueryBuilder('media')
+      .leftJoin('media.posts', 'post')
+      .where('media.user_id = :userId', { userId })
+      .andWhere('post.post_id IS NULL')
+      .getMany();
+  }
+
   async findOne(id: number): Promise<Media> {
     const media = await this.dataSource.getRepository(MediaEntity).findOne({ where: { mediaId: id } });
     if (!media) {

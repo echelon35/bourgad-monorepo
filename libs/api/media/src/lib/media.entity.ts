@@ -15,9 +15,11 @@ export const MediaEntity = new EntitySchema<Media>({
     duration: { type: Number, name: 'duration', nullable: true },
     thumbnailUrl: { type: String, name: 'thumbnail_url', nullable: true },
     title: { type: String, name: 'title', nullable: true },
-    description: { type: String, name: 'description', nullable: true }
+    description: { type: String, name: 'description', nullable: true },
+    userId: { type: Number, name: 'user_id', nullable: true }
   },
   relations: {
       posts: { type: 'many-to-many', target: 'PostEntity', inverseSide: 'medias' },
+      user: { type: 'many-to-one', target: 'UserEntity', joinColumn: { name: 'user_id' } }
   }
 });

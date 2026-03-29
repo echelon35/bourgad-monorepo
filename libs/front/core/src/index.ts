@@ -5,6 +5,7 @@ export * from './lib/services/search-place.service';
 export * from './lib/services/geo.api.service';
 export * from './lib/services/user.api.service';
 export * from './lib/services/post.api.service';
+export * from './lib/services/media.api.service';
 export * from './lib/store/user/user.store';
 export * from './lib/store/auth/auth.store';
 export * from './lib/store/category/category.store';

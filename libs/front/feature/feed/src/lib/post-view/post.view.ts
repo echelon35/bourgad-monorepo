@@ -1,7 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { FullPostDto } from "@bourgad-monorepo/internal";
 import { PostStore } from "../stores/post.store";
 
 @Component({
@@ -15,12 +14,12 @@ export class PostView implements OnInit {
   public readonly postStore = inject(PostStore);
   post = this.postStore.post();
   postId: number;
-  constructor(){
+  constructor() {
     this.postId = +this.route.snapshot.paramMap.get('id');
   }
 
   ngOnInit(): void {
-    if(this.postId){
+    if (this.postId) {
       this.postStore.loadPost(this.postId);
     }
   }
