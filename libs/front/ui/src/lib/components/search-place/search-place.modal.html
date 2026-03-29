@@ -21,30 +21,28 @@
                 'bottom-full mb-1': senseOfResults === SenseOfResults.TOP,
                 'top-full mt-1': senseOfResults === SenseOfResults.BOTTOM,
             }"
-            class="absolute z-on-map-2 left-0 divide-y divide-gray-200 w-full border-2 border-gray-400 max-h-64 overflow-auto">
-                <div class="bg-primary-bourgad text-white flex items-center border-black px-2 py-2">
-                    <p class="text-sm">
-                        Cliquez sur le résultat pour zoomer sur le lieu
-                    </p>
+            class="absolute z-on-map-2 left-0 w-full max-h-64 overflow-auto rounded-lg border border-white/10 shadow-xl bg-gray-800 divide-y divide-white/[0.06]">
+                <div class="px-3 py-2">
+                    <p class="text-xs text-white/40">Cliquez sur le résultat pour zoomer sur le lieu</p>
                 </div>
-                <div (click)="chooseTown(town)" class="cursor-pointer flex items-center bg-white border-black px-2 py-2 hover:text-indigo-400 hover:fill-indigo-400" *ngFor="let town of townList">
-                    <img class="size-4 mr-2" src="{{town.getIcon()}}" alt="town.name" />
-                    <p title="{{town.label}}" class="text-sm">
+                @for (town of townList; track town.label) {
+                <div (click)="chooseTown(town)" class="cursor-pointer flex items-center gap-2 px-3 py-2 hover:bg-white/[0.06] transition-colors">
+                    <img class="size-4 shrink-0" src="{{town.getIcon()}}" alt="town.name" />
+                    <p title="{{town.label}}" class="text-sm text-white/80 truncate">
                         {{town.label}}
-                        <span *ngIf="town.state"> ({{town.state}})</span>
+                        @if (town.state) {<span class="text-white/40"> ({{town.state}})</span>}
                     </p>
                 </div>
+                }
             </div>
         }
         @else if(filterPlace !== '' && isVisible){
             <div [ngClass]="{
                 'bottom-full mb-1': senseOfResults === SenseOfResults.TOP,
                 'top-full mt-1': senseOfResults === SenseOfResults.BOTTOM,
-            }" class="absolute z-on-map-2 left-0 divide-y divide-gray-200 w-full border-2 border-gray-400">
-                <div class="cursor-pointer flex items-center bg-white border-black px-2 py-2">
-                    <p title="Aucun résultat" class="text-sm">
-                        Aucun résultat trouvé
-                    </p>
+            }" class="absolute z-on-map-2 left-0 w-full rounded-lg border border-white/10 shadow-xl bg-gray-800">
+                <div class="px-3 py-2">
+                    <p class="text-sm text-white/40">Aucun résultat trouvé</p>
                 </div>
             </div>
         }
