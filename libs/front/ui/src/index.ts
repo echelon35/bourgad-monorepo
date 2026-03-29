@@ -4,7 +4,6 @@ export * from './lib/components/dropdown/dropdown.component';
 export * from './lib/components/map/map.component';
 export * from './lib/components/search-place/search-place.modal';
 export * from './lib/components/spinner/spinner.component';
-export * from './lib/components/post/post.component';
 export * from './lib/components/emoji/emoji.component';
 export * from './lib/components/toastr/toastr.component';
 export * from './lib/components/load-picture/load-picture.component';

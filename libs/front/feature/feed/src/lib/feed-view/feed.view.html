@@ -106,7 +106,9 @@
     <bgd-makepost class="z-modal" #makePost></bgd-makepost>
     <bgd-search-place-modal class="z-on-map-2 absolute bottom-0 left-0 w-80" [mapId]="this.mapId"
         [senseOfResults]="this.senseOfResults" [providerType]="'openStreetMap'"></bgd-search-place-modal>
-    <bgd-post-modal *ngIf="feedStore.selectedPostId() !== null" [postId]="feedStore.selectedPostId()"
-        (close)="feedStore.setSelectPost(null)">
-    </bgd-post-modal>
+    @if(feedStore.selectedPostId() !== null) {
+        <bgd-post-modal [postId]="feedStore.selectedPostId()"
+        (closeModal)="feedStore.setSelectPost(null)">
+        </bgd-post-modal>
+    }
 </div>

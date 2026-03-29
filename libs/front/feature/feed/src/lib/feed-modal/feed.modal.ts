@@ -2,10 +2,10 @@ import { CommonModule } from "@angular/common";
 import { Component, inject, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { CategoryApiService, CategoryStore, PostApiService } from "@bourgad-monorepo/core";
 import { Category } from "@bourgad-monorepo/model";
-import { PostComponent } from "@bourgad-monorepo/ui";
 import { FeedStore } from "../stores/feed.store";
 import * as L from 'leaflet';
 import { Router } from '@angular/router';
+import { PostComponent } from "../post/post.component";
 
 @Component({
     selector: 'bgd-feed-modal',

@@ -31,11 +31,18 @@
             </button>
             <span class="text-gray-400">Aggrandir les posts</span>
         </div>
-        <div [ngClass]="{'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4': expanded, 
-        'flex flex-wrap justify-center': !expanded}" >
-            @for(item of feedStore.posts(); track item) {
-                <bgd-post [post]="item"></bgd-post>
-            }
-        </div>
+        @if (expanded) {
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+                @for(item of feedStore.posts(); track item) {
+                    <bgd-post [post]="item"></bgd-post>
+                }
+            </div>
+        } @else {
+            <div class="flex flex-wrap justify-center p-4 gap-4">
+                @for(item of feedStore.posts(); track item) {
+                    <bgd-post [post]="item"></bgd-post>
+                }
+            </div>
+        }
     </div>
 </div>

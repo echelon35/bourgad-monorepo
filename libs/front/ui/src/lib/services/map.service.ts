@@ -13,7 +13,7 @@ export class MapService {
     if (!this.maps.has(mapId)) {
       this.maps.set(mapId, { subject: new BehaviorSubject<L.Map | null>(null), isVisible: false });
     }
-    return this.maps.get(mapId)!.subject.asObservable();
+    return this.maps.get(mapId)?.subject.asObservable();
   }
 
   // Définit une carte pour un ID donné
@@ -21,17 +21,19 @@ export class MapService {
     if (!this.maps.has(mapId)) {
       this.maps.set(mapId, { subject: new BehaviorSubject<L.Map | null>(null), isVisible: false });
     }
-    this.maps.get(mapId)!.subject.next(map);
-    this.maps.get(mapId)!.isVisible = isVisible;
+    if (this.maps.get(mapId)) {
+      this.maps.get(mapId).subject.next(map);
+      this.maps.get(mapId).isVisible = isVisible;
+    }
   }
 
   // Met à jour la visibilité d'une carte
   setMapVisibility(mapId: string, isVisible: boolean): void {
     if (this.maps.has(mapId)) {
-      this.maps.get(mapId)!.isVisible = isVisible;
+      this.maps.get(mapId).isVisible = isVisible;
       if (isVisible) {
         // Si la carte devient visible, on force un redimensionnement
-        const map = this.maps.get(mapId)!.subject.getValue();
+        const map = this.maps.get(mapId).subject.getValue();
         if (map) {
           setTimeout(() => map.invalidateSize(), 0);
         }
