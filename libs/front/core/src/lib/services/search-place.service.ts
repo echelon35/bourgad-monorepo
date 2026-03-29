@@ -51,7 +51,7 @@ export class SearchPlaceService {
     }
 
     async searchWithBourgad(placeToSearch: string): Promise<PlaceDto[]> {
-        const res = await this.geoApiProvider.searchCityByName(placeToSearch);
+        const res = await this.geoApiProvider.searchCityByName(placeToSearch, 50);
         const townList: PlaceDto[] = [];
         res.forEach((thisPlace:City) => {
             const placeDto = new PlaceDto();

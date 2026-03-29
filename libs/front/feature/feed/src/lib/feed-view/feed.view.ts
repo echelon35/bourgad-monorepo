@@ -28,6 +28,10 @@ export class FeedView {
     feedMap?: L.Map;
     feedLayer?: L.LayerGroup = new L.LayerGroup();
     public senseOfResults: SenseOfResults = SenseOfResults.TOP;
+    public readonly mancheBounds = L.latLngBounds(
+        L.latLng(48.26, -2.15),
+        L.latLng(49.93, 1.80)
+    );
 
     private readonly mapService = inject(MapService);
 

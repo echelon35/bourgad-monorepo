@@ -30,8 +30,10 @@ export class GeoApiService {
         return this.http.get<City>(this.API_URL + `/geo/city/${cityId}`, this.httpOptions);
     }
 
-    searchCityByName(name: string): Promise<City[]> {
-        return firstValueFrom(this.http.get<City[]>(this.API_URL + `/geo/cities?name=${name}`, this.httpOptions));
+    searchCityByName(name: string, deptId?: number): Promise<City[]> {
+        const params = new URLSearchParams({ name });
+        if (deptId !== undefined) params.set('deptId', String(deptId));
+        return firstValueFrom(this.http.get<City[]>(this.API_URL + `/geo/cities?${params}`, this.httpOptions));
     }
 
 }

@@ -19,6 +19,10 @@ export class LocalizeView {
   place: PlaceDto | undefined;
   success = false;
   mapId = 'map-localize';
+  public readonly mancheBounds = L.latLngBounds(
+      L.latLng(48.26, -2.15),
+      L.latLng(49.93, 1.80)
+  );
 
   private readonly mapService = inject(MapService);
   private mapSubscription!: Subscription;
@@ -45,6 +49,8 @@ export class LocalizeView {
                     this.localizeMap!.fitBounds(cityLayer.getBounds(), { maxZoom: 12 });
                     cityLayer.addTo(this.localizeLayer!);
                     this.localizeLayer!.addTo(this.localizeMap!);
+                } else {
+                    this.localizeMap!.fitBounds(this.mancheBounds);
                 }
               }
             });

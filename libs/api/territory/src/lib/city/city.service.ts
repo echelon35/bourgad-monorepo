@@ -36,7 +36,7 @@ export class CityService {
     const queryBuilder = this.dataSource.getRepository(CityEntity).createQueryBuilder('city');
 
     if (deptId) {
-      queryBuilder.where('city.departmentId = :deptId', { deptId });
+      queryBuilder.where('city.department.departmentId = :deptId', { deptId });
     }
 
     if (name) {

@@ -23,6 +23,8 @@ export class MapComponent implements AfterViewInit, OnInit, OnChanges, OnDestroy
   @Input() defaultZoom = 3;
   @Input() isVisible = true;
   @Input() maxBoundsViscosity = 1.0;
+  @Input() maxBounds: L.LatLngBounds | null = null;
+  @Input() minZoom: number | null = null;
 
   public isLoading = false;
   
@@ -77,11 +79,11 @@ export class MapComponent implements AfterViewInit, OnInit, OnChanges, OnDestroy
         maxBoundsViscosity: this.maxBoundsViscosity,
         worldCopyJump: false,
         zoomDelta: this.zoomDelta,
+        ...(this.minZoom !== null ? { minZoom: this.minZoom } : {}),
         // zoomSnap: 0
       });
 
-      //Map limited to world
-      this.mapDetail.setMaxBounds(L.latLngBounds(
+      this.mapDetail.setMaxBounds(this.maxBounds ?? L.latLngBounds(
         L.latLng(-90, -360),
         L.latLng(90, 360)
       ));

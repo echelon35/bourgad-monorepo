@@ -98,8 +98,8 @@
             </div>
         </div>
         <div id="map-feed" class="z-map w-full h-full">
-            <bgd-map #feedMap [mapId]="this.mapId" [defaultZoom]="2" [displayScale]="false" [displayZoom]="false"
-                [displayLayers]="false"></bgd-map>
+            <bgd-map #feedMap [mapId]="this.mapId" [defaultZoom]="9" [displayScale]="false" [displayZoom]="false"
+                [displayLayers]="false" [maxBounds]="this.mancheBounds" [minZoom]="8"></bgd-map>
         </div>
     </div>
     <bgd-feed-modal [map]="this.feedMap" class="z-modal-2"></bgd-feed-modal>

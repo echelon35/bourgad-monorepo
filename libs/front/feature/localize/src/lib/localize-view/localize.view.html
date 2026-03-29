@@ -38,7 +38,7 @@
         <div class="mt-6">
           <bgd-search-place-modal (selectedPlace$)="updateLocation($event)" [mapId]="this.mapId" [id]="'localize'" [providerType]="'bourgad'" [zoomLevel]="8" [placeholder]="'Recherchez votre Bourgade'" [inputClasses]="'block rounded-md pl-10 pr-10 py-1.5 text-base placeholder:text-gray-400 sm:text-sm/6 w-80 truncate'"></bgd-search-place-modal>
           <div id="map-localize" class="z-map w-full h-96 rounded-md">
-              <bgd-map [mapId]="this.mapId" [defaultZoom]="2" [displayScale]="false" [displayZoom]="false" [displayLayers]="false"></bgd-map>
+              <bgd-map [mapId]="this.mapId" [defaultZoom]="9" [displayScale]="false" [displayZoom]="false" [displayLayers]="false" [maxBounds]="this.mancheBounds" [minZoom]="8"></bgd-map>
           </div>
           <div class="mt-6">
             @if(this.userStore.loading()){
