@@ -1,6 +1,8 @@
 import { inject, Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
 import { GeoApiFrProvider, OpenStreetMapProvider } from 'leaflet-geosearch';
 import * as L from 'leaflet';
+import { firstValueFrom } from 'rxjs';
 import { PlaceDto } from '@bourgad-monorepo/external';
 import { GeoApiService } from "./geo.api.service";
 import { City } from "@bourgad-monorepo/model";
@@ -10,7 +12,8 @@ import { City } from "@bourgad-monorepo/model";
 })
 export class SearchPlaceService {
 
-    private readonly geoApiProvider = inject(GeoApiService)
+    private readonly geoApiProvider = inject(GeoApiService);
+    private readonly http = inject(HttpClient);
     // Par défaut, le contexte géographique est limité à la Manche (Bourgad est exclusivement dans ce département)
     public geographicContext: L.LatLngBounds = L.latLngBounds(
       L.latLng(48.26, -2.15),
@@ -56,6 +59,27 @@ export class SearchPlaceService {
         }
       });
       return townList;
+    }
+
+    async searchWithIGN(placeToSearch: string): Promise<PlaceDto[]> {
+        const params = {
+            text: placeToSearch,
+            type: 'StreetAddress,PositionOfInterest',
+            terr: 50,
+            maximumResponses: '10',
+        };
+        const res = await firstValueFrom(
+            this.http.get<{ results: any[] }>('https://data.geopf.fr/geocodage/completion/', { params })
+        );
+        const townList: PlaceDto[] = [];
+        (res?.results ?? []).forEach(item => {
+            const place = new PlaceDto();
+            place.copyFromIGNProvider(item);
+            if (place.latitude && place.longitude) {
+                townList.push(place);
+            }
+        });
+        return townList;
     }
 
     async searchWithBourgad(placeToSearch: string): Promise<PlaceDto[]> {

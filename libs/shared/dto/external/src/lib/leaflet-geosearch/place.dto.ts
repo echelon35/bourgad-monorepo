@@ -89,6 +89,22 @@ export class PlaceDto {
         }
     }
 
+    copyFromIGNProvider(obj: any) {
+        if (obj && obj.x !== undefined && obj.y !== undefined && obj.fulltext) {
+            this.longitude = obj.x;
+            this.latitude = obj.y;
+            this.label = obj.fulltext;
+            // StreetAddress: champ "street", PositionOfInterest: champ "toponyme"
+            this.name = obj.street || obj.toponyme || obj.city || obj.fulltext.split(',')[0];
+            this.marker = new L.Marker([this.latitude, this.longitude]);
+            this.providerTypeId = obj.nature || obj.type || null;
+            this.state = obj.departement || null;
+            this.department = obj.departement || null;
+            this.country = 'France';
+            this.countryCode = 'fr';
+        }
+    }
+
     copyFromBourgad(obj: City){
         this.id = obj.cityId || null;
         this.label = obj.name || null;

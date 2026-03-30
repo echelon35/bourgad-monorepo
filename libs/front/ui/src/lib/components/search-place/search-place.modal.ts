@@ -37,7 +37,7 @@ export class SearchPlace implements OnInit, AfterViewInit {
     //Level of zoom when clicking on result
     @Input() zoomLevel = 15;
     //Type of provider to use for search
-    @Input() providerType: 'geoApi' | 'openStreetMap' | 'bourgad' = 'geoApi';
+    @Input() providerType: 'geoApi' | 'openStreetMap' | 'bourgad' | 'IGN' = 'geoApi';
     //Results on top or bottom of the input
     @Input() senseOfResults: SenseOfResults = SenseOfResults.BOTTOM;
     @Input() placeholder = "Vous cherchez un lieu ?";
@@ -144,6 +144,9 @@ export class SearchPlace implements OnInit, AfterViewInit {
           break;
         case 'bourgad':
           this.townList = await this.searchPlaceService.searchWithBourgad(searchedPlace);
+          break;
+        case 'IGN':
+          this.townList = await this.searchPlaceService.searchWithIGN(searchedPlace);
           break;
         default:
           this.townList = await this.searchPlaceService.searchWithGeoApi(searchedPlace);

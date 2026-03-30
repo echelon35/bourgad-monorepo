@@ -105,7 +105,7 @@
     <bgd-feed-modal [map]="this.feedMap" class="z-modal-2"></bgd-feed-modal>
     <bgd-makepost class="z-modal" #makePost></bgd-makepost>
     <bgd-search-place-modal class="z-on-map-2 absolute bottom-0 left-0 w-80" [mapId]="this.mapId"
-        [senseOfResults]="this.senseOfResults" [providerType]="'openStreetMap'"></bgd-search-place-modal>
+        [senseOfResults]="this.senseOfResults" [providerType]="'IGN'"></bgd-search-place-modal>
     @if(feedStore.selectedPostId() !== null) {
         <bgd-post-modal [postId]="feedStore.selectedPostId()"
         (closeModal)="feedStore.setSelectPost(null)">
