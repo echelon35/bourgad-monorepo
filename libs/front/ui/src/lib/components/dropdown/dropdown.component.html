@@ -23,11 +23,11 @@
 
 <!-- Overlay pour fermer en cliquant ailleurs -->
 @if (opened) {
-    <div class="fixed inset-0 z-[1998]" role="button" tabindex="0"
+    <div class="fixed inset-0 z-modal-2" role="button" tabindex="0"
         (click)="closeDropdown()" (keydown.escape)="closeDropdown()"></div>
 
     <!-- Liste en fixed -->
-    <div class="fixed z-[1999] bg-gray-700 divide-y divide-gray-600 rounded-lg shadow-xl max-h-80 overflow-y-auto overflow-x-hidden"
+    <div class="fixed z-modal-2 bg-gray-700 divide-y divide-gray-600 rounded-lg shadow-xl max-h-80 overflow-y-auto overflow-x-hidden"
         [style.top]="listStyle.top" [style.left]="listStyle.left" [style.width]="listStyle.width">
         <ul class="py-1 text-sm text-gray-200">
             @for (item of dropdownItems; track $index) {

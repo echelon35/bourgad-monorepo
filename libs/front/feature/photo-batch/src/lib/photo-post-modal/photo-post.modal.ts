@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, EventEmitter, inject, Input, OnInit, Output, ViewChild } from "@angular/core";
+import { Component, effect, EventEmitter, inject, Input, OnInit, Output, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Media, Post, Subcategory, Category } from "@bourgad-monorepo/model";
 import { CategoryApiService, CategoryStore, PostApiService, UserStore } from "@bourgad-monorepo/core";
@@ -49,13 +49,22 @@ export class PhotoPostModal implements OnInit {
       title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       content: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(1000)]],
     });
+    
+    effect(() => {
+        this.feedDropdownCategories();
+    });
 
-    this.dropdownCategories = this.categoryStore.categories$().map(cat => ({
-      label: cat.name,
-      value: cat,
-      icon: cat.iconUrl,
-      description: cat.description
-    } as DropdownItem));
+  }
+
+  feedDropdownCategories(){
+      this.dropdownCategories = this.categoryStore.categories$().map(category => {
+          return {
+              label: category.name,
+              value: category,
+              icon: category.iconUrl,
+              description: category.description
+          } as DropdownItem;
+      });
   }
 
   open(media: Media): void {

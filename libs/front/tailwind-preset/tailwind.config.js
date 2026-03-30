@@ -8,7 +8,7 @@ export const theme = {
             'modal-bg': '899',
             'modal': '900',
             'modal-2': '901',
-            'toastr': '999',
+            'toastr': '9999',
         },
         colors: {
             'primary-bourgad': '#264965',

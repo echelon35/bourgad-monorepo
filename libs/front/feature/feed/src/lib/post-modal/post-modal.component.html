@@ -1,4 +1,4 @@
-<div class="fixed inset-0 z-[1000] flex items-center justify-center p-4">
+<div class="fixed inset-0 z-modal flex items-center justify-center p-4">
   <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" role="button" tabindex="0" (click)="onClose()" (keydown.escape)="onClose()"></div>
 
   @if (postStore.post()) {
@@ -135,8 +135,8 @@
 
   <!-- Dropdown commentaire (rendu en fixed pour passer au-dessus de tout) -->
   @if (openMenuCommentId !== null) {
-    <div class="fixed inset-0 z-[1100]" role="button" tabindex="0" (click)="closeMenu()" (keydown.escape)="closeMenu()"></div>
-    <div class="fixed z-[1101] bg-gray-900 border border-white/10 rounded-lg shadow-xl py-1 min-w-[160px]"
+    <div class="fixed inset-0 z-modal-2" role="button" tabindex="0" (click)="closeMenu()" (keydown.escape)="closeMenu()"></div>
+    <div class="fixed z-modal-2 bg-gray-900 border border-white/10 rounded-lg shadow-xl py-1 min-w-[160px]"
       [style.top.px]="menuPosition.top" [style.right.px]="menuPosition.right">
       @for (comment of postStore.comments(); track comment.commentId) {
         @if (comment.commentId === openMenuCommentId) {
