@@ -9,9 +9,11 @@ export const ManchePlaceEntity = new EntitySchema<ManchePlace>({
     name: { type: String, name: 'name' },
     slug: { type: String, name: 'slug' },
     category: { type: String, name: 'category' },
+    source: { type: String, name: 'source' },
+    externalId: { type: String, name: 'external_id' },
     lat: { type: 'double precision', name: 'lat', nullable: true },
     lng: { type: 'double precision', name: 'lng', nullable: true },
-    wikimanchePageId: { type: Number, name: 'wikimanche_page_id', unique: true },
+    point: { type: 'geometry', name: 'point', nullable: true },
     enrichedAt: { type: Date, name: 'enriched_at', nullable: true },
     createdAt: {
       type: Date,
@@ -19,4 +21,7 @@ export const ManchePlaceEntity = new EntitySchema<ManchePlace>({
       default: () => 'CURRENT_TIMESTAMP',
     },
   },
+  uniques: [
+    { name: 'UQ_manche_places_source_external_id', columns: ['source', 'externalId'] },
+  ],
 });

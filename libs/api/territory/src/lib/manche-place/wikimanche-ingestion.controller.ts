@@ -1,4 +1,4 @@
-import { Controller, HttpCode, Logger, Param, Post } from '@nestjs/common';
+import { Controller, HttpCode, Logger, Post } from '@nestjs/common';
 import { WikimancheIngestionService } from './wikimanche-ingestion.service';
 
 @Controller('admin/wikimanche')
@@ -16,18 +16,6 @@ export class WikimancheIngestionController {
       this.logger.error(`Erreur ingestion complète: ${err}`),
     );
     return { message: 'Ingestion complète démarrée en arrière-plan' };
-  }
-
-  @Post('ingest/category/:category')
-  @HttpCode(202)
-  async triggerCategoryIngestion(
-    @Param('category') category: string,
-  ): Promise<{ message: string }> {
-    this.logger.log(`Ingestion de la catégorie "${category}" déclenchée manuellement`);
-    this.ingestionService.ingestCategory(decodeURIComponent(category)).catch(err =>
-      this.logger.error(`Erreur ingestion catégorie "${category}": ${err}`),
-    );
-    return { message: `Ingestion de la catégorie "${category}" démarrée en arrière-plan` };
   }
 
   @Post('sync/incremental')

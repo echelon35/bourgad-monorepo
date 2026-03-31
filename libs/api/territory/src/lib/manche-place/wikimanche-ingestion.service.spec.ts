@@ -32,112 +32,140 @@ describe('WikimancheIngestionService', () => {
     service = module.get<WikimancheIngestionService>(WikimancheIngestionService);
   });
 
-  // ─── fetchCategoryPages ──────────────────────────────────────────────────
+  // ─── ingestFromGeoApiGouv ────────────────────────────────────────────────
 
-  describe('fetchCategoryPages', () => {
-    it('retourne les pages d\'une catégorie sans pagination', async () => {
+  describe('ingestFromGeoApiGouv', () => {
+    it('upserte les communes avec leurs coordonnées', async () => {
       mockFetch.mockResolvedValueOnce({
-        json: async () => ({
-          query: { categorymembers: [{ pageid: 1, title: 'Cherbourg-en-Cotentin' }] },
-        }),
+        ok: true,
+        json: async () => ([
+          { nom: 'Cherbourg-en-Cotentin', code: '50129', centre: { type: 'Point', coordinates: [-1.6194, 49.6333] } },
+          { nom: 'Avranches', code: '50025', centre: { type: 'Point', coordinates: [-1.3564, 48.6847] } },
+        ]),
       });
 
-      const pages = await service.fetchCategoryPages('Commune de la Manche');
-      expect(pages).toHaveLength(1);
-      expect(pages[0]).toEqual({ pageid: 1, title: 'Cherbourg-en-Cotentin' });
+      const result = await service.ingestFromGeoApiGouv();
+
+      expect(result.fetched).toBe(2);
+      expect(result.upserted).toBe(2);
+      expect(mockExecute).toHaveBeenCalledTimes(2);
+
+      const firstCall = mockInsertQueryBuilder.values.mock.calls[0][0];
+      expect(firstCall.source).toBe('geoapi');
+      expect(firstCall.externalId).toBe('50129');
+      expect(firstCall.lat).toBe(49.6333);
+      expect(firstCall.lng).toBe(-1.6194);
+      expect(firstCall.category).toBe('Commune');
     });
 
-    it('gère la pagination avec cmcontinue', async () => {
-      mockFetch
-        .mockResolvedValueOnce({
-          json: async () => ({
-            query: { categorymembers: [{ pageid: 1, title: 'Avranches' }] },
-            continue: { cmcontinue: 'token123' },
-          }),
-        })
-        .mockResolvedValueOnce({
-          json: async () => ({
-            query: { categorymembers: [{ pageid: 2, title: 'Granville' }] },
-          }),
-        });
-
-      const pages = await service.fetchCategoryPages('Commune de la Manche');
-      expect(pages).toHaveLength(2);
-      expect(mockFetch).toHaveBeenCalledTimes(2);
-      expect(mockFetch.mock.calls[1][0]).toContain('cmcontinue=token123');
-    });
-
-    it('retourne un tableau vide si aucun résultat', async () => {
+    it('gère les communes sans coordonnées', async () => {
       mockFetch.mockResolvedValueOnce({
-        json: async () => ({ query: { categorymembers: [] } }),
+        ok: true,
+        json: async () => ([
+          { nom: 'Commune sans coords', code: '50999' },
+        ]),
       });
 
-      const pages = await service.fetchCategoryPages('Catégorie vide');
-      expect(pages).toHaveLength(0);
+      const result = await service.ingestFromGeoApiGouv();
+      expect(result.upserted).toBe(1);
+      const call = mockInsertQueryBuilder.values.mock.calls[0][0];
+      expect(call.lat).toBeNull();
+      expect(call.lng).toBeNull();
+      expect(call.enrichedAt).toBeNull();
+    });
+
+    it('lève une erreur si l\'API répond avec un statut non-OK', async () => {
+      mockFetch.mockResolvedValueOnce({ ok: false, status: 503 });
+      await expect(service.ingestFromGeoApiGouv()).rejects.toThrow('GeoAPI Gouv HTTP 503');
     });
   });
 
-  // ─── fetchCoordinatesBatch ───────────────────────────────────────────────
+  // ─── ingestFromWikidataSparql ────────────────────────────────────────────
 
-  describe('fetchCoordinatesBatch', () => {
-    it('retourne les coordonnées pour les pages qui en ont', async () => {
+  describe('ingestFromWikidataSparql', () => {
+    it('upserte les lieux retournés par SPARQL', async () => {
       mockFetch.mockResolvedValueOnce({
+        ok: true,
         json: async () => ({
-          query: {
-            pages: {
-              '1': { coordinates: [{ lat: 49.63, lon: -1.62 }] },
-              '2': { /* pas de coordinates */ },
-            },
+          results: {
+            bindings: [
+              {
+                item: { value: 'http://www.wikidata.org/entity/Q259463' },
+                itemLabel: { value: 'Mont Saint-Michel' },
+                lat: { value: '48.636' },
+                lng: { value: '-1.511' },
+                typeLabel: { value: 'île' },
+              },
+              {
+                item: { value: 'http://www.wikidata.org/entity/Q6441' },
+                itemLabel: { value: 'Granville' },
+                lat: { value: '48.8352' },
+                lng: { value: '-1.5987' },
+              },
+            ],
           },
         }),
       });
 
-      const map = await service.fetchCoordinatesBatch([1, 2]);
-      expect(map.size).toBe(1);
-      expect(map.get(1)).toEqual({ lat: 49.63, lng: -1.62 });
-      expect(map.get(2)).toBeUndefined();
+      const result = await service.ingestFromWikidataSparql();
+
+      expect(result.fetched).toBe(2);
+      expect(result.upserted).toBe(2);
+
+      const firstCall = mockInsertQueryBuilder.values.mock.calls[0][0];
+      expect(firstCall.source).toBe('wikidata');
+      expect(firstCall.externalId).toBe('Q259463');
+      expect(firstCall.lat).toBe(48.636);
+      expect(firstCall.lng).toBe(-1.511);
+      expect(firstCall.category).toBe('île');
+
+      const secondCall = mockInsertQueryBuilder.values.mock.calls[1][0];
+      expect(secondCall.category).toBe('Lieu'); // pas de typeLabel
     });
 
-    it('découpe en lots de 50 pageids', async () => {
-      const pageids = Array.from({ length: 75 }, (_, i) => i + 1);
-      mockFetch
-        .mockResolvedValue({ json: async () => ({ query: { pages: {} } }) });
-
-      await service.fetchCoordinatesBatch(pageids);
-      expect(mockFetch).toHaveBeenCalledTimes(2);
-    });
-  });
-
-  // ─── fetchCoordinatesFromIGN ─────────────────────────────────────────────
-
-  describe('fetchCoordinatesFromIGN', () => {
-    it('retourne les coordonnées depuis l\'API IGN', async () => {
+    it('ignore les entrées avec des coordonnées invalides (NaN)', async () => {
       mockFetch.mockResolvedValueOnce({
+        ok: true,
         json: async () => ({
-          features: [{ geometry: { coordinates: [-1.62, 49.63] } }],
+          results: {
+            bindings: [
+              {
+                item: { value: 'http://www.wikidata.org/entity/Q1' },
+                itemLabel: { value: 'Lieu invalide' },
+                lat: { value: 'NaN' },
+                lng: { value: 'NaN' },
+              },
+            ],
+          },
         }),
       });
 
-      const coords = await service.fetchCoordinatesFromIGN('Mont Saint-Michel');
-      expect(coords).toEqual({ lat: 49.63, lng: -1.62 });
-      expect(mockFetch.mock.calls[0][0]).toContain('geocodage.ign.fr');
-      expect(mockFetch.mock.calls[0][0]).toContain('postcode=50');
+      const result = await service.ingestFromWikidataSparql();
+      expect(result.fetched).toBe(1);
+      expect(result.upserted).toBe(0);
+      expect(mockExecute).not.toHaveBeenCalled();
     });
 
-    it('retourne null si aucune feature trouvée', async () => {
+    it('utilise wikibase:box et filtre sur la France (P17 Q142)', async () => {
       mockFetch.mockResolvedValueOnce({
-        json: async () => ({ features: [] }),
+        ok: true,
+        json: async () => ({ results: { bindings: [] } }),
       });
 
-      const coords = await service.fetchCoordinatesFromIGN('Lieu inconnu');
-      expect(coords).toBeNull();
+      await service.ingestFromWikidataSparql();
+
+      const url: string = mockFetch.mock.calls[0][0];
+      expect(url).toContain('wikibase%3Abox');
+      expect(url).toContain('wd%3AQ142');
+      expect(url).toContain('-1.95');
+      expect(url).toContain('48.42');
+      expect(url).toContain('-0.05');
+      expect(url).toContain('49.74');
     });
 
-    it('retourne null en cas d\'erreur réseau', async () => {
-      mockFetch.mockRejectedValueOnce(new Error('network error'));
-
-      const coords = await service.fetchCoordinatesFromIGN('Lieu');
-      expect(coords).toBeNull();
+    it('lève une erreur si SPARQL répond avec un statut non-OK', async () => {
+      mockFetch.mockResolvedValueOnce({ ok: false, status: 429 });
+      await expect(service.ingestFromWikidataSparql()).rejects.toThrow('Wikidata SPARQL HTTP 429');
     });
   });
 
@@ -149,81 +177,112 @@ describe('WikimancheIngestionService', () => {
         json: async () => ({
           query: {
             recentchanges: [
-              { pageid: 1, title: 'Coutances', timestamp: '2026-03-30T01:00:00Z' },
-              { pageid: 1, title: 'Coutances', timestamp: '2026-03-30T00:30:00Z' },
-              { pageid: 2, title: 'Valognes', timestamp: '2026-03-30T00:15:00Z' },
+              { pageid: 1, title: 'Coutances' },
+              { pageid: 1, title: 'Coutances' },
+              { pageid: 2, title: 'Valognes' },
             ],
           },
         }),
       });
 
-      const changes = await service.fetchRecentChanges('2026-03-29T18:00:00.000Z');
+      const changes = await service.fetchRecentChanges('2026-03-31T00:00:00Z');
       expect(changes).toHaveLength(2);
       expect(changes.map(c => c.pageid)).toEqual([1, 2]);
+    });
+  });
+
+  // ─── fetchWikidataItemsBatch ─────────────────────────────────────────────
+
+  describe('fetchWikidataItemsBatch', () => {
+    it('retourne les QIDs Wikidata par pageid', async () => {
+      mockFetch.mockResolvedValueOnce({
+        json: async () => ({
+          query: {
+            pages: {
+              '1': { pageprops: { wikibase_item: 'Q259463' } },
+              '2': { pageprops: {} },
+            },
+          },
+        }),
+      });
+
+      const map = await service.fetchWikidataItemsBatch([1, 2]);
+      expect(map.size).toBe(1);
+      expect(map.get(1)).toBe('Q259463');
+      expect(map.get(2)).toBeUndefined();
+    });
+
+    it('découpe en lots de 50 pageids', async () => {
+      const pageids = Array.from({ length: 75 }, (_, i) => i + 1);
+      mockFetch.mockResolvedValue({
+        json: async () => ({ query: { pages: {} } }),
+      });
+
+      await service.fetchWikidataItemsBatch(pageids);
+      expect(mockFetch).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  // ─── fetchWikidataCoordsForQid ───────────────────────────────────────────
+
+  describe('fetchWikidataCoordsForQid', () => {
+    it('retourne les coordonnées depuis la propriété P625', async () => {
+      mockFetch.mockResolvedValueOnce({
+        json: async () => ({
+          entities: {
+            Q259463: {
+              claims: {
+                P625: [{
+                  mainsnak: {
+                    datavalue: { value: { latitude: 48.636, longitude: -1.511 } },
+                  },
+                }],
+              },
+            },
+          },
+        }),
+      });
+
+      const coords = await service.fetchWikidataCoordsForQid('Q259463');
+      expect(coords).toEqual({ lat: 48.636, lng: -1.511 });
+    });
+
+    it('retourne null si P625 absent', async () => {
+      mockFetch.mockResolvedValueOnce({
+        json: async () => ({ entities: { Q1: { claims: {} } } }),
+      });
+
+      const coords = await service.fetchWikidataCoordsForQid('Q1');
+      expect(coords).toBeNull();
+    });
+
+    it('retourne null en cas d\'erreur réseau', async () => {
+      mockFetch.mockRejectedValueOnce(new Error('timeout'));
+      const coords = await service.fetchWikidataCoordsForQid('Q1');
+      expect(coords).toBeNull();
     });
   });
 
   // ─── upsertPlace ────────────────────────────────────────────────────────
 
   describe('upsertPlace', () => {
-    it('appelle orUpdate avec le conflit sur wikimanchePageId', async () => {
+    it('utilise la contrainte unique composite (source, external_id)', async () => {
       await service.upsertPlace({
-        name: 'Plage de Barneville',
-        slug: 'Plage_de_Barneville',
-        category: 'Plage de la Manche',
-        lat: 49.3,
-        lng: -1.72,
-        wikimanchePageId: 42,
-        enrichedAt: new Date('2026-03-30'),
+        name: 'Mont Saint-Michel',
+        slug: 'mont-saint-michel',
+        category: 'île',
+        source: 'wikidata',
+        externalId: 'Q259463',
+        lat: 48.636,
+        lng: -1.511,
+        enrichedAt: new Date('2026-03-31'),
       });
 
       expect(mockInsertQueryBuilder.orUpdate).toHaveBeenCalledWith(
         ['name', 'slug', 'category', 'lat', 'lng', 'enriched_at'],
-        ['wikimanche_page_id'],
+        ['source', 'external_id'],
       );
       expect(mockExecute).toHaveBeenCalled();
-    });
-  });
-
-  // ─── ingestCategory ──────────────────────────────────────────────────────
-
-  describe('ingestCategory', () => {
-    it('enrichit via IGN les pages sans coordonnées wiki et retourne les compteurs', async () => {
-      // 1. categorymembers
-      mockFetch.mockResolvedValueOnce({
-        json: async () => ({
-          query: {
-            categorymembers: [
-              { pageid: 10, title: 'Barneville-Carteret' },
-              { pageid: 11, title: 'Fermanville' },
-            ],
-          },
-        }),
-      });
-      // 2. coordinates batch — pageid 10 a des coords, 11 non
-      mockFetch.mockResolvedValueOnce({
-        json: async () => ({
-          query: {
-            pages: {
-              '10': { coordinates: [{ lat: 49.38, lon: -1.76 }] },
-              '11': {},
-            },
-          },
-        }),
-      });
-      // 3. IGN fallback pour pageid 11
-      mockFetch.mockResolvedValueOnce({
-        json: async () => ({
-          features: [{ geometry: { coordinates: [-1.52, 49.68] } }],
-        }),
-      });
-
-      const result = await service.ingestCategory('Commune de la Manche');
-
-      expect(result.fetched).toBe(2);
-      expect(result.enriched).toBe(1);   // 1 enrichi via IGN
-      expect(result.upserted).toBe(2);
-      expect(mockExecute).toHaveBeenCalledTimes(2);
     });
   });
 });
