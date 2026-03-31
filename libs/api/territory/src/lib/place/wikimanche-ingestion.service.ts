@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { DataSource } from 'typeorm';
 import { ManchePlace } from '@bourgad-monorepo/model';
-import { ManchePlaceEntity } from './manche-place.entity';
+import { PlaceEntity } from './place.entity';
 
 const sleep = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
 
@@ -23,6 +23,15 @@ interface SparqlBinding {
   lng: { value: string };
 }
 
+interface OverpassElement {
+  type: 'node' | 'way' | 'relation';
+  id: number;
+  lat?: number;
+  lon?: number;
+  center?: { lat: number; lon: number };
+  tags?: Record<string, string>;
+}
+
 @Injectable()
 export class WikimancheIngestionService {
   private readonly logger = new Logger(WikimancheIngestionService.name);
@@ -30,6 +39,20 @@ export class WikimancheIngestionService {
   private readonly WIKIMANCHE_BASE = 'http://www.wikimanche.fr/api.php';
   private readonly WIKIDATA_SPARQL = 'https://query.wikidata.org/sparql';
   private readonly GEOAPI_GOUV = 'https://geo.api.gouv.fr/communes';
+  private readonly OVERPASS_API = 'https://overpass-api.de/api/interpreter';
+
+  // Bbox département Manche pour Overpass
+  private readonly MANCHE_BBOX = '48.42,-1.95,49.76,-0.05';
+
+  // Groupes de tags OSM à ingérer, avec leur catégorie Bourgad
+  private readonly OVERPASS_GROUPS: Array<{ filter: string; category: string }> = [
+    { filter: 'node["amenity"~"restaurant|cafe|bar|pub|fast_food|bakery|pharmacy|hospital|clinic|school|college|university|library|townhall|post_office|bank|fuel|parking|place_of_worship"]', category: 'Équipement' },
+    { filter: 'node["shop"]', category: 'Commerce' },
+    { filter: 'node["tourism"~"hotel|guest_house|hostel|camp_site|caravan_site|attraction|museum|viewpoint|information|artwork"]', category: 'Tourisme' },
+    { filter: 'node["historic"~"monument|memorial|castle|fort|ruins|archaeological_site|wayside_cross|wayside_shrine|milestone"]', category: 'Patrimoine' },
+    { filter: 'node["leisure"~"park|garden|beach_resort|playground|sports_centre|fitness_centre|swimming_pool|marina"]', category: 'Loisir' },
+    { filter: 'node["natural"~"beach|peak|cliff|bay|cape|spring"]', category: 'Nature' },
+  ];
 
   /** 1 req/s vers Wikimanche */
   private readonly WIKIMANCHE_DELAY_MS = 1000;
@@ -43,20 +66,24 @@ export class WikimancheIngestionService {
   async fullIngestion(): Promise<void> {
     this.logger.log('Démarrage de l\'ingestion complète');
 
-    const [geoApi, wikidata] = await Promise.allSettled([
+    const [geoApi, wikidata, overpass] = await Promise.allSettled([
       this.ingestFromGeoApiGouv(),
       this.ingestFromWikidataSparql(),
+      this.ingestFromOverpass(),
     ]);
 
-    const geoApiResult = geoApi.status === 'fulfilled' ? geoApi.value : { fetched: 0, upserted: 0 };
+    const geoApiResult   = geoApi.status   === 'fulfilled' ? geoApi.value   : { fetched: 0, upserted: 0 };
     const wikidataResult = wikidata.status === 'fulfilled' ? wikidata.value : { fetched: 0, upserted: 0 };
+    const overpassResult = overpass.status === 'fulfilled' ? overpass.value : { fetched: 0, upserted: 0 };
 
-    if (geoApi.status === 'rejected') this.logger.error(`GeoAPI Gouv: ${geoApi.reason}`);
+    if (geoApi.status   === 'rejected') this.logger.error(`GeoAPI Gouv: ${geoApi.reason}`);
     if (wikidata.status === 'rejected') this.logger.error(`Wikidata SPARQL: ${wikidata.reason}`);
+    if (overpass.status === 'rejected') this.logger.error(`Overpass OSM: ${overpass.reason}`);
 
     this.logger.log(
       `Ingestion terminée — GeoAPI: ${geoApiResult.upserted}/${geoApiResult.fetched}, ` +
-      `Wikidata: ${wikidataResult.upserted}/${wikidataResult.fetched}`,
+      `Wikidata: ${wikidataResult.upserted}/${wikidataResult.fetched}, ` +
+      `Overpass: ${overpassResult.upserted}/${overpassResult.fetched}`,
     );
   }
 
@@ -239,6 +266,91 @@ LIMIT 10000`.trim();
     return { fetched: totalFetched, upserted };
   }
 
+  // ─── Overpass OSM ─────────────────────────────────────────────────────────
+
+  async ingestFromOverpass(): Promise<{ fetched: number; upserted: number }> {
+    this.logger.log('Overpass OSM: démarrage de l\'ingestion');
+
+    let totalFetched = 0;
+    let upserted = 0;
+
+    for (const group of this.OVERPASS_GROUPS) {
+      const query = `[out:json][timeout:60];(${group.filter}(${this.MANCHE_BBOX}););out center;`;
+
+      this.logger.log(`Overpass OSM: requête "${group.category}"`);
+
+      // Retry avec backoff exponentiel sur les 429 (max 3 tentatives)
+      const MAX_RETRIES = 3;
+      let res: Response | null = null;
+
+      for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 65_000);
+        try {
+          res = await fetch(this.OVERPASS_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `data=${encodeURIComponent(query)}`,
+            signal: controller.signal,
+          });
+        } finally {
+          clearTimeout(timeout);
+        }
+
+        if (res.status === 429) {
+          const waitMs = attempt * 15_000; // 15s, 30s, 45s
+          this.logger.warn(
+            `Overpass 429 pour "${group.category}" (tentative ${attempt}/${MAX_RETRIES}) — attente ${waitMs / 1000}s`,
+          );
+          await sleep(waitMs);
+          res = null;
+          continue;
+        }
+        break;
+      }
+
+      if (!res || !res.ok) {
+        this.logger.error(`Overpass HTTP ${res?.status ?? 'N/A'} pour "${group.category}" — groupe ignoré`);
+        await sleep(10_000);
+        continue;
+      }
+
+      const data = await res.json() as { elements: OverpassElement[] };
+      const elements = data.elements ?? [];
+      this.logger.log(`Overpass OSM "${group.category}": ${elements.length} éléments reçus`);
+      totalFetched += elements.length;
+
+      for (const el of elements) {
+        const lat = el.lat ?? el.center?.lat ?? null;
+        const lng = el.lon ?? el.center?.lon ?? null;
+        const tags = el.tags ?? {};
+        const name = tags['name'] ?? tags['name:fr'] ?? null;
+
+        if (!name || lat === null || lng === null) continue;
+
+        await this.upsertPlace({
+          name,
+          slug: slugify(name),
+          category: tags['amenity'] ?? tags['shop'] ?? tags['tourism']
+            ?? tags['historic'] ?? tags['leisure'] ?? tags['natural']
+            ?? group.category,
+          source: 'osm',
+          externalId: `${el.type}/${el.id}`,
+          lat,
+          lng,
+          enrichedAt: new Date(),
+        });
+        upserted++;
+      }
+
+      // Pause entre chaque groupe : laisse le temps au serveur Overpass de libérer les slots
+      await sleep(10_000);
+    }
+
+    this.logger.log(`Overpass OSM: ${upserted} lieux upsertés (${totalFetched} éléments bruts)`);
+    return { fetched: totalFetched, upserted };
+  }
+
   // ─── Wikimanche — recentchanges ────────────────────────────────────────────
 
   async fetchRecentChanges(since: string): Promise<WikiPage[]> {
@@ -331,7 +443,7 @@ LIMIT 10000`.trim();
     await this.dataSource
       .createQueryBuilder()
       .insert()
-      .into(ManchePlaceEntity)
+      .into(PlaceEntity)
       .values({ ...data, point } as unknown as ManchePlace)
       .orUpdate(
         ['name', 'slug', 'category', 'lat', 'lng', 'point', 'enriched_at'],

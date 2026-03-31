@@ -7,19 +7,19 @@ import { CityService } from './city/city.service';
 import { DepartmentService } from './department/department.service';
 import { DepartmentEntity } from './department/department.entity';
 import { CityEntity } from './city/city.entity';
-import { ManchePlaceEntity } from './manche-place/manche-place.entity';
-import { ManchePlaceController } from './manche-place/manche-place.controller';
-import { WikimancheIngestionController } from './manche-place/wikimanche-ingestion.controller';
-import { ManchePlaceService } from './manche-place/manche-place.service';
-import { WikimancheIngestionService } from './manche-place/wikimanche-ingestion.service';
+import { PlaceEntity } from './place/place.entity';
+import { PlaceController } from './place/place.controller';
+import { WikimancheIngestionController } from './place/wikimanche-ingestion.controller';
+import { PlaceService } from './place/place.service';
+import { WikimancheIngestionService } from './place/wikimanche-ingestion.service';
 
 @Module({
   imports: [
     ScheduleModule.forRoot(),
-    TypeOrmModule.forFeature([DepartmentEntity, CityEntity, ManchePlaceEntity]),
+    TypeOrmModule.forFeature([DepartmentEntity, CityEntity, PlaceEntity]),
   ],
-  controllers: [CityController, DepartmentController, ManchePlaceController, WikimancheIngestionController],
-  providers: [CityService, DepartmentService, ManchePlaceService, WikimancheIngestionService],
+  controllers: [CityController, DepartmentController, PlaceController, WikimancheIngestionController],
+  providers: [CityService, DepartmentService, PlaceService, WikimancheIngestionService],
   exports: [CityService],
 })
 export class TerritoryModule {}

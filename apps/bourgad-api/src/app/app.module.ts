@@ -7,7 +7,7 @@ import {
   TerritoryModule,
   CityEntity,
   DepartmentEntity,
-  ManchePlaceEntity,
+  PlaceEntity,
 } from '@bourgad-monorepo/api/territory';
 import {
   CategoryModule,
@@ -59,7 +59,7 @@ import { CommentEntity, LikeEntity, PostEntity, LocationEntity, PostModule } fro
         CommentEntity,
         LikeEntity,
         LocationEntity,
-        ManchePlaceEntity,
+        PlaceEntity,
       ],
       synchronize: true,
       logging: true,

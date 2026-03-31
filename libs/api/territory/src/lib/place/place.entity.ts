@@ -1,9 +1,9 @@
 import { EntitySchema } from 'typeorm';
 import { ManchePlace } from '@bourgad-monorepo/model';
 
-export const ManchePlaceEntity = new EntitySchema<ManchePlace>({
-  name: 'ManchePlaceEntity',
-  tableName: 'manche_places',
+export const PlaceEntity = new EntitySchema<ManchePlace>({
+  name: 'PlaceEntity',
+  tableName: 'places',
   columns: {
     id: { type: Number, primary: true, generated: true, name: 'id' },
     name: { type: String, name: 'name' },
@@ -22,6 +22,6 @@ export const ManchePlaceEntity = new EntitySchema<ManchePlace>({
     },
   },
   uniques: [
-    { name: 'UQ_manche_places_source_external_id', columns: ['source', 'externalId'] },
+    { name: 'UQ_places_source_external_id', columns: ['source', 'externalId'] },
   ],
 });

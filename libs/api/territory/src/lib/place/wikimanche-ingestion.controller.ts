@@ -18,6 +18,16 @@ export class WikimancheIngestionController {
     return { message: 'Ingestion complète démarrée en arrière-plan' };
   }
 
+  @Post('ingest/overpass')
+  @HttpCode(202)
+  async triggerOverpassIngestion(): Promise<{ message: string }> {
+    this.logger.log('Ingestion Overpass OSM déclenchée manuellement');
+    this.ingestionService.ingestFromOverpass().catch(err =>
+      this.logger.error(`Erreur ingestion Overpass: ${err}`),
+    );
+    return { message: 'Ingestion Overpass OSM démarrée en arrière-plan' };
+  }
+
   @Post('sync/incremental')
   @HttpCode(202)
   async triggerIncrementalSync(): Promise<{ message: string }> {

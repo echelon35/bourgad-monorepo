@@ -1,18 +1,18 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ManchePlaceService } from './manche-place.service';
-import { ManchePlaceAutocompleteDto } from '@bourgad-monorepo/internal';
+import { PlaceService } from './place.service';
+import { PlaceAutocompleteDto } from '@bourgad-monorepo/internal';
 import { Public } from '@bourgad-monorepo/api/core';
 
-@Controller('places')
-export class ManchePlaceController {
-  constructor(private readonly manchePlaceService: ManchePlaceService) {}
+@Controller('geo/places')
+export class PlaceController {
+  constructor(private readonly manchePlaceService: PlaceService) {}
 
   @Get('autocomplete')
   @Public()
   async autocomplete(
     @Query('q') q: string,
     @Query('limit') limit?: string,
-  ): Promise<ManchePlaceAutocompleteDto[]> {
+  ): Promise<PlaceAutocompleteDto[]> {
     if (!q || q.trim().length < 2) return [];
     return this.manchePlaceService.autocomplete(q.trim(), limit ? Math.min(Number(limit), 50) : 10);
   }

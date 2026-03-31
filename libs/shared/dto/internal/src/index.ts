@@ -29,7 +29,7 @@ export * from './lib/post/comment.dto';
 //TERRITORY
 export * from './lib/territory/city/getCityByIdParam.dto';
 export * from './lib/territory/city/updateCityByDeptQuery.dto';
-export * from './lib/territory/manche-place.dto';
+export * from './lib/territory/places/place.dto';
 
 //USER
 export * from './lib/user/getProfile.dto';

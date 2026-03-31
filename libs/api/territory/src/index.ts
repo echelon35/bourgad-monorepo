@@ -2,4 +2,4 @@ export * from './lib/territory.module';
 export * from './lib/city/city.entity';
 export * from './lib/city/city.service';
 export * from './lib/department/department.entity';
-export * from './lib/manche-place/manche-place.entity';
+export * from './lib/place/place.entity';
