@@ -1,0 +1,432 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-03-31",
+  "__export_source": "bourgad-monorepo",
+  "resources": [
+    {
+      "_id": "wrk_bourgad",
+      "_type": "workspace",
+      "name": "Bourgad API",
+      "description": "Collection complète des endpoints Bourgad",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_bourgad_base",
+      "_type": "environment",
+      "parentId": "wrk_bourgad",
+      "name": "Local",
+      "data": {
+        "base_url": "http://localhost:3000",
+        "bearer_token": "VOTRE_JWT_TOKEN"
+      }
+    },
+
+    {
+      "_id": "fld_auth",
+      "_type": "request_group",
+      "parentId": "wrk_bourgad",
+      "name": "Authentication"
+    },
+    {
+      "_id": "req_login",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Login",
+      "method": "POST",
+      "url": "{{ _.base_url }}/login",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"mail\": \"user@example.com\",\n  \"password\": \"motdepasse\"\n}"
+      }
+    },
+    {
+      "_id": "req_logout",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Logout",
+      "method": "POST",
+      "url": "{{ _.base_url }}/logout",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.bearer_token }}" }
+      ],
+      "body": { "mimeType": "application/json", "text": "{}" }
+    },
+    {
+      "_id": "req_signup",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Inscription",
+      "method": "POST",
+      "url": "{{ _.base_url }}/signup",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"firstname\": \"Jean\",\n  \"lastname\": \"Dupont\",\n  \"mail\": \"jean.dupont@example.com\",\n  \"password\": \"motdepasse\"\n}"
+      }
+    },
+    {
+      "_id": "req_confirm_email",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Confirmer l'email",
+      "method": "GET",
+      "url": "{{ _.base_url }}/confirm-email?token=TOKEN_EMAIL"
+    },
+    {
+      "_id": "req_resend_confirmation",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Renvoyer le mail de confirmation",
+      "method": "POST",
+      "url": "{{ _.base_url }}/resend-confirmation-mail?mail=user%40example.com",
+      "body": { "mimeType": "application/json", "text": "{}" }
+    },
+    {
+      "_id": "req_forgot_password",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Mot de passe oublié",
+      "method": "POST",
+      "url": "{{ _.base_url }}/forgot-password?mail=user%40example.com",
+      "body": { "mimeType": "application/json", "text": "{}" }
+    },
+    {
+      "_id": "req_change_password",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Changer le mot de passe",
+      "method": "POST",
+      "url": "{{ _.base_url }}/change-password",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"token\": \"TOKEN_RESET\",\n  \"password\": \"nouveau_motdepasse\"\n}"
+      }
+    },
+    {
+      "_id": "req_expiration",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Vérifier l'expiration du token",
+      "method": "GET",
+      "url": "{{ _.base_url }}/expiration",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.bearer_token }}" }
+      ]
+    },
+    {
+      "_id": "req_google_signin",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Google OAuth — Initier",
+      "method": "GET",
+      "url": "{{ _.base_url }}/google/signin"
+    },
+
+    {
+      "_id": "fld_user",
+      "_type": "request_group",
+      "parentId": "wrk_bourgad",
+      "name": "Utilisateur"
+    },
+    {
+      "_id": "req_user_profile_get",
+      "_type": "request",
+      "parentId": "fld_user",
+      "name": "Mon profil",
+      "method": "GET",
+      "url": "{{ _.base_url }}/user/profile",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.bearer_token }}" }
+      ]
+    },
+    {
+      "_id": "req_user_profile_patch",
+      "_type": "request",
+      "parentId": "fld_user",
+      "name": "Mettre à jour le profil",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/user/profile",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.bearer_token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"firstname\": \"Jean\",\n  \"lastname\": \"Dupont\",\n  \"phone\": \"0612345678\"\n}"
+      }
+    },
+    {
+      "_id": "req_user_summary",
+      "_type": "request",
+      "parentId": "fld_user",
+      "name": "Résumé utilisateur",
+      "method": "GET",
+      "url": "{{ _.base_url }}/user/summary",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.bearer_token }}" }
+      ]
+    },
+    {
+      "_id": "req_user_change_town",
+      "_type": "request",
+      "parentId": "fld_user",
+      "name": "Changer de bourgade",
+      "method": "POST",
+      "url": "{{ _.base_url }}/user/change-town",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.bearer_token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"cityId\": \"50129\"\n}"
+      }
+    },
+    {
+      "_id": "req_user_avatar",
+      "_type": "request",
+      "parentId": "fld_user",
+      "name": "Mettre à jour l'avatar",
+      "method": "POST",
+      "url": "{{ _.base_url }}/user/avatar",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.bearer_token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"mediaId\": 1\n}"
+      }
+    },
+
+    {
+      "_id": "fld_post",
+      "_type": "request_group",
+      "parentId": "wrk_bourgad",
+      "name": "Posts"
+    },
+    {
+      "_id": "req_post_feed",
+      "_type": "request",
+      "parentId": "fld_post",
+      "name": "Feed (posts autour de moi)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/post?onlyWithLocation=false",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.bearer_token }}" }
+      ]
+    },
+    {
+      "_id": "req_post_get",
+      "_type": "request",
+      "parentId": "fld_post",
+      "name": "Détail d'un post",
+      "method": "GET",
+      "url": "{{ _.base_url }}/post/1"
+    },
+    {
+      "_id": "req_post_create",
+      "_type": "request",
+      "parentId": "fld_post",
+      "name": "Créer un post",
+      "method": "POST",
+      "url": "{{ _.base_url }}/post",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.bearer_token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"title\": \"Mon post\",\n  \"content\": \"Contenu du post\",\n  \"subcategoryId\": 1,\n  \"locationId\": null,\n  \"mediaIds\": []\n}"
+      }
+    },
+    {
+      "_id": "req_comments_get",
+      "_type": "request",
+      "parentId": "fld_post",
+      "name": "Commentaires d'un post",
+      "method": "GET",
+      "url": "{{ _.base_url }}/post/1/comments"
+    },
+    {
+      "_id": "req_comment_create",
+      "_type": "request",
+      "parentId": "fld_post",
+      "name": "Écrire un commentaire",
+      "method": "POST",
+      "url": "{{ _.base_url }}/post/1/comments",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.bearer_token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"content\": \"Super post !\"\n}"
+      }
+    },
+
+    {
+      "_id": "fld_location",
+      "_type": "request_group",
+      "parentId": "wrk_bourgad",
+      "name": "Localisation"
+    },
+    {
+      "_id": "req_location_create",
+      "_type": "request",
+      "parentId": "fld_location",
+      "name": "Créer / récupérer une localisation",
+      "method": "POST",
+      "url": "{{ _.base_url }}/location",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.bearer_token }}" },
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"label\": \"Plage de Barneville-Carteret\",\n  \"point\": {\n    \"type\": \"Point\",\n    \"coordinates\": [-1.762, 49.382]\n  }\n}"
+      }
+    },
+
+    {
+      "_id": "fld_category",
+      "_type": "request_group",
+      "parentId": "wrk_bourgad",
+      "name": "Catégories"
+    },
+    {
+      "_id": "req_categories_get",
+      "_type": "request",
+      "parentId": "fld_category",
+      "name": "Toutes les catégories",
+      "method": "GET",
+      "url": "{{ _.base_url }}/category"
+    },
+    {
+      "_id": "req_subcategories_get",
+      "_type": "request",
+      "parentId": "fld_category",
+      "name": "Sous-catégories d'une catégorie",
+      "method": "GET",
+      "url": "{{ _.base_url }}/category/subcategories?categoryId=1"
+    },
+
+    {
+      "_id": "fld_territory",
+      "_type": "request_group",
+      "parentId": "wrk_bourgad",
+      "name": "Territoire"
+    },
+    {
+      "_id": "req_city_get",
+      "_type": "request",
+      "parentId": "fld_territory",
+      "name": "Ville par ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/geo/city/50129",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.bearer_token }}" }
+      ]
+    },
+    {
+      "_id": "req_cities_search",
+      "_type": "request",
+      "parentId": "fld_territory",
+      "name": "Rechercher des villes",
+      "method": "GET",
+      "url": "{{ _.base_url }}/geo/cities?name=Cherbourg",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.bearer_token }}" }
+      ]
+    },
+    {
+      "_id": "req_places_autocomplete",
+      "_type": "request",
+      "parentId": "fld_territory",
+      "name": "Autocomplétion des lieux Manche",
+      "method": "GET",
+      "url": "{{ _.base_url }}/places/autocomplete?q=mont&limit=10"
+    },
+
+    {
+      "_id": "fld_media",
+      "_type": "request_group",
+      "parentId": "wrk_bourgad",
+      "name": "Médias"
+    },
+    {
+      "_id": "req_media_imported",
+      "_type": "request",
+      "parentId": "fld_media",
+      "name": "Médias orphelins (non associés)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/media/imported",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.bearer_token }}" }
+      ]
+    },
+    {
+      "_id": "req_media_upload",
+      "_type": "request",
+      "parentId": "fld_media",
+      "name": "Uploader des médias",
+      "method": "POST",
+      "url": "{{ _.base_url }}/media/upload",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.bearer_token }}" }
+      ],
+      "body": {
+        "mimeType": "multipart/form-data",
+        "params": [
+          { "name": "files", "value": "", "type": "file", "fileName": "" }
+        ]
+      }
+    },
+
+    {
+      "_id": "fld_admin",
+      "_type": "request_group",
+      "parentId": "wrk_bourgad",
+      "name": "Admin — Wikimanche"
+    },
+    {
+      "_id": "req_wikimanche_full",
+      "_type": "request",
+      "parentId": "fld_admin",
+      "name": "Ingestion complète",
+      "method": "POST",
+      "url": "{{ _.base_url }}/admin/wikimanche/ingest/full",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.bearer_token }}" }
+      ],
+      "body": { "mimeType": "application/json", "text": "{}" }
+    },
+    {
+      "_id": "req_wikimanche_category",
+      "_type": "request",
+      "parentId": "fld_admin",
+      "name": "Ingestion par catégorie",
+      "method": "POST",
+      "url": "{{ _.base_url }}/admin/wikimanche/ingest/category/Plage%20de%20la%20Manche",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.bearer_token }}" }
+      ],
+      "body": { "mimeType": "application/json", "text": "{}" }
+    },
+    {
+      "_id": "req_wikimanche_incremental",
+      "_type": "request",
+      "parentId": "fld_admin",
+      "name": "Synchronisation incrémentale",
+      "method": "POST",
+      "url": "{{ _.base_url }}/admin/wikimanche/sync/incremental",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.bearer_token }}" }
+      ],
+      "body": { "mimeType": "application/json", "text": "{}" }
+    }
+  ]
+}

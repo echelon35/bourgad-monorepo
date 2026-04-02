@@ -5,7 +5,7 @@ import * as L from 'leaflet';
 import { firstValueFrom } from 'rxjs';
 import { PlaceDto } from '@bourgad-monorepo/external';
 import { GeoApiService } from "./geo.api.service";
-import { City } from "@bourgad-monorepo/model";
+import { City, ManchePlace } from "@bourgad-monorepo/model";
 
 @Injectable({
   providedIn: 'root'
@@ -82,12 +82,23 @@ export class SearchPlaceService {
         return townList;
     }
 
-    async searchWithBourgad(placeToSearch: string): Promise<PlaceDto[]> {
+    async searchCitiesWithBourgad(placeToSearch: string): Promise<PlaceDto[]> {
         const res = await this.geoApiProvider.searchCityByName(placeToSearch, 50);
         const townList: PlaceDto[] = [];
         res.forEach((thisPlace:City) => {
             const placeDto = new PlaceDto();
-            placeDto.copyFromBourgad(thisPlace);
+            placeDto.copyFromBourgadCity(thisPlace);
+            townList.push(placeDto);
+        });
+        return townList;
+    }
+
+    async searchPlacesWithBourgad(placeToSearch: string): Promise<PlaceDto[]> {
+        const res = await this.geoApiProvider.searchPlaceByName(placeToSearch);
+        const townList: PlaceDto[] = [];
+        res.forEach((thisPlace:ManchePlace) => {
+            const placeDto = new PlaceDto();
+            placeDto.copyFromBourgadPlace(thisPlace);
             townList.push(placeDto);
         });
         return townList;

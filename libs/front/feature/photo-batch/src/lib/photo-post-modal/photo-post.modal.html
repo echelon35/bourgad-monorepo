@@ -73,14 +73,14 @@
                         <label class="text-[0.8rem] font-semibold text-white/70 tracking-wide">
                             Catégorie <span class="text-primary-bourgad-2">*</span>
                         </label>
-                        <bgd-dropdown #category id="photo-post-category" [dropdownItems]="dropdownCategories"
+                        <bgd-dropdown #category id="photo-post-category" [dropdownItems]="dropdownCategories" [name]="'category'"
                             placeholder="Choisir une catégorie" (selectedItem$)="selectCategory($event)"></bgd-dropdown>
                     </div>
                     <div class="flex flex-col gap-1.5 flex-1">
                         <label class="text-[0.8rem] font-semibold text-white/70 tracking-wide">
                             Sous-catégorie <span class="text-primary-bourgad-2">*</span>
                         </label>
-                        <bgd-dropdown #subcategory id="photo-post-subcategory" [dropdownItems]="dropdownSubCategories"
+                        <bgd-dropdown #subcategory id="photo-post-subcategory" [dropdownItems]="dropdownSubCategories" [name]="'subcategory'"
                             placeholder="Choisir une sous-catégorie" (selectedItem$)="selectSubCategory($event)"
                             [disabled]="!selectedCategory"></bgd-dropdown>
                     </div>

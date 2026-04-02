@@ -44,14 +44,16 @@ export class PhotoPostModal implements OnInit {
   private readonly toastrService = inject(ToastrService);
   private readonly photoBatchStore = inject(PhotoBatchStore);
 
+  constructor() {
+    effect(() => {
+        this.feedDropdownCategories();
+    });
+  }
+
   ngOnInit(): void {
     this.postForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       content: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(1000)]],
-    });
-    
-    effect(() => {
-        this.feedDropdownCategories();
     });
 
   }

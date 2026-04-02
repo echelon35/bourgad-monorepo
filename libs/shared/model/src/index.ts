@@ -1,4 +1,5 @@
 export * from './lib/audited.model'
+export * from './lib/manche-place.model'
 export * from './lib/category.model'
 export * from './lib/city.model'
 export * from './lib/comment.model'
