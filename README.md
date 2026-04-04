@@ -52,7 +52,7 @@ Bourgad est centré sur le département de la Manche. Les fonctionnalités princ
 ### Frontend
 | Technologie | Rôle |
 |---|---|
-| [Angular](https://angular.dev) 20 | Framework SPA |
+| [Angular](https://angular.dev) 21 | Framework SPA |
 | [NgRx Signals](https://ngrx.io/guide/signals) | Gestion d'état réactive |
 | [Leaflet.js](https://leafletjs.com) | Carte interactive |
 | [TailwindCSS](https://tailwindcss.com) | Styles utilitaires |
